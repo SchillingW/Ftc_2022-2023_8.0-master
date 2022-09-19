@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import java.util.ArrayList;
 
 // pure pursuit algorithm demo
-@TeleOp(name="PursuitBotDemo", group="PursuitBot")
+@TeleOp(name="PursuitBotDemo3", group="PursuitBot")
 public class PursuitBotDemo3 extends LinearOpMode {
 
     // robot reference
@@ -232,6 +232,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
         {
             while(xPos >= 0 && yPos >= 0)
             {
+                robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
                 yPos = robot.odometry.getPose().getY();
                 robot.drive.driveRobotCentric(-0.1, -0.1, 0.0);
@@ -242,6 +243,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
         {
             while(xPos >= 0 && yPos <= 0)
             {
+                robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
                 yPos = robot.odometry.getPose().getY();
                 robot.drive.driveRobotCentric(-0.1, 0.1, 0.0);
@@ -252,6 +254,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
         {
             while(xPos <= 0 && yPos >= 0)
             {
+                robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
                 yPos = robot.odometry.getPose().getY();
                 robot.drive.driveRobotCentric(0.1, -0.1, 0.0);
@@ -262,6 +265,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
         {
             while(xPos <= 0 && yPos <= 0)
             {
+                robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
                 yPos = robot.odometry.getPose().getY();
                 robot.drive.driveRobotCentric(0.1, 0.1, 0.0);
@@ -270,7 +274,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
     public void RotationalCorrection()
     {
-        if(isAtHome == true)
+        if(isAtHome)
         {
             robot.drive.stop();
 
@@ -287,6 +291,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
                             if (currentRotation.getDegrees() <= 0) {
                                 isDoneCorrectingRotation = true;
+                                break;
                             }
 
                         }
@@ -299,6 +304,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
                             if (currentRotation.getDegrees() >= 0) {
                                 isDoneCorrectingRotation = true;
+                                break;
                             }
                         }
                     }
