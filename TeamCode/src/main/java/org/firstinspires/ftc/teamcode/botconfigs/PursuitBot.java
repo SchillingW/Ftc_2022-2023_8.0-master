@@ -58,7 +58,7 @@ public class PursuitBot {
         encoderR = getSupplier(motorFR, 1);
         encoderH = getSupplier(motorBL, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
-                encoderL, encoderR, encoderH,
+                encoderR, encoderL, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
 
         // orient to home
