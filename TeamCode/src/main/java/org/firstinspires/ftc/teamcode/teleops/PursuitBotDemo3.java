@@ -291,6 +291,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
                             if (currentRotation.getDegrees() <= 0) {
                                 isDoneCorrectingRotation = true;
+                                robot.drive.stop();
                                 break;
                             }
 
@@ -304,6 +305,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
                             if (currentRotation.getDegrees() >= 0) {
                                 isDoneCorrectingRotation = true;
+                                robot.drive.stop();
                                 break;
                             }
                         }
