@@ -23,11 +23,11 @@ public class PursuitBotDemo3 extends LinearOpMode {
     public ArrayList<Pose2d> recording;
 
     // movement parameters
-    public double movementSpeed = 0.925;
-    public double turnSpeed = 0.925;
-    public double followRadius = 7.5;
-    public double positionBuffer = 0.25;
-    public double rotationBuffer = Math.toRadians(0.2);
+    public double movementSpeed = 0.5;
+    public double turnSpeed = 0.5;
+    public double followRadius = 5;
+    public double positionBuffer = 1;
+    public double rotationBuffer = Math.toRadians(15);
 
     public boolean isAtHome = false;
     public boolean isDoneCorrectingRotation = false;
