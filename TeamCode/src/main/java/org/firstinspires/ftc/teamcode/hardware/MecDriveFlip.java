@@ -11,6 +11,6 @@ public class MecDriveFlip extends MecanumDrive {
 
     @Override
     public void driveFieldCentric(double strafeSpeed, double forwardSpeed, double turnSpeed, double gyroAngle) {
-        super.driveFieldCentric(forwardSpeed, strafeSpeed, turnSpeed, 0.0);
+        super.driveFieldCentric(forwardSpeed, strafeSpeed, turnSpeed, -gyroAngle);
     }
 }
