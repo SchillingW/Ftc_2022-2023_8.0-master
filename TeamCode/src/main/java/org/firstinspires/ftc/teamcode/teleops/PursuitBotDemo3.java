@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import java.util.ArrayList;
 
 // pure pursuit algorithm demo
-@TeleOp(name="PursuitBotDemo", group="PursuitBot")
+@TeleOp(name="PursuitBotDemo3", group="PursuitBot")
 public class PursuitBotDemo3 extends LinearOpMode {
 
     // robot reference
