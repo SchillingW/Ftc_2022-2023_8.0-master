@@ -37,8 +37,8 @@ public class PursuitBot {
 
     // robot type data
     public double encoderTicksPerInch = encoderTicksPerRotation / wheelCircumference;
-    public double encoderTrackWidth = 20;
-    public double encoderWheelOffset = 0;
+    public double encoderTrackWidth = 8.5;
+    public double encoderWheelOffset = 1.5;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
@@ -58,7 +58,7 @@ public class PursuitBot {
         encoderR = getSupplier(motorFR, 1);
         encoderH = getSupplier(motorBL, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
-                encoderR, encoderL, encoderH,
+                encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
 
         // orient to home
