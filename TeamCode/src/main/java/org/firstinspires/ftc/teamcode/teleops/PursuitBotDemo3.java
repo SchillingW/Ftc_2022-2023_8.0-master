@@ -288,6 +288,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
                         while (currentRotation.getDegrees() >= 0.0) {
                             robot.drive.driveRobotCentric(0.0, 0.0, -0.1);
                             robot.odometry.update();
+                            DebugPartial("correcting rotation: " + currentRotation);
 
                             if (currentRotation.getDegrees() <= 0) {
                                 isDoneCorrectingRotation = true;
@@ -302,6 +303,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
                         while (currentRotation.getDegrees() <= 0.0) {
                             robot.drive.driveRobotCentric(0.0, 0.0, 0.1);
                             robot.odometry.update();
+                            DebugPartial("correcting rotation: " + currentRotation);
 
                             if (currentRotation.getDegrees() >= 0) {
                                 isDoneCorrectingRotation = true;
