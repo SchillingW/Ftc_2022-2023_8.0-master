@@ -15,6 +15,9 @@ public class ClawLiftTele extends OpMode {
     public Motor primaryArm;
     public Motor secondaryArm;
 
+    public Motor left;
+    public Motor right;
+
     // called on program initialization
     @Override
     public void init() {
@@ -23,17 +26,25 @@ public class ClawLiftTele extends OpMode {
         primaryArm = new Motor(hardwareMap, "primaryArm");
         secondaryArm = new Motor(hardwareMap, "secondaryArm");
         clawServo = new SimpleServo(hardwareMap, "clawServo", 0, 180);
+
+        left = new Motor(hardwareMap, "left");
+        right = new Motor(hardwareMap, "right");
     }
 
     // called repeatedly during program
     @Override
     public void loop() {
 
-        primaryArm.set(gamepad1.left_stick_y);
-        secondaryArm.set(gamepad1.right_stick_y);
+        left.set(gamepad1.left_stick_y);
+        right.set(-gamepad1.right_stick_y);
 
-        if (gamepad1.dpad_up) clawServo.setPosition(1);
-        if (gamepad1.dpad_down) clawServo.setPosition(0);
+        primaryArm.set(gamepad2.left_stick_y);
+        secondaryArm.set(gamepad2.right_stick_y);
+
+        //full close=1
+        if (gamepad2.dpad_up) clawServo.setPosition(0.5);
+        //full open=0
+        if (gamepad2.dpad_down) clawServo.setPosition(0);
 
     }
 }
