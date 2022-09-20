@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="ClawLiftTele", group="ClawLiftBot")
 public class ClawLiftTele extends OpMode {
 
+    public double armSpeed = 0.75;
+    public double driveSpeed = 0.75;
+
     // motor declaration
     public ServoEx clawServo;
     public Motor primaryArm;
@@ -27,6 +30,9 @@ public class ClawLiftTele extends OpMode {
         secondaryArm = new Motor(hardwareMap, "secondaryArm");
         clawServo = new SimpleServo(hardwareMap, "clawServo", 0, 180);
 
+        primaryArm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        secondaryArm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
         left = new Motor(hardwareMap, "left");
         right = new Motor(hardwareMap, "right");
     }
@@ -35,11 +41,14 @@ public class ClawLiftTele extends OpMode {
     @Override
     public void loop() {
 
-        left.set(gamepad1.left_stick_y);
-        right.set(-gamepad1.right_stick_y);
+        float leftSpeed = gamepad1.left_stick_y + gamepad2.right_stick_x;
+        float rightSpeed = gamepad1.left_stick_y - gamepad2.right_stick_x;
 
-        primaryArm.set(gamepad2.left_stick_y);
-        secondaryArm.set(gamepad2.right_stick_y);
+        left.set(leftSpeed * driveSpeed);
+        right.set(rightSpeed * driveSpeed);
+
+        primaryArm.set(gamepad2.left_stick_y * armSpeed);
+        secondaryArm.set(gamepad2.right_stick_y * armSpeed);
 
         //full close=1
         if (gamepad2.dpad_up) clawServo.setPosition(0.5);
