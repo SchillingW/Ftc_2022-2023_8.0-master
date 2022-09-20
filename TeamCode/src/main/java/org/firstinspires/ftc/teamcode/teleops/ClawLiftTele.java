@@ -41,8 +41,8 @@ public class ClawLiftTele extends OpMode {
     @Override
     public void loop() {
 
-        float leftSpeed = gamepad1.left_stick_y + gamepad2.right_stick_x;
-        float rightSpeed = gamepad1.left_stick_y - gamepad2.right_stick_x;
+        float leftSpeed = gamepad1.left_stick_y + gamepad1.right_stick_x;
+        float rightSpeed = gamepad1.left_stick_y - gamepad1.right_stick_x;
 
         left.set(leftSpeed * driveSpeed);
         right.set(rightSpeed * driveSpeed);
