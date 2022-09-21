@@ -242,7 +242,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
         if(positiveStartingX && !positiveStartingY)
         {
-            while(xPos >= 0 && yPos <= 0)
+            while(xPos >= 0 && yPos <= 0 && opModeIsActive())
             {
                 robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
@@ -253,7 +253,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
         if(!positiveStartingX && positiveStartingY)
         {
-            while(xPos <= 0 && yPos >= 0)
+            while(xPos <= 0 && yPos >= 0 && opModeIsActive())
             {
                 robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
@@ -264,7 +264,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
         if(!positiveStartingX && !positiveStartingY)
         {
-            while(xPos <= 0 && yPos <= 0)
+            while(xPos <= 0 && yPos <= 0 && opModeIsActive())
             {
                 robot.odometry.update();
                 xPos = robot.odometry.getPose().getX();
@@ -286,7 +286,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
                     Rotation2d currentRotation = robot.odometry.getPose().getRotation();
 //hello
                     if (currentRotation.getDegrees() >= 0.0) {
-                        while (currentRotation.getDegrees() >= 0.0) {
+                        while (currentRotation.getDegrees() >= 0.0 && opModeIsActive()) {
                             robot.drive.driveRobotCentric(0.0, 0.0, -0.1);
                             robot.odometry.update();
                             currentRotation = robot.odometry.getPose().getRotation();
@@ -302,7 +302,7 @@ public class PursuitBotDemo3 extends LinearOpMode {
                     }
 
                     else if (currentRotation.getDegrees() <= 0.0) {
-                        while (currentRotation.getDegrees() <= 0.0) {
+                        while (currentRotation.getDegrees() <= 0.0 && opModeIsActive()) {
                             robot.drive.driveRobotCentric(0.0, 0.0, 0.1);
                             robot.odometry.update();
                             currentRotation = robot.odometry.getPose().getRotation();
