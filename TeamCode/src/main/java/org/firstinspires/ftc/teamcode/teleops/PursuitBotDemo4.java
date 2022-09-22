@@ -212,17 +212,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
             if(currentRotation <= 90 && currentRotation >= -90)
             {
-                boolean isDoneRotating = !(currentRotation <= 90 && currentRotation >= -90);
-                while(opModeIsActive() && !isDoneRotating)
-                {
-                    boolean isPositive = (currentRotation >= 0);
-                    double turnSpeed = 1.0;
-                    if(!isPositive) turnSpeed = -1.0;
-                    robot.drive.driveRobotCentric(0.0, 0.0, turnSpeed);
-                    currentRotation = robot.odometry.getPose().getRotation().getDegrees();
-                    isDoneRotating = (currentRotation > 90 || currentRotation < -90);
-                }
-
+                RotationalCorrection();
                 robot.drive.stop();
             }
         }
@@ -243,6 +233,56 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
         // wait a second
         if (opModeIsActive()) sleep(1000);
+    }
+
+    public void RotationalCorrection()
+    {
+        robot.drive.stop();
+
+        if(robot.odometry.getPose().getRotation().getDegrees() != 180.0)
+        {
+            if(!isDoneCorrectingRotation) {
+
+                Rotation2d currentRotation = robot.odometry.getPose().getRotation();
+
+                if (currentRotation.getDegrees() >= 180.0) {
+                    while ((currentRotation.getDegrees() >= 180.0) && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, -0.5);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() <= -180.0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+
+                    }
+                }
+
+                else if (currentRotation.getDegrees() <= -180.0) {
+                    while (currentRotation.getDegrees() <= -180.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, 0.5);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() >= 180.0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+                    }
+                }
+
+                else
+                {
+                    return;
+                }
+            }
+
+        }
     }
 
     // debug program state with telemetry
