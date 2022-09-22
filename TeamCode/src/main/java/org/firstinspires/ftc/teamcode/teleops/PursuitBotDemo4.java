@@ -121,24 +121,38 @@ public class PursuitBotDemo4 extends LinearOpMode {
             DebugPartial("follow path");
 
             // create start and end waypoints from current pose to last pose in recording
-            Waypoint[] points = new Waypoint[recording.size() + 1];
-            Translation2d[] pointsAsTranslation = new Translation2d[recording.size() + 1];
-            points[0] = new StartWaypoint(robot.odometry.getPose());
-            pointsAsTranslation[0] = ConvertToTranslation2d((Pose2d)points[0]);
-            points[points.length - 1] = new EndWaypoint(recording.get(recording.size() - 1),
-                    movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
-            pointsAsTranslation[points.length - 1] = ConvertToTranslation2d((Pose2d)points[points.length - 1]);
+            Pose2d start = robot.odometry.getPose();
+            Pose2d end = recording.get(recording.size() - 1);
 
-            // iterate through recorded poses and convert to waypoints
-            for (int i = 0; i < recording.size() - 1; i++) {
-                points[i + 1] = new GeneralWaypoint(recording.get(i),
-                        movementSpeed, turnSpeed, followRadius);
-                pointsAsTranslation[i + 1] = ConvertToTranslation2d((Pose2d) points[i + 1]);
+            Waypoint[] waypoints = new Waypoint[recording.size() + 3];
+            waypoints[0] = new StartWaypoint(start);
+            waypoints[recording.size() - 1] = new EndWaypoint(end,
+                    movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+
+            for (int i = 1; i < recording.size() - 2; i++)
+            {
+                double xPos = waypoints[i].getPose().getX();
+                double yPos = waypoints[i].getPose().getY();
+                Translation2d translation = new Translation2d(xPos, yPos);
+                followPathInteriorWaypoints.set(i, translation);
+            }
+
+            TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
+            Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
+                    start, followPathInteriorWaypoints, end, config);
+
+            double seconds = returnHomeTrajectory.getTotalTimeSeconds();
+
+            for (int i = 0; i < 101; i++)
+            {
+                waypoints[i + 1] = new PointTurnWaypoint(
+                        returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
+                        movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
             }
 
             // follow path formed by waypoints
             PurePursuitCommand command = new PurePursuitCommand(
-                    robot.drive, robot.odometry, points);
+                    robot.drive, robot.odometry, waypoints);
             RunCommand(command, "follow path");
         }
     }
