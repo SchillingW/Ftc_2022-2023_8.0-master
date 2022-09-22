@@ -200,9 +200,9 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
             for (int i = 0; i < waypoints.length - 1; i++)
             {
-                waypoints[i + 1] = new PointTurnWaypoint(
+                waypoints[i + 1] = new GeneralWaypoint(
                         returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
-                        movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+                        movementSpeed, turnSpeed, followRadius);
             }
 
             waypoints[0] = new StartWaypoint(start);
