@@ -176,10 +176,9 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
 
-            positiveStartingY = (start.getY() >= 0);
+            //positiveStartingY = (start.getY() >= 0);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            config.setReversed(positiveStartingY);
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
 
@@ -206,6 +205,26 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
     // run command linearly
     public void RunCommand(PurePursuitCommand command, String state) {
+
+        if(state.equals("return home"))
+        {
+            double currentRotation = robot.odometry.getPose().getRotation().getDegrees();
+
+            if(currentRotation <= 90 && currentRotation >= -90)
+            {
+                boolean isDoneRotating = !(currentRotation <= 90 && currentRotation >= -90);
+                while(opModeIsActive() && !isDoneRotating)
+                {
+                    if(isDoneRotating) break;
+                    currentRotation = robot.odometry.getPose().getRotation().getDegrees();
+                    boolean isPositive = (currentRotation >= 0);
+                    double turnSpeed = 1.0;
+                    if(!isPositive) turnSpeed = -1.0;
+                    robot.drive.driveRobotCentric(0.0, 0.0, turnSpeed);
+                    isDoneRotating = !(currentRotation <= 90 && currentRotation >= -90);
+                }
+            }
+        }
 
         // follow path
         command.schedule();
