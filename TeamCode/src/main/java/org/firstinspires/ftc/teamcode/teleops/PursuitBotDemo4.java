@@ -143,7 +143,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
             double seconds = returnHomeTrajectory.getTotalTimeSeconds();
 
-            for (int i = 0; i < waypoints.length; i++)
+            for (int i = 0; i < waypoints.length - 1; i++)
             {
                 waypoints[i + 1] = new PointTurnWaypoint(
                         returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
@@ -198,7 +198,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
             waypoints[waypoints.length - 1] = new EndWaypoint(end, movementSpeed,
                     turnSpeed, followRadius, positionBuffer, rotationBuffer);
 
-            for (int i = 0; i < waypoints.length; i++)
+            for (int i = 0; i < waypoints.length - 1; i++)
             {
                 waypoints[i + 1] = new PointTurnWaypoint(
                         returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
