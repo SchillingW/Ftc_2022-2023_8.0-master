@@ -29,8 +29,8 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
     // robot poses which form recorded path
     public ArrayList<Pose2d> recording;
-    public ArrayList<Translation2d> returnHomeInteriorWaypoints;
-    public ArrayList<Translation2d> followPathInteriorWaypoints;
+    public ArrayList<Translation2d> returnHomeInteriorWaypoints = new ArrayList<Translation2d>();
+    public ArrayList<Translation2d> followPathInteriorWaypoints = new ArrayList<Translation2d>();
 
     // movement parameters
     public double movementSpeed = 0.5;
