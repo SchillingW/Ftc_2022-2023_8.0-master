@@ -134,7 +134,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
                 double xPos = waypoints[i].getPose().getX();
                 double yPos = waypoints[i].getPose().getY();
                 Translation2d translation = new Translation2d(xPos, yPos);
-                followPathInteriorWaypoints.set(i, translation);
+                followPathInteriorWaypoints.add(translation);
             }
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
@@ -178,7 +178,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
             double averagePosX = (startPosX + endPosX)/2.0;
             double averagePosY = (startPosY + endPosY)/2.0;
 
-            returnHomeInteriorWaypoints.set(0, new Translation2d(averagePosX, averagePosY));
+            returnHomeInteriorWaypoints.add(new Translation2d(averagePosX, averagePosY));
 
             /*positiveStartingY = (start.getY() >= 0);
             positiveStartingX = (end.getX() >= 0);*/
