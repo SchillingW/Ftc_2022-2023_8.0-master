@@ -174,15 +174,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d();
 
-            double startPosX = start.getX();
-            double endPosX = end.getX();
-            double startPosY = start.getY();
-            double endPosY = end.getY();
-
-            double averagePosX = (startPosX + endPosX)/2.0;
-            double averagePosY = (startPosY + endPosY)/2.0;
-
-            returnHomeInteriorWaypoints.add(new Translation2d(averagePosX, averagePosY));
+            returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
 
             /*positiveStartingY = (start.getY() >= 0);
             positiveStartingX = (end.getX() >= 0);*/
@@ -198,10 +190,10 @@ public class PursuitBotDemo4 extends LinearOpMode {
             waypoints[waypoints.length - 1] = new EndWaypoint(end, movementSpeed,
                     turnSpeed, followRadius, positionBuffer, rotationBuffer);
 
-            for (int i = 0; i < waypoints.length - 1; i++)
+            for (int i = 0; i < 100; i++)
             {
                 waypoints[i + 1] = new GeneralWaypoint(
-                        returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
+                        returnHomeTrajectory.sample(((i / 100.0) * seconds)).poseMeters,
                         movementSpeed, turnSpeed, followRadius);
             }
 
