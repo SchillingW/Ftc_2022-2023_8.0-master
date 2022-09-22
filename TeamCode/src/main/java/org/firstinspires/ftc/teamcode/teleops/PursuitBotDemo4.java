@@ -220,7 +220,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
                     if(!isPositive) turnSpeed = -1.0;
                     robot.drive.driveRobotCentric(0.0, 0.0, turnSpeed);
                     currentRotation = robot.odometry.getPose().getRotation().getDegrees();
-                    isDoneRotating = (currentRotation > 90 && currentRotation < -90);
+                    isDoneRotating = (currentRotation > 90 || currentRotation < -90);
                 }
 
                 robot.drive.stop();
