@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 // pure pursuit algorithm demo
 //hi
-@TeleOp(name="PursuitBotDemo3", group="PursuitBot")
+@TeleOp(name="PursuitBotDemo4", group="PursuitBot")
 public class PursuitBotDemo4 extends LinearOpMode {
 
     // robot reference
@@ -169,6 +169,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
             // create start and end waypoints from current pose to origin pose
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d();
+            returnHomeInteriorWaypoints.set(0, new Translation2d(0, 0));
 
             /*positiveStartingY = (start.getY() >= 0);
             positiveStartingX = (end.getX() >= 0);*/
