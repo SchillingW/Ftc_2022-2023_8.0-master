@@ -169,7 +169,16 @@ public class PursuitBotDemo4 extends LinearOpMode {
             // create start and end waypoints from current pose to origin pose
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d();
-            returnHomeInteriorWaypoints.set(0, new Translation2d(0, 0));
+
+            double startPosX = start.getX();
+            double endPosX = end.getX();
+            double startPosY = start.getY();
+            double endPosY = end.getY();
+
+            double averagePosX = (startPosX + endPosX)/2.0;
+            double averagePosY = (startPosY + endPosY)/2.0;
+
+            returnHomeInteriorWaypoints.set(0, new Translation2d(averagePosX, averagePosY));
 
             /*positiveStartingY = (start.getY() >= 0);
             positiveStartingX = (end.getX() >= 0);*/
