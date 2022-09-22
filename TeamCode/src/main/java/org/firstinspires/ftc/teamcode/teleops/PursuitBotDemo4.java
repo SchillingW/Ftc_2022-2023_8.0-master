@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.arcrobotics.ftclib.purepursuit.waypoints.PointTurnWaypoint;
 import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
@@ -9,21 +10,27 @@ import com.arcrobotics.ftclib.purepursuit.Waypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
+import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
+import com.arcrobotics.ftclib.trajectory.TrajectoryGenerator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.sun.tools.javac.util.Convert;
+
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import java.util.ArrayList;
 
 // pure pursuit algorithm demo
 //hi
 @TeleOp(name="PursuitBotDemo3", group="PursuitBot")
-public class PursuitBotDemo3 extends LinearOpMode {
+public class PursuitBotDemo4 extends LinearOpMode {
 
     // robot reference
     public PursuitBot robot;
 
     // robot poses which form recorded path
     public ArrayList<Pose2d> recording;
+    public ArrayList<Translation2d> returnHomeInteriorWaypoints;
+    public ArrayList<Translation2d> followPathInteriorWaypoints;
 
     // movement parameters
     public double movementSpeed = 0.5;
@@ -31,6 +38,8 @@ public class PursuitBotDemo3 extends LinearOpMode {
     public double followRadius = 5;
     public double positionBuffer = 1;
     public double rotationBuffer = Math.toRadians(15);
+    public double maxVelocity = 0.5;
+    public double maxAcceleration = 0.5;
 
     public boolean isAtHome = false;
     public boolean isDoneCorrectingRotation = false;
@@ -94,6 +103,14 @@ public class PursuitBotDemo3 extends LinearOpMode {
         }
     }
 
+    public Translation2d ConvertToTranslation2d(Pose2d pose)
+    {
+        double xValue = pose.getX();
+        double yValue = pose.getY();
+
+        return new Translation2d(xValue, yValue);
+    }
+
     // follows recorded path with pure pursuit
     public void FollowPath() {
 
@@ -105,14 +122,18 @@ public class PursuitBotDemo3 extends LinearOpMode {
 
             // create start and end waypoints from current pose to last pose in recording
             Waypoint[] points = new Waypoint[recording.size() + 1];
+            Translation2d[] pointsAsTranslation = new Translation2d[recording.size() + 1];
             points[0] = new StartWaypoint(robot.odometry.getPose());
+            pointsAsTranslation[0] = ConvertToTranslation2d((Pose2d)points[0]);
             points[points.length - 1] = new EndWaypoint(recording.get(recording.size() - 1),
                     movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+            pointsAsTranslation[points.length - 1] = ConvertToTranslation2d((Pose2d)points[points.length - 1]);
 
             // iterate through recorded poses and convert to waypoints
             for (int i = 0; i < recording.size() - 1; i++) {
                 points[i + 1] = new GeneralWaypoint(recording.get(i),
                         movementSpeed, turnSpeed, followRadius);
+                pointsAsTranslation[i + 1] = ConvertToTranslation2d((Pose2d) points[i + 1]);
             }
 
             // follow path formed by waypoints
@@ -132,16 +153,32 @@ public class PursuitBotDemo3 extends LinearOpMode {
             DebugPartial("return home");
 
             // create start and end waypoints from current pose to origin pose
-            Waypoint start = new StartWaypoint(robot.odometry.getPose());
-            Waypoint end = new EndWaypoint(new Pose2d(),
-                    movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+            Pose2d start = robot.odometry.getPose();
+            Pose2d end = new Pose2d();
 
-            positiveStartingY = (start.getPose().getY() >= 0);
-            positiveStartingX = (start.getPose().getX() >= 0);
+            /*positiveStartingY = (start.getY() >= 0);
+            positiveStartingX = (end.getX() >= 0);*/
+
+            TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
+            Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
+                    start, returnHomeInteriorWaypoints, end, config);
 
             // follow path formed by waypoints
+            double seconds = returnHomeTrajectory.getTotalTimeSeconds();
+            Waypoint[] waypoints = new Waypoint[102];
+            waypoints[0] = new StartWaypoint(start);
+            waypoints[waypoints.length - 1] = new EndWaypoint(end, movementSpeed,
+                    turnSpeed, followRadius, positionBuffer, rotationBuffer);
+
+            for (int i = 0; i < waypoints.length - 1; i++)
+            {
+                waypoints[i + 1] = new PointTurnWaypoint(
+                        returnHomeTrajectory.sample((1.0/(i + 1.0) * seconds)).poseMeters,
+                        movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+            }
+
             PurePursuitCommand command = new PurePursuitCommand(
-                    robot.drive, robot.odometry, start, end);
+                    robot.drive, robot.odometry, waypoints);
             RunCommand(command, "return home");
 
         }
@@ -156,176 +193,16 @@ public class PursuitBotDemo3 extends LinearOpMode {
         // loop while following
         while (opModeIsActive() && !command.isFinished()) {
 
-            command.execute();
+            //command.execute();
             robot.odometry.update();
             DebugFull(state);
-
-            if(state.equals("return home"))
-            {
-                if(CheckForHome()) isAtHome = true;
-                if(isAtHome)
-                {
-                    command.end(true);
-                    RotationalCorrection();
-                }
-            }
-
-
-            //check if drivetrain is behind the origin, then correct rotation if needed.
-
         }
 
-        // end robot movement
-        /*command.end(true);
-        robot.drive.stop();*/
+        command.end(true);
+        robot.drive.stop();
 
         // wait a second
         if (opModeIsActive()) sleep(1000);
-    }
-
-    public boolean CheckForHome()
-    {
-        double xPos = robot.odometry.getPose().getX();
-        double yPos = robot.odometry.getPose().getY();
-        boolean hasReachedHomeRange = false;
-
-        if(!isAtHome)
-        {
-            if(positiveStartingY)
-            {
-                if(positiveStartingX)
-                {
-                    if (xPos <= 0 && yPos <= 0) hasReachedHomeRange = true;
-                }
-
-                else
-                {
-                    if (xPos >= 0 && yPos <= 0) hasReachedHomeRange = true;
-                }
-            }
-
-            else
-            {
-                if(positiveStartingX)
-                {
-                    if (xPos <= 0 && yPos >= 0) hasReachedHomeRange = true;
-                }
-
-                else
-                {
-                    if (xPos >= 0 && yPos >= 0) hasReachedHomeRange = true;
-                }
-            }
-        }
-
-        if(hasReachedHomeRange)
-        {
-            return true;
-        } else{
-            return false;
-        }
-    }
-
-    public void ManualOverride()
-    {
-        double xPos = robot.odometry.getPose().getX();
-        double yPos = robot.odometry.getPose().getY();
-
-        if(positiveStartingX && positiveStartingY)
-        {
-            while(xPos >= 0 && yPos >= 0)
-            {
-                robot.odometry.update();
-                xPos = robot.odometry.getPose().getX();
-                yPos = robot.odometry.getPose().getY();
-                robot.drive.driveRobotCentric(-0.1, -0.1, 0.0);
-            }
-        }
-
-        if(positiveStartingX && !positiveStartingY)
-        {
-            while(xPos >= 0 && yPos <= 0 && opModeIsActive())
-            {
-                robot.odometry.update();
-                xPos = robot.odometry.getPose().getX();
-                yPos = robot.odometry.getPose().getY();
-                robot.drive.driveRobotCentric(-0.1, 0.1, 0.0);
-            }
-        }
-
-        if(!positiveStartingX && positiveStartingY)
-        {
-            while(xPos <= 0 && yPos >= 0 && opModeIsActive())
-            {
-                robot.odometry.update();
-                xPos = robot.odometry.getPose().getX();
-                yPos = robot.odometry.getPose().getY();
-                robot.drive.driveRobotCentric(0.1, -0.1, 0.0);
-            }
-        }
-
-        if(!positiveStartingX && !positiveStartingY)
-        {
-            while(xPos <= 0 && yPos <= 0 && opModeIsActive())
-            {
-                robot.odometry.update();
-                xPos = robot.odometry.getPose().getX();
-                yPos = robot.odometry.getPose().getY();
-                robot.drive.driveRobotCentric(0.1, 0.1, 0.0);
-            }        }
-    }
-
-    public void RotationalCorrection()
-    {
-        if(isAtHome)
-        {
-            robot.drive.stop();
-
-            if(robot.odometry.getPose().getRotation().getDegrees() != 0.0)
-            {
-                if(!isDoneCorrectingRotation) {
-
-                    Rotation2d currentRotation = robot.odometry.getPose().getRotation();
-//hello
-                    if (currentRotation.getDegrees() >= 0.0) {
-                        while (currentRotation.getDegrees() >= 0.0 && opModeIsActive()) {
-                            robot.drive.driveRobotCentric(0.0, 0.0, -0.1);
-                            robot.odometry.update();
-                            currentRotation = robot.odometry.getPose().getRotation();
-                            DebugPartial("correcting rotation: " + currentRotation);
-
-                            if (currentRotation.getDegrees() <= 0) {
-                                isDoneCorrectingRotation = true;
-                                robot.drive.stop();
-                                break;
-                            }
-
-                        }
-                    }
-
-                    else if (currentRotation.getDegrees() <= 0.0) {
-                        while (currentRotation.getDegrees() <= 0.0 && opModeIsActive()) {
-                            robot.drive.driveRobotCentric(0.0, 0.0, 0.1);
-                            robot.odometry.update();
-                            currentRotation = robot.odometry.getPose().getRotation();
-                            DebugPartial("correcting rotation: " + currentRotation);
-
-                            if (currentRotation.getDegrees() >= 0) {
-                                isDoneCorrectingRotation = true;
-                                robot.drive.stop();
-                                break;
-                            }
-                        }
-                    }
-
-                    else
-                    {
-                        return;
-                    }
-                }
-
-            }
-        }
     }
 
     // debug program state with telemetry
