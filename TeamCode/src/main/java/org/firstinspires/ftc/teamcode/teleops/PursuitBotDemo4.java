@@ -176,10 +176,10 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
 
-            /*positiveStartingY = (start.getY() >= 0);
-            positiveStartingX = (end.getX() >= 0);*/
+            positiveStartingY = (start.getY() >= 0);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
+            config.setReversed(positiveStartingY);
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
 
