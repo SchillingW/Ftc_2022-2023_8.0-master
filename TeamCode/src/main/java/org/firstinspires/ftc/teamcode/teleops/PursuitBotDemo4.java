@@ -197,10 +197,6 @@ public class PursuitBotDemo4 extends LinearOpMode {
                         movementSpeed, turnSpeed, followRadius);
             }
 
-            waypoints[0] = new StartWaypoint(start);
-            waypoints[waypoints.length - 1] = new EndWaypoint(end,
-                    movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
-
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
             RunCommand(command, "return home");
@@ -217,7 +213,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
         // loop while following
         while (opModeIsActive() && !command.isFinished()) {
 
-            //command.execute();
+            command.execute();
             robot.odometry.update();
             DebugFull(state);
         }
