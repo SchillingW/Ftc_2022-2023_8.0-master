@@ -210,7 +210,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
         {
             double currentRotation = robot.odometry.getPose().getRotation().getDegrees();
 
-            if(currentRotation <= 90 && currentRotation >= -90)
+            if(currentRotation <= 90 && currentRotation >= -90 && robot.odometry.getPose().getY() >= 0)
             {
                 RotationalCorrection();
                 robot.drive.stop();
@@ -231,6 +231,11 @@ public class PursuitBotDemo4 extends LinearOpMode {
         command.end(true);
         robot.drive.stop();
 
+        if(state.equals("return home"))
+        {
+            HomeRotationalCorrection();
+        }
+
         // wait a second
         if (opModeIsActive()) sleep(1000);
     }
@@ -247,7 +252,7 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
                 if (currentRotation.getDegrees() <= 179.9 && currentRotation.getDegrees() >= 0) {
                     while ((currentRotation.getDegrees() <= 179.0) && opModeIsActive()) {
-                        robot.drive.driveRobotCentric(0.0, 0.0, 0.5);
+                        robot.drive.driveRobotCentric(0.0, 0.0, 2.0);
                         robot.odometry.update();
                         currentRotation = robot.odometry.getPose().getRotation();
                         DebugPartial("correcting rotation: " + currentRotation);
@@ -263,12 +268,62 @@ public class PursuitBotDemo4 extends LinearOpMode {
 
                 else if (currentRotation.getDegrees() >= -179.9 && currentRotation.getDegrees() < 0) {
                     while (currentRotation.getDegrees() >= -179.0 && opModeIsActive()) {
-                        robot.drive.driveRobotCentric(0.0, 0.0, -0.5);
+                        robot.drive.driveRobotCentric(0.0, 0.0, -2.0);
                         robot.odometry.update();
                         currentRotation = robot.odometry.getPose().getRotation();
                         DebugPartial("correcting rotation: " + currentRotation);
 
                         if (currentRotation.getDegrees() <= 179.0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+                    }
+                }
+
+                else
+                {
+                    return;
+                }
+            }
+
+        }
+    }
+
+    public void HomeRotationalCorrection()
+    {
+        robot.drive.stop();
+
+        if(robot.odometry.getPose().getRotation().getDegrees() != 0.0)
+        {
+            if(!isDoneCorrectingRotation) {
+
+                Rotation2d currentRotation = robot.odometry.getPose().getRotation();
+//hello
+                if (currentRotation.getDegrees() >= 0.0) {
+                    while (currentRotation.getDegrees() >= 0.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, -2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() <= 0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+
+                    }
+                }
+
+                else if (currentRotation.getDegrees() <= 0.0) {
+                    while (currentRotation.getDegrees() <= 0.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, 2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() >= 0) {
                             isDoneCorrectingRotation = true;
                             robot.drive.stop();
                             break;
