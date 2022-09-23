@@ -179,7 +179,6 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d end = new Pose2d();
 
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
-            positiveStartingX = (start.getX() > 0);
             positiveStartingY = (start.getY() > 0);
 
             Translation2d last = returnHomeInteriorWaypoints.get(0);
@@ -234,7 +233,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
         command.end(true);
 
-        if(state.equals("return home"))
+        if(state.equals("return home") && command.isFinished())
         {
             HomeRotationalCorrection();
         }
