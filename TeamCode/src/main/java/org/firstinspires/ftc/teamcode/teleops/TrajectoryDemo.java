@@ -139,7 +139,7 @@ public class TrajectoryDemo extends LinearOpMode {
                     turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+            //config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
 
             Trajectory followPathTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, followPathInteriorWaypoints, end, config);
@@ -178,7 +178,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d(); //hi
 
-            returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
+            //returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
             positiveStartingX = (start.getX() > 0);
             positiveStartingY = (start.getY() > 0);
 
@@ -188,7 +188,7 @@ public class TrajectoryDemo extends LinearOpMode {
                     turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+            //config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
