@@ -61,8 +61,8 @@ public class TrajectoryDemo extends LinearOpMode {
             // loop through demo states
             RecordPath();
             ReturnHome();
-            /*FollowPath();
-            ReturnHome();*/
+            FollowPath();
+            ReturnHome();
         }
     }
 
@@ -112,7 +112,7 @@ public class TrajectoryDemo extends LinearOpMode {
     }
 
     // follows recorded path with pure pursuit
-    public void FollowPath() {
+    public void FollowPathTrajectory() {
 
         // check that program is running
         if (opModeIsActive()) {
@@ -159,6 +159,34 @@ public class TrajectoryDemo extends LinearOpMode {
             // follow path formed by waypoints
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
+            RunCommand(command, "follow path");
+        }
+    }
+
+    public void FollowPath() {
+
+        // check that program is running
+        if (opModeIsActive())
+        {
+
+            // debug
+            DebugPartial("follow path");
+
+            // create start and end waypoints from current pose to last pose in recording
+            Waypoint[] points = new Waypoint[recording.size() + 2];
+            points[0] = new StartWaypoint(robot.odometry.getPose());
+            points[points.length - 1] = new EndWaypoint(recording.get(recording.size() - 1),
+                    movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
+
+            // iterate through recorded poses and convert to waypoints
+            for (int i = 1; i < points.length - 1; i++) {
+                points[i] = new GeneralWaypoint(recording.get(i),
+                        movementSpeed, turnSpeed, followRadius);
+            }
+
+            // follow path formed by waypoints
+            PurePursuitCommand command = new PurePursuitCommand(
+                    robot.drive, robot.odometry, points);
             RunCommand(command, "follow path");
         }
     }
