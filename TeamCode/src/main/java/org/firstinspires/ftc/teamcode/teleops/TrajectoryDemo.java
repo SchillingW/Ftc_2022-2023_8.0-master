@@ -232,6 +232,10 @@ public class TrajectoryDemo extends LinearOpMode {
         }
 
         command.end(true);
+        if(state.equals("return home"))
+        {
+            HomeRotationalCorrection();
+        }
 
         // wait a second
         if (opModeIsActive()) sleep(1000);
