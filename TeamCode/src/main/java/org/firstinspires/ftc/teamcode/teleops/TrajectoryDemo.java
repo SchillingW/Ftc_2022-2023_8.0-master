@@ -216,7 +216,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
     // run command linearly
     public void RunCommand(PurePursuitCommand command, String state, Waypoint[] waypoints, Trajectory trajectory) {
-        // follow path
+        // follow path hi
         command.schedule();
 
         // loop while following
