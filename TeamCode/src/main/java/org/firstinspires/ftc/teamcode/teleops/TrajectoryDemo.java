@@ -190,9 +190,10 @@ public class TrajectoryDemo extends LinearOpMode {
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
             config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
 
-            Rotation2d endRotation = end.getRotation();
-            Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());
-            if(config.isReversed()) end = new Pose2d(0, 0, reversedEndRot);
+            /*Rotation2d endRotation = end.getRotation();
+            Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());*/
+            if(config.isReversed()) RotationalCorrection();
+            isDoneCorrectingRotation = false;
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
@@ -233,6 +234,11 @@ public class TrajectoryDemo extends LinearOpMode {
         command.end(true);
         robot.drive.stop();
 
+        if(state.equals("return home"))
+        {
+            HomeRotationalCorrection();
+        }
+
 
         // wait a second
         if (opModeIsActive()) sleep(1000);
@@ -267,6 +273,106 @@ public class TrajectoryDemo extends LinearOpMode {
         }
 
         return false;
+    }
+
+    public void RotationalCorrection()
+    {
+        robot.drive.stop();
+
+        if(robot.odometry.getPose().getRotation().getDegrees() != 179.9)
+        {
+            if(!isDoneCorrectingRotation) {
+
+                Rotation2d currentRotation = robot.odometry.getPose().getRotation();
+
+                if (currentRotation.getDegrees() <= 179.9 && currentRotation.getDegrees() >= 0) {
+                    while ((currentRotation.getDegrees() <= 179.0) && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, 2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() >= 179.0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+
+                    }
+                }
+
+                else if (currentRotation.getDegrees() >= -179.9 && currentRotation.getDegrees() < 0) {
+                    while (currentRotation.getDegrees() >= -179.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, -2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() <= 179.0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+                    }
+                }
+
+                else
+                {
+                    return;
+                }
+            }
+
+        }
+    }
+
+    public void HomeRotationalCorrection()
+    {
+        robot.drive.stop();
+
+        if(robot.odometry.getPose().getRotation().getDegrees() != 0.0)
+        {
+            if(!isDoneCorrectingRotation) {
+
+                Rotation2d currentRotation = robot.odometry.getPose().getRotation();
+//hello
+                if (currentRotation.getDegrees() >= 0.0) {
+                    while (currentRotation.getDegrees() >= 0.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, -2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() <= 0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+
+                    }
+                }
+
+                else if (currentRotation.getDegrees() <= 0.0) {
+                    while (currentRotation.getDegrees() <= 0.0 && opModeIsActive()) {
+                        robot.drive.driveRobotCentric(0.0, 0.0, 2.0);
+                        robot.odometry.update();
+                        currentRotation = robot.odometry.getPose().getRotation();
+                        DebugPartial("correcting rotation: " + currentRotation);
+
+                        if (currentRotation.getDegrees() >= 0) {
+                            isDoneCorrectingRotation = true;
+                            robot.drive.stop();
+                            break;
+                        }
+                    }
+                }
+
+                else
+                {
+                    return;
+                }
+            }
+
+        }
     }
     
     /*public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
