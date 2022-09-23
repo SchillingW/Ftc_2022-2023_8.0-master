@@ -178,7 +178,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d();
 
-            //returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
+            returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
             positiveStartingX = (start.getX() > 0);
             positiveStartingY = (start.getY() > 0);
 
