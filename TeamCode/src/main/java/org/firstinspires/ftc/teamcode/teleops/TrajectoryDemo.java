@@ -132,14 +132,14 @@ public class TrajectoryDemo extends LinearOpMode {
                 followPathInteriorWaypoints.add(i - 1, translation);
             }
 
-            positiveStartingY = (start.getY() > 0);
+            positiveStartingX = (start.getX() > 0);
             Translation2d last = followPathInteriorWaypoints.get(followPathInteriorWaypoints.size() - 1);
             Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
             GeneralWaypoint finalWaypoint = new GeneralWaypoint(waypointPose2d, movementSpeed,
                     turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            //config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+            config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
             Trajectory followPathTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, followPathInteriorWaypoints, end, config);
@@ -179,7 +179,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d end = new Pose2d();
 
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
-            positiveStartingY = (start.getY() > 0);
+            positiveStartingX = (start.getX() > 0);
 
             Translation2d last = returnHomeInteriorWaypoints.get(0);
             Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
@@ -187,7 +187,7 @@ public class TrajectoryDemo extends LinearOpMode {
                     turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+            config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
             /*Rotation2d endRotation = end.getRotation();
             Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());*/
@@ -237,15 +237,15 @@ public class TrajectoryDemo extends LinearOpMode {
         if (opModeIsActive()) sleep(1000);
     }
 
-    public boolean DetectReverse(boolean positiveY, Waypoint lastWaypoint)
+    public boolean DetectReverse(boolean positiveX, Waypoint lastWaypoint)
     {
-        double yPos = lastWaypoint.getPose().getY();
-        double currentPosition = robot.odometry.getPose().getY();
+        double xPos = lastWaypoint.getPose().getX();
+        double currentPosition = robot.odometry.getPose().getX();
         double currentRotation = robot.odometry.getPose().getRotation().getDegrees();
 
-        if(positiveY)
+        if(positiveX)
         {
-            if(yPos < currentPosition)
+            if(xPos < currentPosition)
             {
                 if(currentRotation <= 90.0 && currentRotation >= -90.0)
                 {
@@ -256,7 +256,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
         else
         {
-            if(yPos > currentPosition)
+            if(xPos > currentPosition)
             {
                 if(currentRotation >= 90.0 || currentRotation <= -90.0)
                 {
@@ -311,6 +311,8 @@ public class TrajectoryDemo extends LinearOpMode {
 
             else if(currentRotation >= 90.0 || currentRotation <= -90.0)
             {
+                DebugPartial("correcting rotation: " + currentRotation);
+
                 if (currentRotation < 179.9 && currentRotation >= 90.0) {
                     while ((currentRotation > 0.0) && opModeIsActive()) {
                         robot.drive.driveRobotCentric(0.0, 0.0, -2.0);
