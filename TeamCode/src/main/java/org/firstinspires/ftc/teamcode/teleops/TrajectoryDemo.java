@@ -195,11 +195,14 @@ public class TrajectoryDemo extends LinearOpMode {
 
             // follow path formed by waypoints
             double seconds = returnHomeTrajectory.getTotalTimeSeconds();
-            Waypoint[] waypoints = new Waypoint[100];
+            Waypoint[] waypoints = new Waypoint[102];
+            waypoints[0] = new StartWaypoint(start);
+            waypoints[waypoints.length - 1] = new EndWaypoint(end, movementSpeed,
+                    turnSpeed, followRadius, positionBuffer, rotationBuffer);
 
             for (int i = 0; i < 100; i++)
             {
-                waypoints[i] = new GeneralWaypoint(
+                waypoints[i + 1] = new GeneralWaypoint(
                         returnHomeTrajectory.sample(((i / 100.0) * seconds)).poseMeters,
                         movementSpeed, turnSpeed, followRadius);
             }
