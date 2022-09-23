@@ -222,7 +222,6 @@ public class TrajectoryDemo extends LinearOpMode {
         // loop while following
         while (opModeIsActive() && !command.isFinished()) {
 
-            DebugTrajectory(state, trajectory, waypoints);
             command.execute();
             robot.odometry.update();
             DebugFull(state);
@@ -267,7 +266,7 @@ public class TrajectoryDemo extends LinearOpMode {
         return false;
     }
     
-    public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
+    /*public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
     {
         double seconds = trajectory.getTotalTimeSeconds();
         double elapsed = 0.0;
@@ -302,7 +301,7 @@ public class TrajectoryDemo extends LinearOpMode {
         }
 
         return elapsed;
-    }
+    }*/
 
     public double distanceFormula(Translation2d a, Translation2d b)
     {
@@ -332,11 +331,11 @@ public class TrajectoryDemo extends LinearOpMode {
         telemetry.addData("input rotational", gamepad1.right_stick_x);
         telemetry.update();
     }
-    
-    public void DebugTrajectory(String state, Trajectory trajectory, Waypoint[] waypoints)
+
+    /*public void DebugTrajectory(String state, Trajectory trajectory, Waypoint[] waypoints)
     {
         telemetry.addData("state", state);
         telemetry.addData("total trajectory time", trajectory.getTotalTimeSeconds());
         telemetry.addData("elapsed time", getProgress(waypoints, trajectory));
-    }
+    }*/
 }
