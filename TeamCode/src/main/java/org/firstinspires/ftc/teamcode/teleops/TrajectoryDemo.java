@@ -194,6 +194,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());*/
             if(config.isReversed()) RotationalCorrection();
             isDoneCorrectingRotation = false;
+            config.setReversed(false);
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
@@ -232,7 +233,6 @@ public class TrajectoryDemo extends LinearOpMode {
         }
 
         command.end(true);
-        robot.drive.stop();
 
         if(state.equals("return home"))
         {
