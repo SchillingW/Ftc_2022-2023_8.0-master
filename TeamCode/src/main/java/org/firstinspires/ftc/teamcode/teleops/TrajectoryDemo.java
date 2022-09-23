@@ -61,8 +61,8 @@ public class TrajectoryDemo extends LinearOpMode {
             // loop through demo states
             RecordPath();
             ReturnHome();
-            FollowPath();
-            ReturnHome();
+            /*FollowPath();
+            ReturnHome();*/
         }
     }
 
@@ -161,7 +161,7 @@ public class TrajectoryDemo extends LinearOpMode {
             // follow path formed by waypoints
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
-            RunCommand(command, "follow path", waypoints, followPathTrajectory);
+            RunCommand(command, "follow path");
         }
     }
 
@@ -176,19 +176,23 @@ public class TrajectoryDemo extends LinearOpMode {
 
             // create start and end waypoints from current pose to origin pose
             Pose2d start = robot.odometry.getPose();
-            Pose2d end = new Pose2d(); //hi
+            Pose2d end = new Pose2d();
 
             //returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
             positiveStartingX = (start.getX() > 0);
             positiveStartingY = (start.getY() > 0);
 
-            /*Translation2d last = returnHomeInteriorWaypoints.get(0);
+            Translation2d last = returnHomeInteriorWaypoints.get(0);
             Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
             GeneralWaypoint finalWaypoint = new GeneralWaypoint(waypointPose2d, movementSpeed,
-                    turnSpeed, followRadius);*/
+                    turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
-            //config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+            config.setReversed(DetectReverse(positiveStartingY, finalWaypoint));
+
+            Rotation2d endRotation = end.getRotation();
+            Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());
+            if(config.isReversed()) end = new Pose2d(0, 0, reversedEndRot);
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
@@ -209,19 +213,18 @@ public class TrajectoryDemo extends LinearOpMode {
 
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
-            RunCommand(command, "return home", waypoints, returnHomeTrajectory);
+            RunCommand(command, "return home");
 
         }
     }
 
     // run command linearly hi
-    public void RunCommand(PurePursuitCommand command, String state, Waypoint[] waypoints, Trajectory trajectory) {
+    public void RunCommand(PurePursuitCommand command, String state) {
         // follow path hi
         command.schedule();
 
         // loop while following
         while (opModeIsActive() && !command.isFinished()) {
-            DebugTrajectory(state, trajectory, waypoints);
             command.execute();
             robot.odometry.update();
             DebugFull(state);
@@ -266,7 +269,7 @@ public class TrajectoryDemo extends LinearOpMode {
         return false;
     }
     
-    public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
+    /*public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
     {
         double seconds = trajectory.getTotalTimeSeconds();
         double elapsed = 0.0;
@@ -308,7 +311,7 @@ public class TrajectoryDemo extends LinearOpMode {
         double initial = Math.pow((a.getX() - b.getX()), 2);
         double second = Math.pow((a.getY() - b.getY()), 2);
         return Math.sqrt((initial + second));
-    }
+    }*/
 
     // debug program state with telemetry
     public void DebugPartial(String state) {
@@ -332,10 +335,10 @@ public class TrajectoryDemo extends LinearOpMode {
         telemetry.update();
     }
 
-    public void DebugTrajectory(String state, Trajectory trajectory, Waypoint[] waypoints)
+    /*public void DebugTrajectory(String state, Trajectory trajectory, Waypoint[] waypoints)
     {
         telemetry.addData("state", state);
         telemetry.addData("total trajectory time", trajectory.getTotalTimeSeconds());
         telemetry.addData("elapsed time", getProgress(waypoints, trajectory));
-    }
+    }*/
 }
