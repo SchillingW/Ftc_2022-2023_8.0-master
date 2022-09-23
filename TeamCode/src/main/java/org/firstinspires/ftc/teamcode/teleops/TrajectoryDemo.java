@@ -133,7 +133,7 @@ public class TrajectoryDemo extends LinearOpMode {
             }
 
             positiveStartingY = (start.getY() > 0);
-            Translation2d last = followPathInteriorWaypoints.get(recording.size() - 1);
+            Translation2d last = followPathInteriorWaypoints.get(followPathInteriorWaypoints.size() - 1);
             Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
             GeneralWaypoint finalWaypoint = new GeneralWaypoint(waypointPose2d, movementSpeed,
                     turnSpeed, followRadius);
@@ -161,7 +161,7 @@ public class TrajectoryDemo extends LinearOpMode {
             // follow path formed by waypoints
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
-            RunCommand(command, "follow path");
+            RunCommand(command, "follow path", waypoints, followPathTrajectory);
         }
     }
 
@@ -209,19 +209,20 @@ public class TrajectoryDemo extends LinearOpMode {
 
             PurePursuitCommand command = new PurePursuitCommand(
                     robot.drive, robot.odometry, waypoints);
-            RunCommand(command, "return home");
+            RunCommand(command, "return home", waypoints, returnHomeTrajectory);
 
         }
     }
 
     // run command linearly
-    public void RunCommand(PurePursuitCommand command, String state) {
+    public void RunCommand(PurePursuitCommand command, String state, Waypoint[] waypoints, Trajectory trajectory) {
         // follow path
         command.schedule();
 
         // loop while following
         while (opModeIsActive() && !command.isFinished()) {
 
+            DebugTrajectory(state, trajectory, waypoints);
             command.execute();
             robot.odometry.update();
             DebugFull(state);
@@ -265,6 +266,50 @@ public class TrajectoryDemo extends LinearOpMode {
 
         return false;
     }
+    
+    public double getProgress(Waypoint[] waypoints, Trajectory trajectory)
+    {
+        double seconds = trajectory.getTotalTimeSeconds();
+        double elapsed = 0.0;
+
+        Waypoint winnerOfForEach = null;
+        double offset = 10.0;
+
+        double xPos = robot.odometry.getPose().getX();
+        double yPos = robot.odometry.getPose().getY();
+        Translation2d translation = new Translation2d(xPos, yPos);
+
+        for (Waypoint w : waypoints)
+        {
+            double waypointX = w.getPose().getX();
+            double waypointY = w.getPose().getY();
+            Translation2d waypointTranslation = new Translation2d(waypointX, waypointY);
+
+            if(distanceFormula(waypointTranslation, translation) >= offset)
+            {
+                winnerOfForEach = w;
+                offset = distanceFormula(waypointTranslation, translation);
+            }
+        }
+
+        for (double i = 0.0; i < seconds; i++)
+        {
+            if(winnerOfForEach == trajectory.sample(i))
+            {
+                elapsed = i;
+                break;
+            }
+        }
+
+        return elapsed;
+    }
+
+    public double distanceFormula(Translation2d a, Translation2d b)
+    {
+        double initial = Math.pow((a.getX() - b.getX()), 2);
+        double second = Math.pow((a.getY() - b.getY()), 2);
+        return Math.sqrt((initial + second));
+    }
 
     // debug program state with telemetry
     public void DebugPartial(String state) {
@@ -286,5 +331,12 @@ public class TrajectoryDemo extends LinearOpMode {
         telemetry.addData("input horizontal", -gamepad1.left_stick_y);
         telemetry.addData("input rotational", gamepad1.right_stick_x);
         telemetry.update();
+    }
+    
+    public void DebugTrajectory(String state, Trajectory trajectory, Waypoint[] waypoints)
+    {
+        telemetry.addData("state", state);
+        telemetry.addData("total trajectory time", trajectory.getTotalTimeSeconds());
+        telemetry.addData("elapsed time", getProgress(waypoints, trajectory));
     }
 }
