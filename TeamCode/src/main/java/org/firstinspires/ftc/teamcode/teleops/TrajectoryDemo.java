@@ -176,7 +176,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
             // create start and end waypoints from current pose to origin pose
             Pose2d start = robot.odometry.getPose();
-            Pose2d end = new Pose2d();
+            Pose2d end = new Pose2d(); //hi
 
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
             positiveStartingX = (start.getX() > 0);
