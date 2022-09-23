@@ -133,9 +133,7 @@ public class TrajectoryDemo extends LinearOpMode {
             }
 
             positiveStartingX = (start.getX() > 0);
-            Translation2d last = followPathInteriorWaypoints.get(followPathInteriorWaypoints.size() - 1);
-            Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
-            GeneralWaypoint finalWaypoint = new GeneralWaypoint(waypointPose2d, movementSpeed,
+            GeneralWaypoint finalWaypoint = new GeneralWaypoint(recording.get(0), movementSpeed,
                     turnSpeed, followRadius);
 
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
@@ -189,8 +187,6 @@ public class TrajectoryDemo extends LinearOpMode {
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
             config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
-            /*Rotation2d endRotation = end.getRotation();
-            Rotation2d reversedEndRot = new Rotation2d(Math.PI + endRotation.getRadians());*/
             if(config.isReversed()) RotationalCorrection();
             isDoneCorrectingRotation = false;
             config.setReversed(false);
