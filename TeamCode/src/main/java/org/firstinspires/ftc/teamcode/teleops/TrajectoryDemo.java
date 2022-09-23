@@ -182,7 +182,7 @@ public class TrajectoryDemo extends LinearOpMode {
             positiveStartingX = (start.getX() > 0);
             positiveStartingY = (start.getY() > 0);
 
-            Translation2d last = returnHomeInteriorWaypoints.get(1);
+            Translation2d last = returnHomeInteriorWaypoints.get(0);
             Pose2d waypointPose2d = new Pose2d(last.getX(), last.getY(), new Rotation2d());
             GeneralWaypoint finalWaypoint = new GeneralWaypoint(waypointPose2d, movementSpeed,
                     turnSpeed, followRadius);
