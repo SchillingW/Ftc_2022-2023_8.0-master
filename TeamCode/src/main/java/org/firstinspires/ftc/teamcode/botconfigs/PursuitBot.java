@@ -69,7 +69,7 @@ public class PursuitBot {
     public DoubleSupplier getSupplier(Motor encoder, float coefficient) {
 
         // convert motor ticks to inches
-        double ticksPerRotation = encoder.getCPR() / wheelCircumference;
-        return () -> encoder.getCurrentPosition() / ticksPerRotation * coefficient;
+        double ticksPerInch = 8192 / wheelCircumference;
+        return () -> encoder.getCurrentPosition() / ticksPerInch * coefficient;
     }
 }

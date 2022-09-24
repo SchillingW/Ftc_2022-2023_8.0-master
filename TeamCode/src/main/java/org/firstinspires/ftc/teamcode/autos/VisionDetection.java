@@ -86,23 +86,11 @@ public class VisionDetection extends LinearOpMode {
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    if (updatedRecognitions.size() == 0) {
-                        telemetry.addData("No Cube", "Position 3");
-                        duckDetectedPosition = 3;
-                    }
+
+
                 }
 
-                if (updatedRecognitions != null && updatedRecognitions.size() == 1) {
-                    Recognition recog = updatedRecognitions.get(0);
-                    double center = (recog.getRight() + recog.getLeft()) / 2.0;
-                    if (center > (recog.getImageWidth() / 2.0)) {
-                        duckDetectedPosition = 2;
-                        telemetry.addData("Cube Right", "Position 2");
-                    } else {
-                        duckDetectedPosition = 1;
-                        telemetry.addData("Cube Left", "Position 1");
-                    }
-                }
+
             }
             telemetry.update();
         }
