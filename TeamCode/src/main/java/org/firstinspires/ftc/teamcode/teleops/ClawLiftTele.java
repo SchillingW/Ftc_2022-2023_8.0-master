@@ -6,6 +6,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
+
 // Rohan's teleop to test claw for cones
 @TeleOp(name="ClawLiftTele", group="ClawLiftBot")
 public class ClawLiftTele extends OpMode {
@@ -17,35 +19,47 @@ public class ClawLiftTele extends OpMode {
     public double linearSpeed = 1;
 
     // motor declaration
-    public ServoEx clawServo;
-    public Motor primaryArm;
-    public Motor secondaryArm;
+    public ServoEx clawL;
+    public ServoEx clawR;
+    public Motor armB;
+    public Motor armF;
 
     public Motor left;
     public Motor right;
+
+    // input system reference
+    GamepadSystem input;
 
     // called on program initialization
     @Override
     public void init() {
 
         // initialize hardware devices
-        primaryArm = new Motor(hardwareMap, "primaryArm");
-        secondaryArm = new Motor(hardwareMap, "secondaryArm");
-        clawServo = new SimpleServo(hardwareMap, "clawServo", 0, 180);
+        clawL = new SimpleServo(hardwareMap, "clawL", 0, 180);
+        clawR = new SimpleServo(hardwareMap, "clawR", 0, 180);
+        armF = new Motor(hardwareMap, "armF");
+        armB = new Motor(hardwareMap, "armB");
 
-        primaryArm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        secondaryArm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        armF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        armB.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         left = new Motor(hardwareMap, "left");
         right = new Motor(hardwareMap, "right");
+
+        input = new GamepadSystem(this);
     }
 
     // called repeatedly during program
     @Override
     public void loop() {
 
-        double leftSpeed = gamepad1.left_stick_y * linearSpeed - gamepad1.right_stick_x * turnSpeed;
-        double rightSpeed = gamepad1.left_stick_y * linearSpeed + gamepad1.right_stick_x * turnSpeed;
+        double leftSpeed =
+                input.gamepad1.getLeftY() * linearSpeed -
+                input.gamepad1.getRightY() * turnSpeed;
+
+        double rightSpeed =
+                input.gamepad1.getLeftY() * linearSpeed +
+                input.gamepad1.getRightY() * turnSpeed;
 
         leftSpeed = Math.max(Math.min(leftSpeed, 1), -1);
         rightSpeed = Math.max(Math.min(rightSpeed, 1), -1);
@@ -56,13 +70,19 @@ public class ClawLiftTele extends OpMode {
         left.set(leftSpeed * maxWheelSpeed);
         right.set(-rightSpeed * maxWheelSpeed);
 
-        primaryArm.set(gamepad2.left_stick_y * armSpeed);
-        secondaryArm.set(gamepad2.right_stick_y * armSpeed);
+        armF.set(input.gamepad2.getLeftY() * armSpeed);
+        armB.set(input.gamepad2.getRightY() * armSpeed);
 
         //full close=1
-        if (gamepad2.dpad_up) clawServo.setPosition(0.5);
+        if (gamepad2.dpad_up) {
+            clawL.setPosition(0.5);
+            clawR.setPosition(0);
+        }
         //full open=0
-        if (gamepad2.dpad_down) clawServo.setPosition(0);
+        if (gamepad2.dpad_down) {
+            clawR.setPosition(0);
+            clawR.setPosition(0.5);
+        }
 
     }
 }
