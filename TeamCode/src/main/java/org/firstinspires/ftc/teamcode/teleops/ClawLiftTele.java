@@ -7,16 +7,18 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 
 // Rohan's teleop to test claw for cones
 @TeleOp(name="ClawLiftTele", group="ClawLiftBot")
 public class ClawLiftTele extends OpMode {
 
+    PursuitBot robot;
+
     public double armSpeed = 0.75;
 
-    public double maxWheelSpeed = 0.75;
-    public double turnSpeed = 0.75;
+    public double turnSpeed = 1;
     public double linearSpeed = 1;
 
     // motor declaration
@@ -25,15 +27,14 @@ public class ClawLiftTele extends OpMode {
     public Motor armB;
     public Motor armF;
 
-    public Motor left;
-    public Motor right;
-
     // input system reference
     GamepadSystem input;
 
     // called on program initialization
     @Override
     public void init() {
+
+        robot = new PursuitBot(telemetry, hardwareMap);
 
         // initialize hardware devices
         clawL = new SimpleServo(hardwareMap, "clawL", 0, 180);
@@ -44,9 +45,6 @@ public class ClawLiftTele extends OpMode {
         armF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armB.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        left = new Motor(hardwareMap, "left");
-        right = new Motor(hardwareMap, "right");
-
         input = new GamepadSystem(this);
     }
 
@@ -54,22 +52,10 @@ public class ClawLiftTele extends OpMode {
     @Override
     public void loop() {
 
-        double leftSpeed =
-                input.gamepad1.getLeftY() * linearSpeed -
-                input.gamepad1.getRightY() * turnSpeed;
-
-        double rightSpeed =
-                input.gamepad1.getLeftY() * linearSpeed +
-                input.gamepad1.getRightY() * turnSpeed;
-
-        leftSpeed = Math.max(Math.min(leftSpeed, 1), -1);
-        rightSpeed = Math.max(Math.min(rightSpeed, 1), -1);
-
-        leftSpeed = leftSpeed * Math.abs(leftSpeed);
-        rightSpeed = rightSpeed * Math.abs(rightSpeed);
-
-        left.set(leftSpeed * maxWheelSpeed);
-        right.set(-rightSpeed * maxWheelSpeed);
+        robot.drive.driveRobotCentric(
+                input.gamepad1.getLeftY() * linearSpeed,
+                input.gamepad1.getLeftX() * linearSpeed,
+                input.gamepad1.getRightX() * turnSpeed);
 
         armF.set(input.gamepad2.getLeftY() * armSpeed);
         armB.set(input.gamepad2.getRightY() * armSpeed);
