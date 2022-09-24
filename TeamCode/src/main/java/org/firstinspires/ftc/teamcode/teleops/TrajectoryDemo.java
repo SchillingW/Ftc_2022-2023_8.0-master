@@ -218,8 +218,8 @@ public class TrajectoryDemo extends LinearOpMode {
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
             config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
-            if(config.isReversed() && followPathInteriorWaypoints == null) RotationalCorrection();
-            if(!config.isReversed() && followPathInteriorWaypoints != null) RotationalCorrection();
+            if(config.isReversed() && followPathInteriorWaypoints.isEmpty()) RotationalCorrection();
+            if(!config.isReversed() && !followPathInteriorWaypoints.isEmpty()) RotationalCorrection();
             isDoneCorrectingRotation = false;
             config.setReversed(false);
 
