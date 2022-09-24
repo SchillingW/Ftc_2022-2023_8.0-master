@@ -259,6 +259,8 @@ public class TrajectoryDemo extends LinearOpMode {
         }
 
         command.end(true);
+        robot.drive.stop();
+
         if(state.equals("return home"))
         {
             HomeRotationalCorrection();
