@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -74,12 +75,12 @@ public class ClawLiftTele extends OpMode {
         armB.set(input.gamepad2.getRightY() * armSpeed);
 
         //full close=1
-        if (gamepad2.dpad_up) {
+        if (input.gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
             clawL.setPosition(0.5);
             clawR.setPosition(0);
         }
         //full open=0
-        if (gamepad2.dpad_down) {
+        if (input.gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             clawR.setPosition(0);
             clawR.setPosition(0.5);
         }
