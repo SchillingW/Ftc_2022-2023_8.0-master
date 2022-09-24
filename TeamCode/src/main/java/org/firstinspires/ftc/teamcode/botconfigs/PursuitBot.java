@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.HoloOdomFlip;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
 import java.util.function.DoubleSupplier;
@@ -31,12 +30,10 @@ public class PursuitBot {
     public DoubleSupplier encoderH;
 
     // hardware specifications
-    public double encoderTicksPerRotation = 8192;
     public double wheelDiameter = 2.5;
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTicksPerInch = encoderTicksPerRotation / wheelCircumference;
     public double encoderTrackWidth = 20.0;
     public double encoderWheelOffset = 0.0;
 
@@ -72,6 +69,7 @@ public class PursuitBot {
     public DoubleSupplier getSupplier(Motor encoder, float coefficient) {
 
         // convert motor ticks to inches
-        return () -> encoder.getCurrentPosition() / encoderTicksPerInch * coefficient;
+        double ticksPerRotation = encoder.getCPR() / wheelCircumference;
+        return () -> encoder.getCurrentPosition() / ticksPerRotation * coefficient;
     }
 }
