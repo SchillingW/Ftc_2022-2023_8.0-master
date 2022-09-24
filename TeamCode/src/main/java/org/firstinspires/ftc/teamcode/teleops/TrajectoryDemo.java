@@ -64,6 +64,7 @@ public class TrajectoryDemo extends LinearOpMode {
             RecordPath();
             ReturnHome();
             FollowPath();
+            returnHomeInteriorWaypoints.clear();
             ReturnHome();
         }
     }
