@@ -136,8 +136,8 @@ public class PursuitBotDemo3 extends LinearOpMode {
             Waypoint end = new EndWaypoint(new Pose2d(),
                     movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
 
-            positiveStartingY = (start.getPose().getY() >= 0);
-            positiveStartingX = (start.getPose().getX() >= 0);
+            if(end.getPose().getY() <= 0) {positiveStartingY = false;} else {positiveStartingY = true;}
+            if(end.getPose().getX() <= 0) {positiveStartingX = false;} else {positiveStartingX = true;}
 
             // follow path formed by waypoints
             PurePursuitCommand command = new PurePursuitCommand(
@@ -195,12 +195,12 @@ public class PursuitBotDemo3 extends LinearOpMode {
             {
                 if(positiveStartingX)
                 {
-                    if (xPos <= 0 && yPos <= 0) hasReachedHomeRange = true;
+                    if (xPos <= 0) {if (yPos <= 0) hasReachedHomeRange = true;}
                 }
 
                 else
                 {
-                    if (xPos >= 0 && yPos <= 0) hasReachedHomeRange = true;
+                    if (xPos >= 0) {if (yPos <= 0) hasReachedHomeRange = true;}
                 }
             }
 
@@ -208,12 +208,12 @@ public class PursuitBotDemo3 extends LinearOpMode {
             {
                 if(positiveStartingX)
                 {
-                    if (xPos <= 0 && yPos >= 0) hasReachedHomeRange = true;
+                    if (xPos <= 0) {if (yPos >= 0) hasReachedHomeRange = true;}
                 }
 
                 else
                 {
-                    if (xPos >= 0 && yPos >= 0) hasReachedHomeRange = true;
+                    if (xPos >= 0) {if (yPos >= 0) hasReachedHomeRange = true;}
                 }
             }
         }
@@ -291,8 +291,6 @@ public class PursuitBotDemo3 extends LinearOpMode {
                         while (currentRotation.getDegrees() >= 0.0 && opModeIsActive()) {
                             robot.drive.driveRobotCentric(0.0, 0.0, -0.1);
                             robot.odometry.update();
-                            currentRotation = robot.odometry.getPose().getRotation();
-                            DebugPartial("correcting rotation: " + currentRotation);
 
                             if (currentRotation.getDegrees() <= 0) {
                                 isDoneCorrectingRotation = true;
@@ -307,8 +305,6 @@ public class PursuitBotDemo3 extends LinearOpMode {
                         while (currentRotation.getDegrees() <= 0.0 && opModeIsActive()) {
                             robot.drive.driveRobotCentric(0.0, 0.0, 0.1);
                             robot.odometry.update();
-                            currentRotation = robot.odometry.getPose().getRotation();
-                            DebugPartial("correcting rotation: " + currentRotation);
 
                             if (currentRotation.getDegrees() >= 0) {
                                 isDoneCorrectingRotation = true;

@@ -12,12 +12,14 @@ import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
 import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
 import com.arcrobotics.ftclib.trajectory.TrajectoryGenerator;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sun.tools.javac.util.Convert;
 
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import java.util.ArrayList;
+
 
 // pure pursuit algorithm demo
 //hi
