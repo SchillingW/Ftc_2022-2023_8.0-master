@@ -38,7 +38,7 @@ public class PursuitBot {
     // robot type data
     public double encoderTicksPerInch = encoderTicksPerRotation / wheelCircumference;
     public double encoderTrackWidth = 20.0;
-    public double encoderWheelOffset = 8.0;
+    public double encoderWheelOffset = 0.0;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
