@@ -18,8 +18,8 @@ public class ClawLiftTele extends OpMode {
 
     public double armSpeed = 0.75;
 
-    public double turnSpeed = 1;
-    public double linearSpeed = 1;
+    public double turnSpeed = 0.75;
+    public double linearSpeed = 0.75;
 
     // motor declaration
     public ServoEx clawL;
