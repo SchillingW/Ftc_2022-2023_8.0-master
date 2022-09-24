@@ -124,7 +124,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = recording.get(recording.size() - 1);
 
-            for (int i = 1; i < recording.size() - 1; i++)
+            for (int i = 1; i < recording.size() - 2; i++)
             {
                 double xPos = recording.get(i).getX();
                 double yPos = recording.get(i).getY();
@@ -178,9 +178,9 @@ public class TrajectoryDemo extends LinearOpMode {
             points[points.length - 1] = new EndWaypoint(recording.get(recording.size() - 1),
                     movementSpeed, turnSpeed, followRadius, positionBuffer, rotationBuffer);
 
-            // iterate through recorded poses and convert to waypoints
-            for (int i = 1; i < points.length - 1; i++) {
-                points[i] = new GeneralWaypoint(recording.get(i),
+            // iterate through recorded poses and convert to waypoints hi
+            for (int i = 1; i < points.length - 2; i++) {
+                points[i] = new GeneralWaypoint(recording.get(i - 1),
                         movementSpeed, turnSpeed, followRadius);
             }
 
