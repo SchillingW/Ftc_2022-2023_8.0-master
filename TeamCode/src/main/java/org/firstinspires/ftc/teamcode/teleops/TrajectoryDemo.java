@@ -124,7 +124,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = recording.get(recording.size() - 1);
 
-            for (int i = 1; i < recording.size() - 1; i++)
+            for (int i = 1; i < recording.size() - 2; i++)
             {
                 double xPos = recording.get(i).getX();
                 double yPos = recording.get(i).getY();
