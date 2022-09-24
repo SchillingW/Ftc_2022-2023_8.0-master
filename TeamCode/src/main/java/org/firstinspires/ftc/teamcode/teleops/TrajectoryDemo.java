@@ -180,7 +180,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
             // iterate through recorded poses and convert to waypoints
             for (int i = 1; i < points.length - 1; i++) {
-                points[i] = new GeneralWaypoint(recording.get(i),
+                points[i] = new GeneralWaypoint(recording.get(i - 1),
                         movementSpeed, turnSpeed, followRadius);
             }
 
