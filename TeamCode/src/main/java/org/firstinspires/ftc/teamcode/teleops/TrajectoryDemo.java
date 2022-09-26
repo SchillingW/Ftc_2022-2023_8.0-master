@@ -64,7 +64,6 @@ public class TrajectoryDemo extends LinearOpMode {
             RecordPath();
             ReturnHome();
             FollowPath();
-            isDoneCorrectingRotation = false;
             ReturnHome();
         }
     }
@@ -219,8 +218,10 @@ public class TrajectoryDemo extends LinearOpMode {
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
             config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
+            isDoneCorrectingRotation = false;
             if(config.isReversed()) RotationalCorrection();
             config.setReversed(false);
+            isDoneCorrectingRotation = false;
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
                     start, returnHomeInteriorWaypoints, end, config);
@@ -260,6 +261,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
         command.end(true);
         robot.drive.stop();
+        isDoneCorrectingRotation = false;
 
         if(state.equals("return home"))
         {

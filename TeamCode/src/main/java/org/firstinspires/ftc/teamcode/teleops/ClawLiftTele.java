@@ -18,8 +18,8 @@ public class ClawLiftTele extends OpMode {
 
     public double armSpeed = 0.75;
 
-    public double turnSpeed = 1;
-    public double linearSpeed = 1;
+    public double turnSpeed = 0.75;
+    public double linearSpeed = 0.75;
 
     // motor declaration
     public ServoEx clawL;
@@ -57,18 +57,22 @@ public class ClawLiftTele extends OpMode {
                 input.gamepad1.getLeftX() * linearSpeed,
                 input.gamepad1.getRightX() * turnSpeed);
 
-        armF.set(input.gamepad2.getLeftY() * armSpeed);
-        armB.set(input.gamepad2.getRightY() * armSpeed);
+        armF.set(input.gamepad2.getRightY() * armSpeed);
+        armB.set(input.gamepad2.getLeftY() * armSpeed);
 
         //full close=1
-        if (input.gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
-            clawL.setPosition(0.5);
+        if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            clawL.setPosition(1);
             clawR.setPosition(0);
+            telemetry.addData("servo", "close");
+            telemetry.update();
         }
         //full open=0
-        if (input.gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
-            clawR.setPosition(0);
-            clawR.setPosition(0.5);
+        if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+            clawL.setPosition(0);
+            clawR.setPosition(1);
+            telemetry.addData("servo", "open");
+            telemetry.update();
         }
 
     }
