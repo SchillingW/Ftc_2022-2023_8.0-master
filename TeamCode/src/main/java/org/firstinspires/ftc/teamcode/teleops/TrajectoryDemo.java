@@ -64,7 +64,6 @@ public class TrajectoryDemo extends LinearOpMode {
             RecordPath();
             ReturnHome();
             FollowPath();
-            returnHomeInteriorWaypoints.clear();
             ReturnHome();
         }
     }
@@ -207,6 +206,7 @@ public class TrajectoryDemo extends LinearOpMode {
             Pose2d start = robot.odometry.getPose();
             Pose2d end = new Pose2d();
 
+            returnHomeInteriorWaypoints.clear();
             returnHomeInteriorWaypoints.add(new Translation2d(0, 0));
             positiveStartingX = (start.getX() > 0);
 
@@ -218,8 +218,7 @@ public class TrajectoryDemo extends LinearOpMode {
             TrajectoryConfig config = new TrajectoryConfig(maxVelocity, maxAcceleration);
             config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
-            if(config.isReversed() && followPathInteriorWaypoints.isEmpty()) RotationalCorrection();
-            if(!config.isReversed() && !followPathInteriorWaypoints.isEmpty()) RotationalCorrection();
+            if(config.isReversed()) RotationalCorrection();
             isDoneCorrectingRotation = false;
             config.setReversed(false);
 
