@@ -64,6 +64,7 @@ public class TrajectoryDemo extends LinearOpMode {
             RecordPath();
             ReturnHome();
             FollowPath();
+            isDoneCorrectingRotation = false;
             ReturnHome();
         }
     }
@@ -219,7 +220,6 @@ public class TrajectoryDemo extends LinearOpMode {
             config.setReversed(DetectReverse(positiveStartingX, finalWaypoint));
 
             if(config.isReversed()) RotationalCorrection();
-            isDoneCorrectingRotation = false;
             config.setReversed(false);
 
             Trajectory returnHomeTrajectory = TrajectoryGenerator.generateTrajectory(
