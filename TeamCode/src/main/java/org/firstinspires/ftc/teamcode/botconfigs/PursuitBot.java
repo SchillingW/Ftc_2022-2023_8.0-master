@@ -53,7 +53,7 @@ public class PursuitBot {
         // initialize odometry
         encoderL = getSupplier(motorFL, -1);
         encoderR = getSupplier(motorFR, 1);
-        encoderH = getSupplier(motorBL, -1);
+        encoderH = getSupplier(motorBR, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
