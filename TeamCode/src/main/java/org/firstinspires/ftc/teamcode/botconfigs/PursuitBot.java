@@ -34,7 +34,7 @@ public class PursuitBot {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 8.0;
+    public double encoderTrackWidth = 20.0;
     public double encoderWheelOffset = 0.0;
 
     // initialize devices
@@ -51,9 +51,9 @@ public class PursuitBot {
         drive = new MecDriveFlip(motorFL, motorFR, motorBL, motorBR);
 
         // initialize odometry
-        encoderL = getSupplier(motorBL, -1);
-        encoderR = getSupplier(motorBR, 1);
-        encoderH = getSupplier(motorFL, -1);
+        encoderL = getSupplier(motorFL, -1);
+        encoderR = getSupplier(motorFR, 1);
+        encoderH = getSupplier(motorBL, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
