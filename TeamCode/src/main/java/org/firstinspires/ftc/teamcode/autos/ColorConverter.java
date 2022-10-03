@@ -16,8 +16,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-@Autonomous(name = "Vision Detection")
-public class VisionDetection extends LinearOpMode {
+@Autonomous(name = "Color Converter")
+public class ColorConverter extends LinearOpMode {
 
     /**
      * Initilizations of all of hardware
@@ -118,7 +118,7 @@ public class VisionDetection extends LinearOpMode {
                         telemetry.addData("rgb", rgb_value);
                         telemetry.addData("rgb", rgb_value);
                     }
-                    catch(java.lang.IllegalArgumentException exception)
+                    catch(IllegalArgumentException exception)
                     {
                     }
 
