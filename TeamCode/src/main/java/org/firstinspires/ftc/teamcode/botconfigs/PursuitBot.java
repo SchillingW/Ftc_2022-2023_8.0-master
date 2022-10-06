@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.botconfigs;
 
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.hardware.HoloOdomFlip;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
 import java.util.function.DoubleSupplier;
@@ -51,7 +53,7 @@ public class PursuitBot {
         drive = new MecDriveFlip(motorFL, motorFR, motorBL, motorBR);
 
         // initialize odometry
-        encoderL = getSupplier(motorFL, 1);
+        encoderL = getSupplier(motorFL, -1);
         encoderR = getSupplier(motorFR, -1);
         encoderH = getSupplier(motorBL, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
@@ -71,5 +73,46 @@ public class PursuitBot {
         // convert motor ticks to inches
         double ticksPerInch = 8192 / wheelCircumference;
         return () -> encoder.getCurrentPosition() / ticksPerInch * coefficient;
+    }
+
+
+
+
+    public void reachPoint(Pose2d target) {
+
+        odometry.update();
+
+        while (!isAtTarget(target)) {
+
+            odometry.update();
+            moveTowards(target);
+        }
+    }
+
+    public void moveTowards(Pose2d target) {
+
+        double x = target.getX() - odometry.getPose().getX();
+        double y = target.getY() - odometry.getPose().getY();
+        double magnitude = Math.sqrt(x * x + y * y);
+        x /= magnitude;
+        y /= magnitude;
+
+        double rot = Math.signum(
+                target.getRotation().getDegrees() -
+                odometry.getPose().getRotation().getDegrees());
+
+        drive.driveFieldCentric(x, y, rot, target.getHeading());
+    }
+
+    public boolean isAtTarget(Pose2d target) {
+
+        double x = target.getX() - odometry.getPose().getX();
+        double y = target.getY() - odometry.getPose().getY();
+
+        double rot =
+                target.getRotation().getDegrees() -
+                odometry.getPose().getRotation().getDegrees();
+
+        return Math.abs(x) <= 0.5 && Math.abs(y) <= 0.5 && Math.abs(rot) <= 3;
     }
 }

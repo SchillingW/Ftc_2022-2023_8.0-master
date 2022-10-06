@@ -5,6 +5,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.Image;
@@ -15,10 +17,11 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 
 @Autonomous(name = "Vision Detection")
 public class VisionDetection extends LinearOpMode {
-
+    public PursuitBot robot;
     /**
      * Initilizations of all of hardware
      */
@@ -36,8 +39,10 @@ public class VisionDetection extends LinearOpMode {
 
     private TFObjectDetector tfod;
 
-    public void path1() {
-
+    public void path1()
+    {
+        robot.reachPoint(new Pose2d(24, 0, new Rotation2d()));
+        robot.reachPoint(new Pose2d(24, 48, new Rotation2d()));
     }
 
     public void path2() {
