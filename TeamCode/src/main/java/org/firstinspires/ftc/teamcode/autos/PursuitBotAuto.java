@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import com.arcrobotics.ftclib.command.PurePursuitCommand;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.purepursuit.Path;
 import com.arcrobotics.ftclib.purepursuit.Waypoint;

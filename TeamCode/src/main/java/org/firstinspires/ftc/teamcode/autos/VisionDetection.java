@@ -1,12 +1,20 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.arcrobotics.ftclib.command.PurePursuitCommand;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
+import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
+import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
@@ -15,9 +23,19 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.opengl.Texture;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
+
+import java.nio.ByteBuffer;
+
 
 @Autonomous(name = "Vision Detection")
 public class VisionDetection extends LinearOpMode {
+
+    public static final int viewSize = 5;
+
+    public ElapsedTime timer = new ElapsedTime();
 
     /**
      * Initilizations of all of hardware
@@ -36,21 +54,43 @@ public class VisionDetection extends LinearOpMode {
 
     private TFObjectDetector tfod;
 
+    PursuitBot robot;
+    GamepadSystem input;
+
+    public void initialize() {
+
+        robot = new PursuitBot(telemetry, hardwareMap);
+    }
+
     public void path1() {
+        Pose2d pose = robot.odometry.getPose();
 
     }
 
     public void path2() {
 
+        robot.RunCommand(robot.generateCommand(
+
+                new Pose2d(),
+                new Pose2d(24, 0, new Rotation2d()),
+                new Pose2d(24, 36, new Rotation2d())
+
+        ), this);
     }
 
     public void path3() {
 
+        robot.RunCommand(robot.generateCommand(
+
+                new Pose2d(),
+                new Pose2d(0, 36, new Rotation2d())
+
+        ), this);
     }
 
 
 
-    public Image getImage(){
+    public Bitmap getImage(){
         VuforiaLocalizer.CloseableFrame frame = null;
         int r = 0;
         int b = 0;
@@ -76,7 +116,10 @@ public class VisionDetection extends LinearOpMode {
 
             telemetry.update();
 
-            return rgbImage;
+            Bitmap bm = Bitmap.createBitmap(rgbImage.getWidth(), rgbImage.getHeight(), Bitmap.Config.RGB_565);
+            bm.copyPixelsFromBuffer(rgbImage.getPixels());
+
+            return bm;
         }
         catch(InterruptedException exc){
             return null;
@@ -87,8 +130,26 @@ public class VisionDetection extends LinearOpMode {
 
     }
 
+    public int[] getAvgPixel(Bitmap bm, int size) {
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+        int[] sum = new int[3];
+        int count = 0;
+
+        for (int x = (bm.getWidth() - size) / 2; x < (bm.getWidth() + size) / 2; x++) {
+            for (int y = (bm.getHeight() - size) / 2; y < (bm.getHeight() + size) / 2; y++) {
+
+                int color = bm.getPixel(x, y);
+                sum[0] += (color >> 16) & 0xFF;
+                sum[1] +=(color >> 8) & 0xFF;
+                sum[2] += color & 0xFF;
+                count++;
+            }
+        }
+
+        sum[0] /= count; sum[1] /= count; sum[2] /= count;
+        return sum;
+    }
+
     public void runOpMode() {
 
         //cameraServo.setPosition(0);
@@ -99,59 +160,34 @@ public class VisionDetection extends LinearOpMode {
             tfod.activate();
             tfod.setZoom(1.0, 20.0 / 20.0);
         }
-        int r = 0;
-        int b = 0;
-        int g = 0;
+
         int result = 0;
         while (!isStarted()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
-                String sequenceRGB = getImage().toString();
-
-                telemetry.addData("sequence", sequenceRGB);
-                if (sequenceRGB != null) {
-                    String hex_value = "#" + sequenceRGB.substring(18, sequenceRGB.length() - 1);
-                    telemetry.addData("hex_value", hex_value);
-                    try {
-                        int rgb_value = Color.parseColor(hex_value);
-                        telemetry.addData("rgb", rgb_value);
-                        telemetry.addData("rgb", rgb_value);
-                    }
-                    catch(java.lang.IllegalArgumentException exception)
-                    {
-                    }
-
-                }
-
-
-                /*for (int i = 0; i < sequenceRGB; i++) {
-                    if (String.valueOf(sequenceRGB).charAt(i) == 'R') {
-                        r++;
-                    }
-                    if (String.valueOf(sequenceRGB).charAt(i) == 'B') {
-                        b++;
-                    }
-                    if (String.valueOf(sequenceRGB).charAt(i) == 'G') {
-                        g++;
-                    }
-                }
-                if (r > b && r > g) {
+                int[] color = getAvgPixel(getImage(), viewSize);
+                if (color[0] > color[1] && color[0] > color[2]) {
+                    telemetry.addData("red is largest", 0);
                     result = 1;
-                }
-                if (b > r && b > g) {
+                } else if (color[1] > color[2]) {
+                    telemetry.addData("green is largest", 1);
                     result = 2;
-                }
-                if (g > r && g > b) {
+                } else {
+                    telemetry.addData("blue is largest", 2);
                     result = 3;
-                }*/
+                }
+
+
+                telemetry.addData("red", color[0]);
+                telemetry.addData("green", color[1]);
+                telemetry.addData("blue", color[2]);
 
 
             }
-            telemetry.update();
         }
-        waitForStart();
 
+        waitForStart();
         //switch statements need breaks, otherwise case 1 would run all three cases. Look up fallthrough
         switch (result) {
             case 1:
