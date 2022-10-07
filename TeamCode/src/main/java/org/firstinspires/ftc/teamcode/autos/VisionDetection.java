@@ -1,120 +1,182 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import android.graphics.Color;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.vuforia.Image;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import java.util.List;
-
 @Autonomous(name = "Vision Detection")
 public class VisionDetection extends LinearOpMode {
-
-
+    public PursuitBot robot;
     /**
      * Initilizations of all of hardware
      */
-    public PursuitBot bot;
 
     /**
      * Vuforia
      */
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 
-    private static final String[] LABELS = {
-            "Ball",
-            "Cube",
-            "Marker",
-
-    };
 
     private static final String VUFORIA_KEY =
             "Ae+gmGj/////AAABmWz20p9iPUvOnbOi93QfB7sXbfkCt0bYRo0ZsF9MfCnyyqSzGT50iAvJq63Zsze7uk3efapcDwvsUKu7VS7cI0PKl2NJjJc3WzUzZw66E7qNLah2J06uP5XNWi262fa0EcXDFRazWernOoMDrdd2Rh6W1l5Wo9m6TWPDXeToJWbxoEAlURg7wosy4dIU5tGFcQNZ8B9ZODO+FxzYKUz7HOQmZ2FVHF7kGtWJsk+7ikLsh80gtIQFs6M9qY8gvTyhUPZJKzzvTGSvbbotaVzpzWd4Brvl1w00NXnGy/rVVr/cvN+6bBIN2/S/Qrxx4OhFF01r5eTNDshoiQV9xTJQ2Zvcl7eVB1C8lqe1RdtM8I1L";
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
+
     private VuforiaLocalizer vuforia;
 
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
     private TFObjectDetector tfod;
 
+    public void path1()
+    {
+        robot.reachPoint(new Pose2d(24, 0, new Rotation2d()));
+        robot.reachPoint(new Pose2d(24, 48, new Rotation2d()));
+    }
+
+    public void path2() {
+
+    }
+
+    public void path3() {
+
+    }
 
 
 
+    public Image getImage(){
+        VuforiaLocalizer.CloseableFrame frame = null;
+        int r = 0;
+        int b = 0;
+        int g = 0;
+        try{
+            frame = vuforia.getFrameQueue().take();
+            Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
+            long numImages = frame.getNumImages();
+            Image rgbImage = null;
+            int hc;
+
+            for (int i = 0; i < numImages; i++) {
+                Image img = frame.getImage(i);
+
+                int fmt = img.getFormat();
+                if (fmt == PIXEL_FORMAT.RGB565) {
+                    rgbImage = frame.getImage(i);
+                    break;
+                }
+            }
+            //telemetry.addData("numImages", numImages);
+            //telemetry.addData("rgbImage", rgbImage.getFormat());
+
+            telemetry.update();
+
+            return rgbImage;
+        }
+        catch(InterruptedException exc){
+            return null;
+        }
+        finally{
+            if (frame != null) frame.close();
+        }
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void runOpMode() {
-        bot = new PursuitBot(telemetry, hardwareMap);
 
         //cameraServo.setPosition(0);
         initVuforia();
         initTfod();
 
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
         if (tfod != null) {
             tfod.activate();
-
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
-            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
-            // (typically 16/9).
             tfod.setZoom(1.0, 20.0 / 20.0);
         }
-        int duckDetectedPosition = 0;
+        int r = 0;
+        int b = 0;
+        int g = 0;
+        int result = 0;
         while (!isStarted()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
+                String sequenceRGB = getImage().toString();
 
+                telemetry.addData("sequence", sequenceRGB);
+                if (sequenceRGB != null) {
+                    String hex_value = "#" + sequenceRGB.substring(18, sequenceRGB.length() - 1);
+                    telemetry.addData("hex_value", hex_value);
+                    try {
+                        int rgb_value = Color.parseColor(hex_value);
+                        telemetry.addData("rgb", rgb_value);
+                        telemetry.addData("rgb", rgb_value);
+                    }
+                    catch(java.lang.IllegalArgumentException exception)
+                    {
+                    }
 
                 }
+
+
+                /*for (int i = 0; i < sequenceRGB; i++) {
+                    if (String.valueOf(sequenceRGB).charAt(i) == 'R') {
+                        r++;
+                    }
+                    if (String.valueOf(sequenceRGB).charAt(i) == 'B') {
+                        b++;
+                    }
+                    if (String.valueOf(sequenceRGB).charAt(i) == 'G') {
+                        g++;
+                    }
+                }
+                if (r > b && r > g) {
+                    result = 1;
+                }
+                if (b > r && b > g) {
+                    result = 2;
+                }
+                if (g > r && g > b) {
+                    result = 3;
+                }*/
 
 
             }
             telemetry.update();
         }
-        /**
-         * Run the camera tensorflow detection before the robot inits, with the while loop and isStarted() command above.
-         */
         waitForStart();
 
         //switch statements need breaks, otherwise case 1 would run all three cases. Look up fallthrough
-        switch (duckDetectedPosition) {
+        switch (result) {
             case 1:
+                path1();
                 telemetry.addData("Path 1", 1);
                 telemetry.update();
                 break;
             case 2:
+                path2();
                 telemetry.addData("Path 2", 2);
                 telemetry.update();
                 break;
             case 3:
+                path3();
                 telemetry.addData("Path 3", 3);
                 telemetry.update();
                 break;
         }
     }
+
 
 
     //Detect and add if statements for which path to take (path1, path2, path3)
@@ -132,6 +194,7 @@ public class VisionDetection extends LinearOpMode {
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
+
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
@@ -146,7 +209,6 @@ public class VisionDetection extends LinearOpMode {
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 }
 
