@@ -37,7 +37,7 @@ public class PursuitBot {
 
     // robot type data
     public double encoderTrackWidth = 5.75;
-    public double encoderWheelOffset = 0.0;
+    public double encoderWheelOffset = 3.5;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
@@ -50,7 +50,10 @@ public class PursuitBot {
         motorFR = new Motor(map, "motorFR");
         motorBL = new Motor(map, "motorBL");
         motorBR = new Motor(map, "motorBR");
-        drive = new MecDriveFlip(motorFL, motorFR, motorBL, motorBR);
+
+        drive = new MecDriveFlip(
+                motorFL, motorFR, motorBL, motorBR,
+                -1, 1, 1, -1);
 
         // initialize odometry
         encoderL = getSupplier(motorFL, -1);
