@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.botconfigs;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -81,30 +82,37 @@ public class PursuitBot {
 
 
 
-    public void reachPoint(Pose2d target) {
+    public void reachPoint(Pose2d target, Telemetry tele) {
 
         odometry.update();
 
         while (!isAtTarget(target)) {
 
             odometry.update();
-            moveTowards(target);
+            moveTowards(target, tele);
         }
     }
 
-    public void moveTowards(Pose2d target) {
+    public void moveTowards(Pose2d target, Telemetry tele) {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
-        double magnitude = Math.sqrt(x * x + y * y);
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
+        double magnitude = Math.sqrt(x * x + y * y + rot * rot);
+        tele.addData("magnitude", magnitude);
+        tele.addData("x", x);
+        tele.addData("y", y);
+        tele.addData("rot", rot);
         x /= magnitude;
         y /= magnitude;
+        rot /= magnitude;
+        x *= 0.2;
+        y *= 0.2;
+        rot *= 0.2;
 
-        double rot = Math.signum(
-                target.getRotation().getDegrees() -
-                        odometry.getPose().getRotation().getDegrees());
+        drive.driveRobotCentric(x, y, rot);
 
-        drive.driveFieldCentric(x, y, rot, target.getHeading());
+        DebugFull(tele);
     }
 
     public boolean isAtTarget(Pose2d target) {
@@ -117,5 +125,15 @@ public class PursuitBot {
                         odometry.getPose().getRotation().getDegrees();
 
         return Math.abs(x) <= 0.5 && Math.abs(y) <= 0.5 && Math.abs(rot) <= 3;
+    }
+
+    // debug info on bot with telemetry
+    public void DebugFull(Telemetry telemetry) {
+
+        telemetry.addData("current pose", odometry.getPose());
+        telemetry.addData("encoder vertical left", encoderL.getAsDouble());
+        telemetry.addData("encoder vertical right", encoderR.getAsDouble());
+        telemetry.addData("encoder horizontal", encoderH.getAsDouble());
+        telemetry.update();
     }
 }
