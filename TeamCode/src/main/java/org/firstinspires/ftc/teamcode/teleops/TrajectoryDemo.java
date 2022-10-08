@@ -92,7 +92,7 @@ public class TrajectoryDemo extends LinearOpMode {
 
                 // drive based on controller input
                 robot.drive.driveRobotCentric(
-                        -gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x);
+                        gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
 
                 // add current pose to recording if b pressed
                 boolean recordInputNew = gamepad1.b;

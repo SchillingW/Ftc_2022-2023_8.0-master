@@ -23,14 +23,12 @@ public class ClawLiftTele extends OpMode {
 
     public double turnSpeed = 0.75;
     public double linearSpeed = 0.75;
-    public ElapsedTime timer = new ElapsedTime();
 
     // motor declaration
     //public ServoEx clawL;
     //public ServoEx clawR;
     //public Motor armB;
     //public Motor armF;
-    public Motor slide;
 
     // input system reference
     GamepadSystem input;
@@ -45,11 +43,9 @@ public class ClawLiftTele extends OpMode {
         //clawL = new SimpleServo(hardwareMap, "clawL", 0, 180);
         //clawR = new SimpleServo(hardwareMap, "clawR", 0, 180);
 
-        slide = new Motor(hardwareMap, "slide");
 
         //armF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         //armB.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        //slide.setZeroPowerBehavior(null);
 
         input = new GamepadSystem(this);
     }
@@ -63,22 +59,8 @@ public class ClawLiftTele extends OpMode {
                 input.gamepad1.getLeftX() * linearSpeed,
                 input.gamepad1.getRightX() * turnSpeed);
 
-        if(gamepad2.y)
-        {
-            timer.reset();
-
-            Up();
-            Down();
-
-            timer.reset();
-            telemetry.addData("seconds", timer.seconds());
-        }
         //armF.set(input.gamepad2.getRightY() * armSpeed);
         //armB.set(input.gamepad2.getLeftY() * armSpeed);
-        slide.set(input.gamepad2.getRightY() * armSpeed);
-        telemetry.addData("speed", input.gamepad2.getRightY() * armSpeed);
-        //slide.set(input.gamepad2.getButton)
-        //telemetry.addData("Linear Slide Position", slide.getDistance());
         //full close=1
 
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -95,23 +77,5 @@ public class ClawLiftTele extends OpMode {
             telemetry.update();
         }
 
-    }
-
-    public void Up()
-    {
-        timer.reset();
-        while(timer.seconds() <= 10)
-        {
-            slide.set(-0.75);
-        }
-    }
-
-    public void Down()
-    {
-        timer.reset();
-        while(timer.seconds() <= 10)
-        {
-            slide.set(-0.75);
-        }
     }
 }

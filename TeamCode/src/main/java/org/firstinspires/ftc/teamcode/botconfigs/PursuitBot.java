@@ -53,12 +53,12 @@ public class PursuitBot {
 
         drive = new MecDriveFlip(
                 motorFL, motorFR, motorBL, motorBR,
-                -1, 1, 1, -1);
+                1, 1, 1, 1);
 
         // initialize odometry
         encoderL = getSupplier(motorFL, 1);
         encoderR = getSupplier(motorFR, -1);
-        encoderH = getSupplier(motorBL, -1);
+        encoderH = getSupplier(motorBL, 1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
