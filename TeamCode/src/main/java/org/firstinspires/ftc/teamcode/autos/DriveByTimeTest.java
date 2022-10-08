@@ -13,37 +13,12 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 public class DriveByTimeTest extends LinearOpMode {
 
     public PursuitBot robot;
-    public ElapsedTime timer = new ElapsedTime();
-    public Motor slide;
+
 
     @Override
     public void runOpMode() {
-
-        slide = new Motor(hardwareMap, "slide");
         robot = new PursuitBot(telemetry, hardwareMap);
-
-        waitForStart();
-        Up();
-        Down();
     }
 
-    public void Up()
-    {
-        timer.reset();
 
-        while(opModeIsActive() && timer.seconds() <= 5)
-        {
-            slide.set(-1);
-        }
-    }
-
-    public void Down()
-    {
-        timer.reset();
-
-        while(opModeIsActive() && timer.seconds() <= 5)
-        {
-            slide.set(1);
-        }
-    }
 }
