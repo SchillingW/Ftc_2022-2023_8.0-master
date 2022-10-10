@@ -110,7 +110,7 @@ public class PursuitBot {
         y *= 0.2;
         rot *= 0.2;
 
-        drive.driveRobotCentric(x, y, rot);
+        drive.driveFieldCentric(x, y, rot, odometry.getPose().getHeading());
 
         DebugFull(tele);
     }
@@ -119,12 +119,9 @@ public class PursuitBot {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
 
-        double rot =
-                target.getRotation().getDegrees() -
-                        odometry.getPose().getRotation().getDegrees();
-
-        return Math.abs(x) <= 0.5 && Math.abs(y) <= 0.5 && Math.abs(rot) <= 3;
+        return Math.abs(x) <= 0.5 && Math.abs(y) <= 0.5 && Math.abs(rot) <= 0.1;
     }
 
     // debug info on bot with telemetry
