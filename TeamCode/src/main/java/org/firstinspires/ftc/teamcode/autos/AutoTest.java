@@ -19,8 +19,7 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.reachPoint(new Pose2d(24, 0, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(0, 24, new Rotation2d()), telemetry);
-        robot.reachPoint(new Pose2d(-12, -12, Rotation2d.fromDegrees(90)), telemetry);
+        robot.reachPoint(new Pose2d(24, 24, new Rotation2d()), telemetry);
     }
 }

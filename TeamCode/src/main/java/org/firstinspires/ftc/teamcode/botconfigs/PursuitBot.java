@@ -36,8 +36,8 @@ public class PursuitBot {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 5.75;
-    public double encoderWheelOffset = 3.5;
+    public double encoderTrackWidth = 8.5;
+    public double encoderWheelOffset = 1.5;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
@@ -56,8 +56,8 @@ public class PursuitBot {
                 1, 1, 1, 1);
 
         // initialize odometry
-        encoderL = getSupplier(motorFL, -1);
-        encoderR = getSupplier(motorFR, 1);
+        encoderL = getSupplier(motorFL, 1);
+        encoderR = getSupplier(motorFR, -1);
         encoderH = getSupplier(motorBL, 1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
@@ -97,18 +97,20 @@ public class PursuitBot {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
-        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
-        double magnitude = Math.sqrt(x * x + y * y + rot * rot);
-        tele.addData("magnitude", magnitude);
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
+
+        double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
+        double targetMagnitude = Math.min(Math.max(currentMagnitude, 0.2), 0.4);
+
+        tele.addData("current magnitude", currentMagnitude);
+        tele.addData("target magnitude", targetMagnitude);
         tele.addData("x", x);
         tele.addData("y", y);
         tele.addData("rot", rot);
-        x /= magnitude;
-        y /= magnitude;
-        rot /= magnitude;
-        x *= 0.2;
-        y *= 0.2;
-        rot *= 0.2;
+
+        x *= targetMagnitude / currentMagnitude;
+        y *= targetMagnitude / currentMagnitude;
+        rot *= targetMagnitude / currentMagnitude;
 
         drive.driveFieldCentric(x, y, rot, odometry.getPose().getHeading());
 
@@ -121,7 +123,7 @@ public class PursuitBot {
         double y = target.getY() - odometry.getPose().getY();
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
 
-        return Math.abs(x) <= 0.5 && Math.abs(y) <= 0.5 && Math.abs(rot) <= 0.1;
+        return Math.abs(x) <= 0.25 && Math.abs(y) <= 0.25 && Math.abs(rot) <= 0.05;
     }
 
     // debug info on bot with telemetry
