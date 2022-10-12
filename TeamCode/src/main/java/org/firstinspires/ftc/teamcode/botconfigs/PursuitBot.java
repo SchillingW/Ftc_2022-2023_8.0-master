@@ -36,8 +36,8 @@ public class PursuitBot {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 5.75;
-    public double encoderWheelOffset = 3.5;
+    public double encoderTrackWidth = 8.5;
+    public double encoderWheelOffset = -1.5;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
