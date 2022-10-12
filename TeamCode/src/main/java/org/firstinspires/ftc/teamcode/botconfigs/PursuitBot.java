@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode.botconfigs;
+
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -89,6 +91,8 @@ public class PursuitBot {
             odometry.update();
             moveTowards(target, tele);
         }
+
+        drive.stop();
     }
 
     public void moveTowards(Pose2d target, Telemetry tele) {
@@ -121,7 +125,7 @@ public class PursuitBot {
         double y = target.getY() - odometry.getPose().getY();
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
 
-        return Math.abs(x) <= 0.25 && Math.abs(y) <= 0.25 && Math.abs(rot) <= 0.05;
+        return Math.abs(x) <= 0.1 && Math.abs(y) <= 0.1 && Math.abs(rot) <= 0.03;
     }
 
     // debug info on bot with telemetry

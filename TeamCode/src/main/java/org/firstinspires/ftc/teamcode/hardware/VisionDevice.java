@@ -1,37 +1,22 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
-
-import com.arcrobotics.ftclib.command.PurePursuitCommand;
-import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.arcrobotics.ftclib.purepursuit.waypoints.EndWaypoint;
-import com.arcrobotics.ftclib.purepursuit.waypoints.GeneralWaypoint;
-import com.arcrobotics.ftclib.purepursuit.waypoints.StartWaypoint;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.internal.opengl.Texture;
-import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
-import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 
-import java.nio.ByteBuffer;
-
-
-@Autonomous(name = "Vision Detection")
-public class VisionDetection extends LinearOpMode {
+public class VisionDevice {
 
     public static final int viewSize = 5;
 
@@ -54,28 +39,16 @@ public class VisionDetection extends LinearOpMode {
 
     private TFObjectDetector tfod;
 
-    PursuitBot robot;
-    GamepadSystem input;
+    public Telemetry telemetry;
+    public HardwareMap hardwareMap;
 
-    public void initialize() {
+    public int result;
 
-        robot = new PursuitBot(telemetry, hardwareMap);
+    public VisionDevice(Telemetry telemetry, HardwareMap map) {
+
+        this.telemetry = telemetry;
+        this.hardwareMap = map;
     }
-
-    public void path1() {
-
-
-    }
-
-    public void path2() {
-
-    }
-
-    public void path3() {
-
-    }
-
-
 
     public Bitmap getImage(){
         VuforiaLocalizer.CloseableFrame frame = null;
@@ -137,9 +110,8 @@ public class VisionDetection extends LinearOpMode {
         return sum;
     }
 
-    public void runOpMode() {
+    public void init() {
 
-        //cameraServo.setPosition(0);
         initVuforia();
         initTfod();
 
@@ -147,52 +119,34 @@ public class VisionDetection extends LinearOpMode {
             tfod.activate();
             tfod.setZoom(1.0, 20.0 / 20.0);
         }
+    }
 
-        int result = 0;
-        while (!isStarted()) {
-            if (tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                int[] color = getAvgPixel(getImage(), viewSize);
-                if (color[0] > color[1] && color[0] > color[2]) {
-                    telemetry.addData("red is largest", 0);
-                    result = 1;
-                } else if (color[1] > color[2]) {
-                    telemetry.addData("green is largest", 1);
-                    result = 2;
-                } else {
-                    telemetry.addData("blue is largest", 2);
-                    result = 3;
-                }
+    public int perform() {
 
-
-                telemetry.addData("red", color[0]);
-                telemetry.addData("green", color[1]);
-                telemetry.addData("blue", color[2]);
-
-
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            int[] color = getAvgPixel(getImage(), viewSize);
+            if (color[0] > color[1] && color[0] > color[2]) {
+                telemetry.addData("red is largest", 0);
+                result = 1;
+            } else if (color[1] > color[2]) {
+                telemetry.addData("green is largest", 1);
+                result = 2;
+            } else {
+                telemetry.addData("blue is largest", 2);
+                result = 0;
             }
+
+
+            telemetry.addData("red", color[0]);
+            telemetry.addData("green", color[1]);
+            telemetry.addData("blue", color[2]);
+
+
         }
 
-        waitForStart();
-        //switch statements need breaks, otherwise case 1 would run all three cases. Look up fallthrough
-        switch (result) {
-            case 1:
-                path1();
-                telemetry.addData("Path 1", 1);
-                telemetry.update();
-                break;
-            case 2:
-                path2();
-                telemetry.addData("Path 2", 2);
-                telemetry.update();
-                break;
-            case 3:
-                path3();
-                telemetry.addData("Path 3", 3);
-                telemetry.update();
-                break;
-        }
+        return result;
     }
 
 
@@ -229,8 +183,3 @@ public class VisionDetection extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
     }
 }
-
-
-
-
-
