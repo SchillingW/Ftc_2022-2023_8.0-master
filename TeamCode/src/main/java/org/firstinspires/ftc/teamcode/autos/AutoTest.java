@@ -37,13 +37,17 @@ public class AutoTest extends LinearOpMode {
         waitForStart();
         claw.setPosition(0);
         sleep(2000);
-        Up();
         robot.reachPoint(new Pose2d(0, 28, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(28, 28, new Rotation2d()), telemetry);
+        Up();
         robot.reachPoint(new Pose2d(28, 40, new Rotation2d()), telemetry);
-        claw.setPosition(0.6);
-        sleep(1000);
-        Down();
+
+        slide.set(1);
+        sleep(500);
+        claw.setPosition(0.5);
+        sleep(500);
+
+        /*
         //turn
         robot.reachPoint(new Pose2d(28, 15, new Rotation2d(-Math.PI/2)), telemetry);
         claw.setPosition(0);
@@ -51,15 +55,18 @@ public class AutoTest extends LinearOpMode {
         Up();
         //turn
         robot.reachPoint(new Pose2d(28, 40, new Rotation2d()), telemetry);
-        claw.setPosition(0.6);
+        claw.setPosition(0.5);
         Down();
+        */
+
+
         robot.reachPoint(new Pose2d(28, 4 - 24 + result * 24, new Rotation2d()), telemetry);
     }
     public void Up()
     {
         timer.reset();
 
-        while(opModeIsActive() && timer.seconds() <= 3)
+        while(opModeIsActive() && timer.seconds() <= 1)
         {
             slide.set(-1);
         }

@@ -63,7 +63,7 @@ public class Meet1BotTeleOp extends OpMode {
         }
         //full open=0
         if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            claw.setPosition(0.35);
+            claw.setPosition(0.5);
             telemetry.addData("servo", "open");
             telemetry.update();
         }
