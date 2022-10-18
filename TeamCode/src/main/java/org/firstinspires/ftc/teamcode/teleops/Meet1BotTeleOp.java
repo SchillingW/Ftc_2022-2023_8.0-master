@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
@@ -26,7 +27,7 @@ public class Meet1BotTeleOp extends OpMode {
 
     // motor declaration
     public Motor slide;
-    public ServoEx claw;
+    public Servo claw;
 
     // input system reference
     GamepadSystem input;
@@ -38,7 +39,7 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
 
         // initialize hardware devicesklm
-        claw = new SimpleServo(hardwareMap, "claw", 0, 180);
+        claw = hardwareMap.servo.get("claw");
         slide = new Motor(hardwareMap, "slide");
 
         input = new GamepadSystem(this);
