@@ -125,7 +125,7 @@ public class PursuitBot {
         double y = target.getY() - odometry.getPose().getY();
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
 
-        return Math.abs(x) <= 0.1 && Math.abs(y) <= 0.1 && Math.abs(rot) <= 0.03;
+        return Math.abs(x) <= 0.1 && Math.abs(y) <= 0.1 && Math.abs(rot) <= 0.15;
     }
 
     // debug info on bot with telemetry
