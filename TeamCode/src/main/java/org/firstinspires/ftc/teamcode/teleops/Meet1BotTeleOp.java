@@ -40,7 +40,7 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
 
         // initialize hardware devicesklm
-        //claw = hardwareMap.servo.get("claw");
+        //claw = hardwareMap.servo.get("claw"); hi
         claw = hardwareMap.servo.get("claw");
         claw.getController().pwmEnable();
 
