@@ -44,7 +44,7 @@ public class AutoTest extends LinearOpMode {
 
         slide.set(1);
         sleep(500);
-        claw.setPosition(0.5);
+        claw.setPosition(1);
         sleep(500);
 
         /*

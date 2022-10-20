@@ -39,8 +39,12 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
 
         // initialize hardware devicesklm
+        //claw = hardwareMap.servo.get("claw");
         claw = hardwareMap.servo.get("claw");
+        claw.getController().pwmEnable();
+
         slide = new Motor(hardwareMap, "slide");
+        slide.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         input = new GamepadSystem(this);
     }
@@ -54,7 +58,7 @@ public class Meet1BotTeleOp extends OpMode {
                 input.gamepad1.getLeftX() * linearSpeed,
                 input.gamepad1.getRightX() * turnSpeed);
 
-        slide.set(-input.gamepad2.getRightY() * armSpeed);
+        slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
         //full close=1
 
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -64,7 +68,7 @@ public class Meet1BotTeleOp extends OpMode {
         }
         //full open=0
         if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            claw.setPosition(0.5);
+            claw.setPosition(1);
             telemetry.addData("servo", "open");
             telemetry.update();
         }
