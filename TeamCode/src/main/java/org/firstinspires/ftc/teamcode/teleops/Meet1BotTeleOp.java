@@ -55,9 +55,9 @@ public class Meet1BotTeleOp extends OpMode {
     public void loop() {
 
         robot.drive.driveRobotCentric(
-                input.gamepad1.getLeftY() * linearSpeed,
-                input.gamepad1.getLeftX() * linearSpeed,
-                input.gamepad1.getRightX() * turnSpeed);
+                input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
+                input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
+                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
 
         slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
         //full close=1
