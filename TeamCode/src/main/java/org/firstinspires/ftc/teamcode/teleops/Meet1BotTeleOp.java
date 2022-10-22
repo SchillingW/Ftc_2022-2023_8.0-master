@@ -24,7 +24,7 @@ public class Meet1BotTeleOp extends OpMode {
     public double armSpeed = 0.75;
 
     public double turnSpeed = 0.75;
-    public double linearSpeed = 0.75;
+    public double linearSpeed = 0.6;
 
     // motor declaration
     public Motor slide;
@@ -54,6 +54,8 @@ public class Meet1BotTeleOp extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Drive Speed", String.format("%.3f", linearSpeed));
+
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
@@ -61,6 +63,16 @@ public class Meet1BotTeleOp extends OpMode {
 
         slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
         //full close=1
+
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
+        {
+            linearSpeed += 0.025;
+        }
+
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN))
+        {
+            linearSpeed -= 0.025;
+        }
 
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             claw.setPosition(0);
