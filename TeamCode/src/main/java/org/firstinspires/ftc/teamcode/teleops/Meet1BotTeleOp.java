@@ -73,7 +73,7 @@ public class Meet1BotTeleOp extends OpMode {
         {
             linearSpeed -= 0.025;
         }
-
+//
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             claw.setPosition(0);
             telemetry.addData("servo", "close");
