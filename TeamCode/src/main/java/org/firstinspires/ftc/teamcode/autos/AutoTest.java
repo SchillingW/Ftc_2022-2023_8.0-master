@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="RedPursuitBotAuto", group="PursuitBot")
+@Autonomous(name="AutoTest", group="PursuitBot")
 public class AutoTest extends LinearOpMode {
 
     public PursuitBot robot;
@@ -39,15 +39,15 @@ public class AutoTest extends LinearOpMode {
         claw.setPosition(0);
         sleep(2000);
         robot.reachPoint(new Pose2d(0, 28, new Rotation2d()), telemetry);
-        robot.reachPoint(new Pose2d(29, 28, new Rotation2d()), telemetry);
+        robot.reachPoint(new Pose2d(28.5, 28, new Rotation2d()), telemetry);
         Up();
-        robot.reachPoint(new Pose2d(29, 39.5, new Rotation2d()), telemetry);
+        robot.reachPoint(new Pose2d(28.5, 40.8, new Rotation2d()), telemetry);
         sleep(2000);
         slide.set(1);
         sleep(1000);
         claw.setPosition(1);
         sleep(2000);
-        robot.reachPoint(new Pose2d(29, 28, new Rotation2d()), telemetry);
+        robot.reachPoint(new Pose2d(28.5, 28, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(1, 5, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(21, 5, new Rotation2d()), telemetry);
@@ -57,7 +57,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(24, 5, new Rotation2d()), telemetry);
         robot.reachPoint(new Pose2d(24, 28, new Rotation2d()), telemetry);
         Up();
-        robot.reachPoint(new Pose2d(29, 39.5, new Rotation2d()), telemetry);
+        robot.reachPoint(new Pose2d(28.5, 40.8, new Rotation2d()), telemetry);
         sleep(2000);
         slide.set(1);
         sleep(1000);
