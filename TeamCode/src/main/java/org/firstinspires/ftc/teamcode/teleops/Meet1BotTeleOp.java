@@ -54,7 +54,7 @@ public class Meet1BotTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        telemetry.addData("Drive Speed", String.format("%.3f", linearSpeed));
+        telemetry.addData("Drive Speed", linearSpeed);
 
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
@@ -66,12 +66,12 @@ public class Meet1BotTeleOp extends OpMode {
 
         if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
         {
-            linearSpeed += 0.025;
+            linearSpeed = 0.75;
         }
 
         if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN))
         {
-            linearSpeed -= 0.025;
+            linearSpeed = 0.35;
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
