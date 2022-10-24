@@ -102,7 +102,7 @@ public class PursuitBot {
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
 
         double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
-        double targetMagnitude = Math.min(Math.max(currentMagnitude, 0.2), 0.4);
+        double targetMagnitude = Math.min(Math.max(currentMagnitude / 12, 0.25), 0.5);
 
         tele.addData("current magnitude", currentMagnitude);
         tele.addData("target magnitude", targetMagnitude);

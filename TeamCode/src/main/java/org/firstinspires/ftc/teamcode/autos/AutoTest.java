@@ -62,7 +62,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(29, 42.5, new Rotation2d()), telemetry);
         sleep(2000);
         slide.set(1);
-        sleep(1000);
+        sleep(500);
         claw.setPosition(1);
         sleep(2000);
 

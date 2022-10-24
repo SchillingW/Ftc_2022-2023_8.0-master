@@ -95,9 +95,11 @@ public class VisionDevice {
         int[] sum = new int[3];
         int count = 0;
 
-        for (int x = (bm.getWidth() - size) / 3; x < (bm.getWidth() + size) / 3; x++) {
-            for (int y = (bm.getHeight() - size) / 2; y < (bm.getHeight() + size) / 2; y++) {
-
+        for (int x = bm.getWidth() / 3 - size; x < bm.getWidth() / 3 + size; x++) {
+            for (int y = bm.getHeight() / 2 - size; y < bm.getHeight() / 2 + size; y++) {
+                telemetry.addData("width", bm.getWidth());
+                telemetry.addData("height", bm.getHeight());
+                telemetry.update();
                 int color = bm.getPixel(x, y);
                 sum[0] += (color >> 16) & 0xFF;
                 sum[1] +=(color >> 8) & 0xFF;
