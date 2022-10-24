@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
@@ -82,17 +83,20 @@ public class PursuitBot {
 
 
 
-    public void reachPoint(Pose2d target, Telemetry tele) {
+    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode opMode) {
 
-        odometry.update();
-
-        while (!isAtTarget(target)) {
+        if (opMode.opModeIsActive()) {
 
             odometry.update();
-            moveTowards(target, tele);
-        }
 
-        drive.stop();
+            while (!isAtTarget(target) && opMode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(target, tele);
+            }
+
+            drive.stop();
+        }
     }
 
     public void moveTowards(Pose2d target, Telemetry tele) {
@@ -102,7 +106,7 @@ public class PursuitBot {
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
 
         double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
-        double targetMagnitude = Math.min(Math.max(currentMagnitude / 12, 0.25), 0.5);
+        double targetMagnitude = Math.min(Math.max(currentMagnitude / 12, 0.3), 0.5);
 
         tele.addData("current magnitude", currentMagnitude);
         tele.addData("target magnitude", targetMagnitude);
