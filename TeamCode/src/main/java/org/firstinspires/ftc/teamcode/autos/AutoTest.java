@@ -32,7 +32,7 @@ public class AutoTest extends LinearOpMode {
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
         int result = 0;
-        while (!isStarted()) result = vision.perform();
+        while (!isStarted()) result = vision.perform(1f / 3f);
 
         waitForStart();
 

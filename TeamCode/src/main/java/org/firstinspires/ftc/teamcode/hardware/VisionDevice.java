@@ -90,16 +90,13 @@ public class VisionDevice {
 
     }
 
-    public int[] getAvgPixel(Bitmap bm, int size) {
+    public int[] getAvgPixel(Bitmap bm, int size, float xPosition) {
 
         int[] sum = new int[3];
         int count = 0;
 
-        for (int x = bm.getWidth() / 3 - size; x < bm.getWidth() / 3 + size; x++) {
+        for (int x = (int)(bm.getWidth() * xPosition) - size; x < bm.getWidth() / 3 + size; x++) {
             for (int y = bm.getHeight() / 2 - size; y < bm.getHeight() / 2 + size; y++) {
-                telemetry.addData("width", bm.getWidth());
-                telemetry.addData("height", bm.getHeight());
-                telemetry.update();
                 int color = bm.getPixel(x, y);
                 sum[0] += (color >> 16) & 0xFF;
                 sum[1] +=(color >> 8) & 0xFF;
@@ -119,16 +116,16 @@ public class VisionDevice {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 20.0 / 20.0);
+            tfod.setZoom(1.0, 640f/480f);
         }
     }
 
-    public int perform() {
+    public int perform(float xPosition) {
 
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
-            int[] color = getAvgPixel(getImage(), viewSize);
+            int[] color = getAvgPixel(getImage(), viewSize, xPosition);
             if (color[0] > color[1] && color[0] > color[2]) {
                 telemetry.addData("red is largest", 0);
                 result = 1;

@@ -20,6 +20,8 @@ public class BlueAutoTest extends LinearOpMode {
     public Motor slide;
     public Servo claw;
 
+    public int startXOff = -6;
+
     @Override
     public void runOpMode() {
 
@@ -30,52 +32,61 @@ public class BlueAutoTest extends LinearOpMode {
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
         int result = 0;
-        while (!isStarted()) result = vision.perform();
+        while (!isStarted()) result = vision.perform(1f / 3f);
 
         waitForStart();
-        slide.set(0);
-        claw.setPosition(0);
-        sleep(2000);
-        robot.reachPoint(new Pose2d(0, -28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29, -28, new Rotation2d()), telemetry, this);
-        Up();
-        robot.reachPoint(new Pose2d(29, -39.5, new Rotation2d()), telemetry, this);
-        sleep(2000);
-        slide.set(1);
-        sleep(1000);
-        claw.setPosition(1);
-        sleep(2000);
-        robot.reachPoint(new Pose2d(29, -28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(1, -28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(1, -5, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(21, -5, new Rotation2d()), telemetry, this);
-        sleep(1000);
-        claw.setPosition(0);
-        sleep(2000);
-        robot.reachPoint(new Pose2d(24, -5, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(24, -28, new Rotation2d()), telemetry, this);
-        Up();
-        robot.reachPoint(new Pose2d(29, -39.5, new Rotation2d()), telemetry, this);
-        sleep(2000);
-        slide.set(1);
-        sleep(1000);
-        claw.setPosition(1);
-        sleep(2000);
+        // START MOVEMENT
 
-        /*
-        //turn
-        robot.reachPoint(new Pose2d(28, 15, new Rotation2d(-Math.PI/2)), telemetry);
-        claw.setPosition(0);
-        sleep(2000);
-        Up();
-        //turn
-        robot.reachPoint(new Pose2d(28, 40, new Rotation2d()), telemetry);
-        claw.setPosition(0.5);
-        Down();
-        */
+        if (opModeIsActive()) slide.set(0);
+        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) sleep(2000);
 
+        // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(29, 4 - 24 + result * 24, new Rotation2d()),
+        robot.reachPoint(new Pose2d(1, -28 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, -28 - startXOff, new Rotation2d()), telemetry, this);
+        if (opModeIsActive()) Up();
+        robot.reachPoint(new Pose2d(29, -40.2 - startXOff, new Rotation2d()), telemetry, this);
+
+        // AT DROP CONE LOCATION
+
+        if (opModeIsActive()) sleep(2000);
+        if (opModeIsActive()) slide.set(1);
+        if (opModeIsActive()) sleep(1000);
+        if (opModeIsActive()) claw.setPosition(0.5);
+        if (opModeIsActive()) sleep(2000);
+
+        // CONE DROPPED
+
+        robot.reachPoint(new Pose2d(29, -28 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(1, -28 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(1, -5 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(16, -5 - startXOff, new Rotation2d()), telemetry, this);
+
+        // AT CONE GRAB LOCATION
+
+        if (opModeIsActive()) sleep(1000);
+        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) sleep(2000);
+
+        // CONE GRABBED
+
+        if (opModeIsActive()) Up();
+        robot.reachPoint(new Pose2d(29, -5 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, -40.2 - startXOff, new Rotation2d()), telemetry, this);
+
+        // AT DROP LOCATION
+
+        if (opModeIsActive()) sleep(2000);
+        if (opModeIsActive()) slide.set(1);
+        if (opModeIsActive()) sleep(500);
+        if (opModeIsActive()) claw.setPosition(0.5);
+        if (opModeIsActive()) sleep(2000);
+
+        // CONE DROPPED
+
+        robot.reachPoint(new Pose2d(27, -40.2 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(27, 4 - 24 + result * 24 - startXOff, new Rotation2d()),
                 telemetry, this);
     }
     public void Up()
