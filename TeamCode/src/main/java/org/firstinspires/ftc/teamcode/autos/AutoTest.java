@@ -47,7 +47,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(29, 28, new Rotation2d()), telemetry, this);
         if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(29, 40, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, 39.8, new Rotation2d()), telemetry, this);
         robot.odometry.update();
         // AT DROP CONE LOCATION
 
@@ -75,14 +75,14 @@ public class AutoTest extends LinearOpMode {
 
         if (opModeIsActive()) Up();
         robot.reachPoint(new Pose2d(29, 3, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29, 40, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, 39.8, new Rotation2d()), telemetry, this);
         //robot.odometry.update();
         // AT DROP LOCATION
 
         if (opModeIsActive()) sleep(2000);
         if (opModeIsActive()) slide.set(1);
         if (opModeIsActive()) sleep(500);
-        if (opModeIsActive()) claw.setPosition(0.5);
+        if (opModeIsActive()) claw.setPosition(0.8);
         if (opModeIsActive()) sleep(2000);
 
         // CONE DROPPED
