@@ -46,7 +46,7 @@ public class BlueAutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(1, -28 - startXOff, new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(29, -28 - startXOff, new Rotation2d()), telemetry, this);
         if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(29, -40.2 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, -42.5 - startXOff, new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
 
@@ -73,7 +73,7 @@ public class BlueAutoTest extends LinearOpMode {
 
         if (opModeIsActive()) Up();
         robot.reachPoint(new Pose2d(29, -5 - startXOff, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29, -40.2 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, -42.5 - startXOff, new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
 

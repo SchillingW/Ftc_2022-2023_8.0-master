@@ -23,8 +23,8 @@ public class Meet1BotTeleOp extends OpMode {
 
     public double armSpeed = 0.75;
 
-    public double turnSpeed = 0.75;
-    public double linearSpeed = 0.6;
+    public double turnSpeed = 0.55;
+    public double linearSpeed = 0.55;
 
     // motor declaration
     public Motor slide;
@@ -67,11 +67,19 @@ public class Meet1BotTeleOp extends OpMode {
         if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
         {
             linearSpeed = 0.75;
+            turnSpeed = 0.75;
+        }
+
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT))
+        {
+            linearSpeed = 0.55;
+            turnSpeed = 0.55;
         }
 
         if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN))
         {
             linearSpeed = 0.35;
+            turnSpeed = 0.35;
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {

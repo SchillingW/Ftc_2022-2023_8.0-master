@@ -8,6 +8,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
@@ -88,8 +90,9 @@ public class PursuitBot {
         if (opMode.opModeIsActive()) {
 
             odometry.update();
+            ElapsedTime time = new ElapsedTime();
 
-            while (!isAtTarget(target) && opMode.opModeIsActive()) {
+            while (!isAtTarget(target) && opMode.opModeIsActive() && time.seconds() < 5) {
 
                 odometry.update();
                 moveTowards(target, tele);
@@ -106,7 +109,7 @@ public class PursuitBot {
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
 
         double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
-        double targetMagnitude = Math.min(Math.max(currentMagnitude / 12, 0.3), 0.5);
+        double targetMagnitude = Math.min(Math.max(currentMagnitude / 12, 0.3), 0.4);
 
         tele.addData("current magnitude", currentMagnitude);
         tele.addData("target magnitude", targetMagnitude);
@@ -127,7 +130,7 @@ public class PursuitBot {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
-        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
 
         return Math.abs(x) <= 0.1 && Math.abs(y) <= 0.1 && Math.abs(rot) <= 0.1;
     }

@@ -32,7 +32,7 @@ public class AutoTest extends LinearOpMode {
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
         int result = 0;
-        while (!isStarted()) result = vision.perform(1f / 3f);
+        while (!isStarted()) result = vision.perform(0.333f);
 
         waitForStart();
 
@@ -47,7 +47,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(29, 28, new Rotation2d()), telemetry, this);
         if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(29, 39.8, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, 40, new Rotation2d()), telemetry, this);
         robot.odometry.update();
         // AT DROP CONE LOCATION
 
@@ -75,7 +75,7 @@ public class AutoTest extends LinearOpMode {
 
         if (opModeIsActive()) Up();
         robot.reachPoint(new Pose2d(29, 3, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29, 39.8, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, 40, new Rotation2d()), telemetry, this);
         //robot.odometry.update();
         // AT DROP LOCATION
 

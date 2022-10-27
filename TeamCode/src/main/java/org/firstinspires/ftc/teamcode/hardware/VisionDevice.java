@@ -95,7 +95,7 @@ public class VisionDevice {
         int[] sum = new int[3];
         int count = 0;
 
-        for (int x = (int)(bm.getWidth() * xPosition) - size; x < bm.getWidth() / 3 + size; x++) {
+        for (int x = (int)(bm.getWidth() * xPosition) - size; x < (int)(bm.getWidth() * xPosition) + size; x++) {
             for (int y = bm.getHeight() / 2 - size; y < bm.getHeight() / 2 + size; y++) {
                 int color = bm.getPixel(x, y);
                 sum[0] += (color >> 16) & 0xFF;
