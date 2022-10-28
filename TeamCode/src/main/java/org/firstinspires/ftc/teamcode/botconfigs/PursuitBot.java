@@ -90,9 +90,8 @@ public class PursuitBot {
         if (opMode.opModeIsActive()) {
 
             odometry.update();
-            ElapsedTime time = new ElapsedTime();
 
-            while (!isAtTarget(target) && opMode.opModeIsActive() && time.seconds() < 5) {
+            while (!isAtTarget(target) && opMode.opModeIsActive()) {
 
                 odometry.update();
                 moveTowards(target, tele);
