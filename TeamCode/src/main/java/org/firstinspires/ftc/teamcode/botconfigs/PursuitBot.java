@@ -6,6 +6,8 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
@@ -82,17 +84,20 @@ public class PursuitBot {
 
 
 
-    public void reachPoint(Pose2d target, Telemetry tele) {
+    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode) {
 
-        odometry.update();
-
-        while (!isAtTarget(target)) {
+        if (mode.opModeIsActive()) {
 
             odometry.update();
-            moveTowards(target, tele);
-        }
 
-        drive.stop();
+            while (!isAtTarget(target) && mode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(target, tele);
+            }
+
+            drive.stop();
+        }
     }
 
     public void moveTowards(Pose2d target, Telemetry tele) {
