@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.botconfigs;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,15 +38,6 @@ public class PursuitBot {
     // robot type data
     public double encoderTrackWidth = 8.5;
     public double encoderWheelOffset = 1.5;
-
-    // robot movement data
-    public double minSpeed = 0.2;
-    public double minGradient = 3;
-    public double maxSpeed = 0.5;
-    public double maxGradient = 6;
-    public double errorMargin = 0.1;
-    public double extraTime = 0.5;
-    public double degreeToInchEquivFactor = 24.0 / 360.0;
 
     // initialize devices
     public PursuitBot(Telemetry tele, HardwareMap map) {
@@ -107,13 +99,10 @@ public class PursuitBot {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
-        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() / 360 * 24;
 
         double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
-
-        double x1 = minGradient; double x2 = maxGradient; double y1 = minSpeed; double y2 = maxSpeed;
-        double targetMagnitude = (y1 - y2) / (x1 - x2) * (currentMagnitude - x1) + y1;
-        targetMagnitude = Math.min(Math.max(targetMagnitude, y1), y2);
+        double targetMagnitude = Math.min(Math.max(currentMagnitude, 0.2), 0.4);
 
         tele.addData("current magnitude", currentMagnitude);
         tele.addData("target magnitude", targetMagnitude);
@@ -134,9 +123,9 @@ public class PursuitBot {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
-        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getRadians();
 
-        return Math.abs(x) <= errorMargin && Math.abs(y) <= errorMargin && Math.abs(rot) <= errorMargin;
+        return Math.abs(x) <= 0.2 && Math.abs(y) <= 0.2 && Math.abs(rot) <= 0.1;
     }
 
     // debug info on bot with telemetry

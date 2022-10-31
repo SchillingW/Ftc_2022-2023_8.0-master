@@ -23,8 +23,8 @@ public class Meet1BotTeleOp extends OpMode {
 
     public double armSpeed = 0.75;
 
-    public double turnSpeed = 0.75;
-    public double linearSpeed = 0.75;
+    public double turnSpeed = 0.55;
+    public double linearSpeed = 0.55;
 
     // motor declaration
     public Motor slide;
@@ -54,6 +54,8 @@ public class Meet1BotTeleOp extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Drive Speed", linearSpeed);
+
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
@@ -62,6 +64,24 @@ public class Meet1BotTeleOp extends OpMode {
         slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
         //full close=1
 
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
+        {
+            linearSpeed = 0.75;
+            turnSpeed = 0.75;
+        }
+
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT))
+        {
+            linearSpeed = 0.55;
+            turnSpeed = 0.55;
+        }
+//
+        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN))
+        {
+            linearSpeed = 0.35;
+            turnSpeed = 0.35;
+        }
+//
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             claw.setPosition(0);
             telemetry.addData("servo", "close");
@@ -69,7 +89,7 @@ public class Meet1BotTeleOp extends OpMode {
         }
         //full open=0
         if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            claw.setPosition(1);
+            claw.setPosition(0.5);
             telemetry.addData("servo", "open");
             telemetry.update();
         }

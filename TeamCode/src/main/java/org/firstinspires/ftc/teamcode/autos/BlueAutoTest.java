@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,14 +11,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="AutoTest", group="PursuitBot")
-public class AutoTest extends LinearOpMode {
+@Autonomous(name="BluePursuitBotAuto", group="PursuitBot")
+public class BlueAutoTest extends LinearOpMode {
 
     public PursuitBot robot;
     public VisionDevice vision;
     public ElapsedTime timer = new ElapsedTime();
     public Motor slide;
     public Servo claw;
+
+    public int startXOff = -6;
 
     @Override
     public void runOpMode() {
@@ -35,36 +35,34 @@ public class AutoTest extends LinearOpMode {
         while (!isStarted()) result = vision.perform(1f / 3f);
 
         waitForStart();
-
         // START MOVEMENT
 
         if (opModeIsActive()) slide.set(0);
-        if (opModeIsActive()) claw.setPosition(0.5);
+        //if (opModeIsActive()) claw.setPosition(0);
         if (opModeIsActive()) sleep(2000);
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29.25, 28, new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(29.25, 39.7, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29, 39.7, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(1, -26.5 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29.25, -26.5 - startXOff, new Rotation2d()), telemetry, this);
+        //if (opModeIsActive()) Up();
+        //robot.reachPoint(new Pose2d(29.5, -39.25 - startXOff, new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
 
-        if (opModeIsActive()) sleep(2000);
-        if (opModeIsActive()) slide.set(1);
-        if (opModeIsActive()) sleep(1000);
-        if (opModeIsActive()) claw.setPosition(0.5);
-        if (opModeIsActive()) sleep(2000);
-
+        //if (opModeIsActive()) sleep(2000);
+        //if (opModeIsActive()) slide.set(1);
+        //if (opModeIsActive()) sleep(1000);
+        //if (opModeIsActive()) claw.setPosition(0.5);
+        //if (opModeIsActive()) sleep(2000);
+        //robot.reachPoint(new Pose2d(26.8, -39.5 - startXOff, new Rotation2d()), telemetry, this);
         // CONE DROPPED
 
-        //robot.reachPoint(new Pose2d(29, 39.7, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(27.5, 28, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(1.5, 28, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(1.5, 5, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(18.5, 5, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, -28 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(1.25, -28 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(1.25, -5 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(17.5, -5 - startXOff, new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 
@@ -74,10 +72,10 @@ public class AutoTest extends LinearOpMode {
 
         // CONE GRABBED
 
-        //robot.reachPoint(new Pose2d(28.5, 5, new Rotation2d()), telemetry, this);
         //if (opModeIsActive()) Up();
-        //robot.reachPoint(new Pose2d(28.5, 39, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(29.25, 39, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, -5 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(29.25, -41.6 - startXOff, new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
 
@@ -89,9 +87,10 @@ public class AutoTest extends LinearOpMode {
 
         // CONE DROPPED
 
-        //robot.reachPoint(new Pose2d(27.5, 39.7, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(27.5, 4 - 24 + result * 24, new Rotation2d()),
+        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(26, -4 - 24 + result * 24 - startXOff, new Rotation2d()),
                 telemetry, this);
+
     }
     public void Up()
     {
