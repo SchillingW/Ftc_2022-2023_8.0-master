@@ -39,15 +39,16 @@ public class AutoTest extends LinearOpMode {
         // START MOVEMENT
 
         if (opModeIsActive()) slide.set(0);
-        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) claw.setPosition(0.5);
         if (opModeIsActive()) sleep(2000);
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(0.4, 28, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(29.25, 28, new Rotation2d()), telemetry, this);
         if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(29.25, 39, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29.25, 39.7, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(29, 39.7, new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
 
@@ -59,36 +60,36 @@ public class AutoTest extends LinearOpMode {
 
         // CONE DROPPED
 
-        robot.reachPoint(new Pose2d(27.5, 39, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(27.5, 28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(1, 28, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(1, 5, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(17.5, 5, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(29, 39.7, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, 28, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(1.5, 28, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(1.5, 5, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(18.5, 5, new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 
-        if (opModeIsActive()) sleep(1000);
-        if (opModeIsActive()) claw.setPosition(0);
-        if (opModeIsActive()) sleep(2000);
+        //if (opModeIsActive()) sleep(1000);
+        //if (opModeIsActive()) claw.setPosition(0);
+        //if (opModeIsActive()) sleep(2000);
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(27.5, 5, new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) Up();
-        robot.reachPoint(new Pose2d(27.5, 39, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29.25, 39, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(28.5, 5, new Rotation2d()), telemetry, this);
+        //if (opModeIsActive()) Up();
+        //robot.reachPoint(new Pose2d(28.5, 39, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(29.25, 39, new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
 
-        if (opModeIsActive()) sleep(2000);
-        if (opModeIsActive()) slide.set(1);
-        if (opModeIsActive()) sleep(500);
-        if (opModeIsActive()) claw.setPosition(0.5);
-        if (opModeIsActive()) sleep(2000);
+        //if (opModeIsActive()) sleep(2000);
+        //if (opModeIsActive()) slide.set(1);
+        //if (opModeIsActive()) sleep(500);
+        //if (opModeIsActive()) claw.setPosition(0.5);
+        //if (opModeIsActive()) sleep(2000);
 
         // CONE DROPPED
 
-        robot.reachPoint(new Pose2d(27.5, 39, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(27.5, 39.7, new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(27.5, 4 - 24 + result * 24, new Rotation2d()),
                 telemetry, this);
     }

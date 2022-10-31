@@ -127,14 +127,14 @@ public class VisionDevice {
             // the last time that call was made.
             int[] color = getAvgPixel(getImage(), viewSize, xPosition);
             if (color[0] > color[1] && color[0] > color[2]) {
-                telemetry.addData("red is largest", 0);
                 result = 1;
+                telemetry.addData("red is largest", result);
             } else if (color[1] > color[2]) {
-                telemetry.addData("green is largest", 1);
                 result = 2;
+                telemetry.addData("green is largest", result);
             } else {
-                telemetry.addData("blue is largest", 2);
                 result = 0;
+                telemetry.addData("blue is largest", result);
             }
 
 
