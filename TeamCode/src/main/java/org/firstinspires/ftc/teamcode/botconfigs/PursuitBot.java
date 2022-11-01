@@ -42,7 +42,7 @@ public class PursuitBot {
     public double encoderWheelOffset = 1.5;
 
     // robot movement datas
-    public double adjustSpeed = 0.20;
+    public double adjustSpeed = 0.2;
     public double minSpeed = 0.3;
     public double minGradient = 3;
     public double maxSpeed = 0.5;
