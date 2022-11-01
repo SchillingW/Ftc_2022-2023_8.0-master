@@ -55,6 +55,7 @@ public class Meet1BotTeleOp extends OpMode {
     public void loop() {
 
         telemetry.addData("Drive Speed", linearSpeed);
+        telemetry.addData("Slide Pos", slide.encoder.getPosition());
 
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
