@@ -41,7 +41,7 @@ public class PursuitBot {
     public double encoderTrackWidth = 8.5;
     public double encoderWheelOffset = 1.5;
 
-    // robot movement data
+    // robot movement datas
     public double adjustSpeed = 0.20;
     public double minSpeed = 0.3;
     public double minGradient = 3;
