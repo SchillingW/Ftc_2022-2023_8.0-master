@@ -40,12 +40,11 @@ public class PursuitBot {
     public double encoderWheelOffset = 1.5;
 
     // robot movement data
-    public double minSpeed = 0.2;
+    public double minSpeed = 0.3;
     public double minGradient = 3;
     public double maxSpeed = 0.5;
     public double maxGradient = 6;
     public double errorMargin = 0.1;
-    public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
 
     // initialize devices
