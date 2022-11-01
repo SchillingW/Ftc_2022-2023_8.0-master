@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
@@ -40,11 +42,13 @@ public class PursuitBot {
     public double encoderWheelOffset = 1.5;
 
     // robot movement data
+    public double adjustSpeed = 0.2;
     public double minSpeed = 0.3;
     public double minGradient = 3;
     public double maxSpeed = 0.5;
     public double maxGradient = 6;
     public double errorMargin = 0.1;
+    public double extraTime = 2;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
 
     // initialize devices
@@ -99,14 +103,22 @@ public class PursuitBot {
             while (!isAtTarget(target) && mode.opModeIsActive()) {
 
                 odometry.update();
-                moveTowards(target, tele);
+                moveTowards(true, target, tele);
+            }
+
+            ElapsedTime time = new ElapsedTime();
+
+            while (time.seconds() < extraTime && mode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(false, target, tele);
             }
 
             drive.stop();
         }
     }
 
-    public void moveTowards(Pose2d target, Telemetry tele) {
+    public void moveTowards(boolean largeMove, Pose2d target, Telemetry tele) {
 
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
@@ -116,7 +128,7 @@ public class PursuitBot {
 
         double x1 = minGradient; double x2 = maxGradient; double y1 = minSpeed; double y2 = maxSpeed;
         double targetMagnitude = (y1 - y2) / (x1 - x2) * (currentMagnitude - x1) + y1;
-        targetMagnitude = Math.min(Math.max(targetMagnitude, y1), y2);
+        targetMagnitude = largeMove ? Math.min(Math.max(targetMagnitude, y1), y2) : adjustSpeed;
 
         tele.addData("current magnitude", currentMagnitude);
         tele.addData("target magnitude", targetMagnitude);
