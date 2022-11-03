@@ -10,12 +10,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.FieldDimensions;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
 import java.util.function.DoubleSupplier;
 
 // mecanum drive bot with odometry for Pure Pursuit
 public class PursuitBot {
+
+    // dimensions
+    public FieldDimensions xDim = new FieldDimensions();
+    public FieldDimensions yDim = new FieldDimensions();
 
     // debugging device
     public Telemetry tele;
@@ -56,6 +61,12 @@ public class PursuitBot {
 
         // store debugging device
         this.tele = tele;
+
+        // initialize dimensions
+        xDim.clawOffset = 13;
+        yDim.clawOffset = 0;
+        xDim.cellOffset = -5;
+        yDim.clawOffset = 0;
 
         // initialize drive train
         motorFL = new Motor(map, "motorFL");
