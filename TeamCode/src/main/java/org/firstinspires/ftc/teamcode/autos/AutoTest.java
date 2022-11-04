@@ -41,8 +41,9 @@ public class AutoTest extends LinearOpMode {
         // START MOVEMENT
 
         if (opModeIsActive()) slide.set(0);
-        if (opModeIsActive()) claw.close();
+        if (opModeIsActive()) claw.setPosition(0);
         if (opModeIsActive()) sleep(2000);
+
 
         // CONE GRABBED
 
