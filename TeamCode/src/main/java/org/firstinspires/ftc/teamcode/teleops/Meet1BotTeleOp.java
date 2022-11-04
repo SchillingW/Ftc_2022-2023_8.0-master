@@ -86,7 +86,7 @@ public class Meet1BotTeleOp extends OpMode {
         {
             slide.set(0.1);
         }
-        //full close=1 hi
+        //full close=1 hi hi hi
 
         if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
         {
