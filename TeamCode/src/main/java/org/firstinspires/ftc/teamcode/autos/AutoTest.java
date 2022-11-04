@@ -41,7 +41,7 @@ public class AutoTest extends LinearOpMode {
         // START MOVEMENT
 
         if (opModeIsActive()) slide.set(0);
-        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) claw.close();
         if (opModeIsActive()) sleep(2000);
 
         // CONE GRABBED
@@ -54,7 +54,7 @@ public class AutoTest extends LinearOpMode {
         // AT DROP CONE LOCATION
 
         if (opModeIsActive()) sleep(2000);
-        Up();
+        Down();
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) claw.setPosition(0.5);
         //if (opModeIsActive()) slide.set(1);
@@ -66,8 +66,8 @@ public class AutoTest extends LinearOpMode {
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(0), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1) - robot.xDim.cellOffset - robot.xDim.clawOffset, robot.yDim.toCell(0) - robot.yDim.cellOffset - robot.yDim.clawOffset, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1) - robot.xDim.cellOffset - robot.xDim.clawOffset, robot.yDim.toCell(1) - robot.yDim.cellOffset - robot.yDim.clawOffset, new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 
@@ -77,14 +77,14 @@ public class AutoTest extends LinearOpMode {
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(0), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         if (opModeIsActive()) Up();
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
 
         if (opModeIsActive()) sleep(2000);
-        Up();
+        Down();
 
         //if (opModeIsActive()) sleep(500);
         //if (opModeIsActive()) slide.set(1);
