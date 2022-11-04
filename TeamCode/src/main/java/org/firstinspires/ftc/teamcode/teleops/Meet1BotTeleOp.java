@@ -67,10 +67,23 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Absolute Value", Math.abs(slide.encoder.getPosition() - reachHeight));
         telemetry.addData("Slide Joystick Input", input.gamepad2.getRightY());
 
+        /*
+        // NORMAL
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
+         */
+
+        // GYRO COMP
+        robot.odometry.update();
+        robot.drive.driveFieldCentric(
+                input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
+                input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
+                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed,
+                robot.odometry.getPose().getHeading());
+
+        telemetry.addData("heading", robot.odometry.getPose().getHeading());
 
         //if(input.gamepad2.getRightY() <= -0.01) slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
         if(moveToNext)
@@ -84,23 +97,23 @@ public class Meet1BotTeleOp extends OpMode {
         }
         else
         {
-            slide.set(0.1);
+            slide.set(-0.1);
         }
         //full close=1 hi hi  hi
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_UP))
+        if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {
             linearSpeed = 0.75;
             turnSpeed = 0.75;
         }
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT))
+        if(input.gamepad1.getButton(GamepadKeys.Button.Y))
         {
             linearSpeed = 0.55;
             turnSpeed = 0.55;
         }
 //
-        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN))
+        if(input.gamepad1.getButton(GamepadKeys.Button.B))
         {
             linearSpeed = 0.35;
             turnSpeed = 0.35;
@@ -134,6 +147,12 @@ public class Meet1BotTeleOp extends OpMode {
         {
             moveToNext = true;
             reachHeight = -3050;
+        }
+
+        if(input.gamepad2.getButton(GamepadKeys.Button.A))
+        {
+            moveToNext = true;
+            reachHeight = 0;
         }
 
     }
