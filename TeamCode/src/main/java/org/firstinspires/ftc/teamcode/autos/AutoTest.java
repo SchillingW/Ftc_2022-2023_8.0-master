@@ -26,8 +26,11 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
 
         robot = new PursuitBot(telemetry, hardwareMap);
-        robot.xDim.start = 7;
-        robot.yDim.start = 32.5;
+        robot.xDim.cellcorner2botanchorPLACEMENT = 2;
+        robot.yDim.cellcorner2botanchorPLACEMENT = 1;
+        robot.xDim.cellPLACEMENT = 1;
+        robot.yDim.cellPLACEMENT = 0;
+
         slide = new Motor(hardwareMap, "slide");
         claw = hardwareMap.servo.get("claw");
 
@@ -68,7 +71,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0) + 1, robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0) + 1, robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1) - robot.xDim.cellOffset - robot.xDim.clawOffset, robot.yDim.toCell(1) - robot.yDim.cellOffset - robot.yDim.clawOffset, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCone(1), robot.yDim.toCone(1), new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 

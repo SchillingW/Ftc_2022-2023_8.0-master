@@ -2,17 +2,24 @@ package org.firstinspires.ftc.teamcode;
 
 public class FieldDimensions {
 
-    public double start;
-    public double clawOffset;
-    public double cellOffset;
+    public double botanchor2botcenterHARDWARE;
+    public double botanchor2clawcenterHARDWARE;
+
+    public double cellcorner2botanchorPLACEMENT;
+    public int cellPLACEMENT;
 
     public double toCell(int i) {
 
-        return (i + 0.5) * 24 - start + cellOffset;
+        return (i - cellPLACEMENT) * 24 - botanchor2botcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 
     public double toPole(int i) {
 
-        return (i + 1) * 24 - start - clawOffset;
+        return (i + 0.5 - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
+    }
+
+    public double toCone(int i) {
+
+        return (i - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 }

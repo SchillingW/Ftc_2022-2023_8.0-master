@@ -49,10 +49,10 @@ public class PursuitBot {
     // robot movement datas
     public double adjustSpeed = 0.1;
     public double minSpeed = 0.3;
-    public double minGradient = 3;
+    public double minGradient = 6;
     public double maxSpeed = 0.5;
-    public double maxGradient = 6;
-    public double errorMargin = 0.1;
+    public double maxGradient = 12;
+    public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
 
@@ -63,10 +63,10 @@ public class PursuitBot {
         this.tele = tele;
 
         // initialize dimensions
-        xDim.clawOffset = 13;
-        yDim.clawOffset = 0;
-        xDim.cellOffset = -5;
-        yDim.clawOffset = 0;
+        xDim.botanchor2botcenterHARDWARE = 6.5;
+        yDim.botanchor2botcenterHARDWARE = 6;
+        xDim.botanchor2clawcenterHARDWARE = 6.5;
+        yDim.botanchor2clawcenterHARDWARE = 19;
 
         // initialize drive train
         motorFL = new Motor(map, "motorFL");
