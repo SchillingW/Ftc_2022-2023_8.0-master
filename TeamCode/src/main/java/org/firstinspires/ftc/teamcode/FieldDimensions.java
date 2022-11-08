@@ -10,16 +10,16 @@ public class FieldDimensions {
 
     public double toCell(int i) {
 
-        return (i - cellPLACEMENT) * 24 - botanchor2botcenterHARDWARE - cellcorner2botanchorPLACEMENT;
+        return (i + 0.5 - cellPLACEMENT) * 24 - botanchor2botcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 
     public double toPole(int i) {
 
-        return (i + 0.5 - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
+        return (i + 1 - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 
     public double toCone(int i) {
 
-        return (i - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
+        return (i + 0.5 - cellPLACEMENT) * 24 - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 }
