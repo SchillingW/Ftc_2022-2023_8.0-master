@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 public class TFOD_Vision extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/ModelSD.tflite";
+    private static final String TFOD_MODEL_ASSET = "ModelSD.tflite";
 
     private static final String[] LABELS = {
             "Cone",
