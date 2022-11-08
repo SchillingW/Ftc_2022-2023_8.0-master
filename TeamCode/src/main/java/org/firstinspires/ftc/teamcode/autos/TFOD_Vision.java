@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.autos;
 import android.graphics.Bitmap;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -55,7 +55,7 @@ public class TFOD_Vision extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 640f/480f);
+            tfod.setZoom(1.0, 480/640);
         }
 
         /** Wait for the game to begin */
@@ -84,7 +84,7 @@ public class TFOD_Vision extends LinearOpMode {
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                            int[] sum = new int[3];
+                            /*int[] sum = new int[3];
                             int count = 0;
                             int result;
                             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -109,7 +109,7 @@ public class TFOD_Vision extends LinearOpMode {
                             } else {
                                 result = 0;
                                 telemetry.addData("blue is largest", result);
-                            }
+                            }*/
                         }
                         telemetry.update();
                     }
@@ -151,6 +151,7 @@ public class TFOD_Vision extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
-
 }
+
+
 
