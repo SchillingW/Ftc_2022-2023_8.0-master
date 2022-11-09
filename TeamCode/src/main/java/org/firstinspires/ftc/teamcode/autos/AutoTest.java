@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -22,6 +23,9 @@ public class AutoTest extends LinearOpMode {
     public Motor slide;
     public Servo claw;
 
+    public boolean moveToNext;
+    public int low = -850; public int med = -1600; public int high = -3050;
+
     @Override
     public void runOpMode() {
 
@@ -33,6 +37,8 @@ public class AutoTest extends LinearOpMode {
 
         slide = new Motor(hardwareMap, "slide");
         claw = hardwareMap.servo.get("claw");
+
+        moveToNext = false;
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
@@ -47,18 +53,19 @@ public class AutoTest extends LinearOpMode {
         if (opModeIsActive()) claw.setPosition(0);
         if (opModeIsActive()) sleep(2000);
 
+        moveSlideToPos(low);
+
 
         // CONE GRABBED
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) Up();
+        if (opModeIsActive()) moveSlideToPos(high);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
 
         if (opModeIsActive()) sleep(1000);
-        Down();
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) claw.setPosition(0.5);
         //if (opModeIsActive()) slide.set(1);
@@ -70,26 +77,29 @@ public class AutoTest extends LinearOpMode {
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        moveSlideToPos(low);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCone(1) - 1, robot.yDim.toCone(1), new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 
+        Down();
+        slide.set(0);
         if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) claw.setPosition(0);
         if (opModeIsActive()) sleep(2000);
 
+        moveSlideToPos(low);
+
         // CONE GRABBED
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) Up();
+        if (opModeIsActive()) moveSlideToPos(high);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
 
         if (opModeIsActive()) sleep(2000);
-        Down();
-
         //if (opModeIsActive()) sleep(500);
         //if (opModeIsActive()) slide.set(1);
         if (opModeIsActive()) claw.setPosition(0.5);
@@ -98,6 +108,7 @@ public class AutoTest extends LinearOpMode {
         // CONE DROPPED
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
+        moveSlideToPos(low);
     }
 
     public void Up()
@@ -118,6 +129,13 @@ public class AutoTest extends LinearOpMode {
         {
             slide.set(1);
         }
+    }
+
+    public void moveSlideToPos(int reachHeight)
+    {
+        while(Math.abs(slide.encoder.getPosition() - reachHeight) > 20)
+            slide.set(Math.signum(reachHeight - slide.encoder.getPosition()));
+        slide.set(-0.1);
     }
 }
 
