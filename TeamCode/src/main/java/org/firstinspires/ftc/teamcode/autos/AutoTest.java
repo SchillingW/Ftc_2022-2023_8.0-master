@@ -105,7 +105,7 @@ public class AutoTest extends LinearOpMode {
         if (opModeIsActive()) claw.setPosition(0.5);
         if (opModeIsActive()) sleep(2000);
 
-        // CONE DROPPED
+        // CONE  hi
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
         moveSlideToPos(low);
