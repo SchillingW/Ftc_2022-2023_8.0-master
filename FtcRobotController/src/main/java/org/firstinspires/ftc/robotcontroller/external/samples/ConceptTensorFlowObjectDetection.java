@@ -29,21 +29,13 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import android.graphics.Bitmap;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
-
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
@@ -52,14 +44,14 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * determine which image is being presented to the robot.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
 @Disabled
-public class ConceptTensorFlowObjectDetection extends LinearOpMode {
+class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -71,10 +63,11 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
+
     private static final String[] LABELS = {
-      "1 Bolt",
-      "2 Bulb",
-      "3 Panel"
+            "1 Bolt",
+            "2 Bulb",
+            "3 Panel"
     };
 
     /*
@@ -103,69 +96,6 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * Detection engine.
      */
     private TFObjectDetector tfod;
-    public Telemetry telemetry;
-    public HardwareMap hardwareMap;
-
-    public int result;
-    public Bitmap getImage(){
-        VuforiaLocalizer.CloseableFrame frame = null;
-        int r = 0;
-        int b = 0;
-        int g = 0;
-        try{
-            frame = vuforia.getFrameQueue().take();
-            Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
-            long numImages = frame.getNumImages();
-            Image rgbImage = null;
-            int hc;
-
-            for (int i = 0; i < numImages; i++) {
-                Image img = frame.getImage(i);
-
-                int fmt = img.getFormat();
-                if (fmt == PIXEL_FORMAT.RGB565) {
-                    rgbImage = frame.getImage(i);
-                    break;
-                }
-            }
-            //telemetry.addData("numImages", numImages);
-            //telemetry.addData("rgbImage", rgbImage.getFormat());
-
-            telemetry.update();
-
-            Bitmap bm = Bitmap.createBitmap(rgbImage.getWidth(), rgbImage.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(rgbImage.getPixels());
-
-            return bm;
-        }
-        catch(InterruptedException exc){
-            return null;
-        }
-        finally{
-            if (frame != null) frame.close();
-        }
-
-    }
-
-    public int[] getAvgPixel(Bitmap bm, int size, float xPosition) {
-
-        int[] sum = new int[3];
-        int count = 0;
-
-        for (int x = (int)(bm.getWidth() * xPosition) - size; x < (int)(bm.getWidth() * xPosition) + size; x++) {
-            for (int y = bm.getHeight() / 2 - size; y < bm.getHeight() / 2 + size; y++) {
-                int color = bm.getPixel(x, y);
-                sum[0] += (color >> 16) & 0xFF;
-                sum[1] +=(color >> 8) & 0xFF;
-                sum[2] += color & 0xFF;
-                count++;
-            }
-        }
-
-        sum[0] /= count; sum[1] /= count; sum[2] /= count;
-        return sum;
-    }
-
 
     @Override
     public void runOpMode() {
@@ -187,10 +117,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 640f/480f);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
-
-
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
@@ -209,15 +137,15 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                         // step through the list of recognitions and display image position/size information for each one
                         // Note: "Image number" refers to the randomized image orientation/number
                         for (Recognition recognition : updatedRecognitions) {
-                            double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                            double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                            double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                            double height = Math.abs(recognition.getTop() - recognition.getBottom());
+                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                            telemetry.addData("", " ");
-                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                            telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                            telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                            telemetry.addData(""," ");
+                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                         }
                         telemetry.update();
                     }
@@ -236,7 +164,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -247,7 +175,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;

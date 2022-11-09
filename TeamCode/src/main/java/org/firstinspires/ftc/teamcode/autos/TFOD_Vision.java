@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -21,8 +22,7 @@ public class TFOD_Vision extends LinearOpMode {
     };
 
     private static final String VUFORIA_KEY =
-            "Ae+gmGj/////AAABmWz20p9iPUvOnbOi93QfB7sXbfkCt0bYRo0ZsF9MfCnyyqSzGT50iAvJq63Zsze7uk3efapcDwvsUKu7VS7cI0PKl2NJjJc3WzUzZw66E7qNLah2J06uP5XNWi262fa0EcXDFRazWernOoMDrdd2Rh6W1l5Wo9m6TWPDXeToJWbxoEAlURg7wosy4dIU5tGFcQNZ8B9ZODO+FxzYKUz7HOQmZ2FVHF7kGtWJsk+7ikLsh80gtIQFs6M9qY8gvTyhUPZJKzzvTGSvbbotaVzpzWd4Brvl1w00NXnGy/rVVr/cvN+6bBIN2/S/Qrxx4OhFF01r5eTNDshoiQV9xTJQ2Zvcl7eVB1C8lqe1RdtM8I1L";
-
+            "Acdz4y//////AAABmW70zDxKuEnWrJY6iYczknpDiqeSYqA9IRXuJzhbM0+fRsY0g5rvwouqXOHVlvH/Nf4497j/5YltWntYrjROZWpFeh6E3RbeYfTKzmBCugWJgep4koejh5vMsEAouaqEqQA53H89VYjlf5uEA8Z9p0Ti3FC4yP+fGy68ktKx22IVuprZr9nwfDv+ky2RBfL+FP42Ew+yqTVguX+NQ//41Fv9XXZxUaL0ZL4FnZxzb6A9KlXPvIlN41QpAYAT/n3XhuD8lwdVS2bcjPgaFD1qbcsVKg8V57QGwfUdd9CfEHqwJatdqEOamTqQfAf4wdnrs7TWDwBkpmErMbir+yPMImtlumeXdQezlnkUG9V4MBXy";
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
@@ -55,14 +55,13 @@ public class TFOD_Vision extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16/9);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
-
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 if (tfod != null) {
@@ -77,39 +76,13 @@ public class TFOD_Vision extends LinearOpMode {
                         for (Recognition recognition : updatedRecognitions) {
                             double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
                             double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                            int width  = (int) Math.abs(recognition.getRight() - recognition.getLeft());
-                            int height = (int) Math.abs(recognition.getTop()  - recognition.getBottom());
+                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
                             telemetry.addData(""," ");
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                            /*int[] sum = new int[3];
-                            int count = 0;
-                            int result;
-                            Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                            for (int x = (int)(width * col) - 5; x < (int)(width * col) + 5; x++) {
-                                for (int y = height / 2 - 5; y < height / 2 + 5; y++) {
-                                    int color = bm.getPixel((int) row, (int) col);
-                                    sum[0] += (color >> 16) & 0xFF;
-                                    sum[1] += (color >> 8) & 0xFF;
-                                    sum[2] += color & 0xFF;
-                                    count++;
-                                }
-                            }
-
-                            sum[0] /= count; sum[1] /= count; sum[2] /= count;
-                            int[] color = sum;
-                            if (color[0] > color[1] && color[0] > color[2]) {
-                                result = 1;
-                                telemetry.addData("red is largest", result);
-                            } else if (color[1] > color[2]) {
-                                result = 2;
-                                telemetry.addData("green is largest", result);
-                            } else {
-                                result = 0;
-                                telemetry.addData("blue is largest", result);
-                            }*/
                         }
                         telemetry.update();
                     }
@@ -128,7 +101,7 @@ public class TFOD_Vision extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -152,6 +125,3 @@ public class TFOD_Vision extends LinearOpMode {
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }
-
-
-
