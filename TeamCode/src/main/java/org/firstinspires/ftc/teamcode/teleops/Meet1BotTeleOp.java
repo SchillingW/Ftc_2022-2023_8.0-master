@@ -29,6 +29,7 @@ public class Meet1BotTeleOp extends OpMode {
     public double linearSpeed = 0.55;
 
     public boolean moveToNext;
+    public boolean manualControl;
 
     // motor declaration
     public Motor slide;
@@ -55,6 +56,7 @@ public class Meet1BotTeleOp extends OpMode {
         input = new GamepadSystem(this);
 
         moveToNext = false;
+        manualControl = false;
     }
 
     // called repeatedly during program
@@ -67,14 +69,13 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Absolute Value", Math.abs(slide.encoder.getPosition() - reachHeight));
         telemetry.addData("Slide Joystick Input", input.gamepad2.getRightY());
 
-        /*
         // NORMAL
         robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
-         */
 
+        /*
         // GYRO COMP
         robot.odometry.update();
         robot.drive.driveFieldCentric(
@@ -82,11 +83,12 @@ public class Meet1BotTeleOp extends OpMode {
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed,
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
+         */
 
         telemetry.addData("heading", robot.odometry.getPose().getHeading());
 
         //if(input.gamepad2.getRightY() <= -0.01) slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
-        if(moveToNext)
+        if(moveToNext && !manualControl)
         {
             if(Math.abs(slide.encoder.getPosition() - reachHeight) < 20)
             {
@@ -95,10 +97,12 @@ public class Meet1BotTeleOp extends OpMode {
             }
             slide.set(Math.signum(reachHeight - slide.encoder.getPosition()));
         }
-        else
+        else if(manualControl)
         {
-            slide.set(-0.1);
+            reachHeight = slide.encoder.getPosition();
+            slide.set(input.gamepad2.getRightY() * armSpeed);
         }
+        else slide.set(-0.1);
         //full close=1 hi hi  hi
 
         if(input.gamepad1.getButton(GamepadKeys.Button.X))
@@ -134,13 +138,13 @@ public class Meet1BotTeleOp extends OpMode {
         if(input.gamepad2.getButton(GamepadKeys.Button.X))
         {
             moveToNext = true;
-            reachHeight = -1250;
+            reachHeight = -850;
         }
 
         if(input.gamepad2.getButton(GamepadKeys.Button.Y))
         {
             moveToNext = true;
-            reachHeight = -2150;
+            reachHeight = -1600;
         }
 
         if(input.gamepad2.getButton(GamepadKeys.Button.B))
@@ -155,5 +159,6 @@ public class Meet1BotTeleOp extends OpMode {
             reachHeight = 0;
         }
 
+        manualControl = (input.gamepad2.getRightY() != 0);
     }
 }
