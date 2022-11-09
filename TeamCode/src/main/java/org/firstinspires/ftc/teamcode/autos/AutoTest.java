@@ -91,7 +91,7 @@ public class AutoTest extends LinearOpMode {
 
         moveSlideToPos(low);
 
-        // CONE GRABBED
+        // CONE GRABBED hi
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         if (opModeIsActive()) moveSlideToPos(high);
