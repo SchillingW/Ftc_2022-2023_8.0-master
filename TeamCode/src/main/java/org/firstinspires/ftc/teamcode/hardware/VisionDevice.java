@@ -14,7 +14,10 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
 
 public class VisionDevice {
 
@@ -22,14 +25,13 @@ public class VisionDevice {
 
     public ElapsedTime timer = new ElapsedTime();
 
-    /**
-     * Initilizations of all of hardware
-     */
+    private static final String TFOD_MODEL_ASSET = "model2.tflite";
 
-    /**
-     * Vuforia
-     */
-
+    private static final String[] LABELS = {
+            "Outlet",
+            "Gear",
+            "Balloon",
+    };
 
     private static final String VUFORIA_KEY =
             "Ae+gmGj/////AAABmWz20p9iPUvOnbOi93QfB7sXbfkCt0bYRo0ZsF9MfCnyyqSzGT50iAvJq63Zsze7uk3efapcDwvsUKu7VS7cI0PKl2NJjJc3WzUzZw66E7qNLah2J06uP5XNWi262fa0EcXDFRazWernOoMDrdd2Rh6W1l5Wo9m6TWPDXeToJWbxoEAlURg7wosy4dIU5tGFcQNZ8B9ZODO+FxzYKUz7HOQmZ2FVHF7kGtWJsk+7ikLsh80gtIQFs6M9qY8gvTyhUPZJKzzvTGSvbbotaVzpzWd4Brvl1w00NXnGy/rVVr/cvN+6bBIN2/S/Qrxx4OhFF01r5eTNDshoiQV9xTJQ2Zvcl7eVB1C8lqe1RdtM8I1L";
@@ -50,64 +52,6 @@ public class VisionDevice {
         this.hardwareMap = map;
     }
 
-    public Bitmap getImage(){
-        VuforiaLocalizer.CloseableFrame frame = null;
-        int r = 0;
-        int b = 0;
-        int g = 0;
-        try{
-            frame = vuforia.getFrameQueue().take();
-            Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
-            long numImages = frame.getNumImages();
-            Image rgbImage = null;
-            int hc;
-
-            for (int i = 0; i < numImages; i++) {
-                Image img = frame.getImage(i);
-
-                int fmt = img.getFormat();
-                if (fmt == PIXEL_FORMAT.RGB565) {
-                    rgbImage = frame.getImage(i);
-                    break;
-                }
-            }
-            //telemetry.addData("numImages", numImages);
-            //telemetry.addData("rgbImage", rgbImage.getFormat());
-
-            telemetry.update();
-
-            Bitmap bm = Bitmap.createBitmap(rgbImage.getWidth(), rgbImage.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(rgbImage.getPixels());
-
-            return bm;
-        }
-        catch(InterruptedException exc){
-            return null;
-        }
-        finally{
-            if (frame != null) frame.close();
-        }
-
-    }
-
-    public int[] getAvgPixel(Bitmap bm, int size, float xPosition) {
-
-        int[] sum = new int[3];
-        int count = 0;
-
-        for (int x = (int)(bm.getWidth() * xPosition) - size; x < (int)(bm.getWidth() * xPosition) + size; x++) {
-            for (int y = bm.getHeight() / 2 - size; y < bm.getHeight() / 2 + size; y++) {
-                int color = bm.getPixel(x, y);
-                sum[0] += (color >> 16) & 0xFF;
-                sum[1] +=(color >> 8) & 0xFF;
-                sum[2] += color & 0xFF;
-                count++;
-            }
-        }
-
-        sum[0] /= count; sum[1] /= count; sum[2] /= count;
-        return sum;
-    }
 
     public void init() {
 
@@ -122,29 +66,36 @@ public class VisionDevice {
 
     public int perform(float xPosition) {
 
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            int[] color = getAvgPixel(getImage(), viewSize, xPosition);
-            if (color[0] > color[1] && color[0] > color[2]) {
-                result = 1;
-                telemetry.addData("red is largest", result);
-            } else if (color[1] > color[2]) {
-                result = 2;
-                telemetry.addData("green is largest", result);
-            } else {
-                result = 0;
-                telemetry.addData("blue is largest", result);
+        int result = 0;
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            telemetry.addData("# Objects Detected", updatedRecognitions.size());
+
+            // step through the list of recognitions and display image position/size information for each one
+            // Note: "Image number" refers to the randomized image orientation/number
+            for (Recognition recognition : updatedRecognitions) {
+                double col = (recognition.getLeft() + recognition.getRight()) / 2;
+                double row = (recognition.getTop() + recognition.getBottom()) / 2;
+                double width = Math.abs(recognition.getRight() - recognition.getLeft());
+                double height = Math.abs(recognition.getTop() - recognition.getBottom());
+
+                telemetry.addData("", " ");
+                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
+                telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                if (recognition.getLabel() == "Outlet") {
+                    result = 0;
+                }
+                if (recognition.getLabel() == "Gear") {
+                    result = 1;
+                }
+                if (recognition.getLabel() == "Balloon") {
+                    result = 2;
+                }
             }
 
 
-            telemetry.addData("red", color[0]);
-            telemetry.addData("green", color[1]);
-            telemetry.addData("blue", color[2]);
-
-
         }
-
         return result;
     }
 
