@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.hardware;
 import android.graphics.Bitmap;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -68,6 +68,7 @@ public class TFOD_Vision extends LinearOpMode {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
+                    int result;
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Objects Detected", updatedRecognitions.size());
@@ -84,8 +85,18 @@ public class TFOD_Vision extends LinearOpMode {
                             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                            if (recognition.getLabel() == "Outlet") {
+                                result = 0;
+                            }
+                            if (recognition.getLabel() == "Gear") {
+                                result = 1;
+                            }
+                            if (recognition.getLabel() == "Balloon") {
+                                result = 2;
+                            }
                         }
                         telemetry.update();
+
                     }
                 }
             }
