@@ -21,12 +21,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Meet1BotTeleOp extends OpMode {
 
     PursuitBot robot;
-    LinearSlide slide;
+    LinearSlide linearSlide;
 
     public double armSpeed = 0.75;
 
     public double turnSpeed = 0.55;
     public double linearSpeed = 0.55;
+
+    public int heightIndex = 0;
 
     // input system reference
     GamepadSystem input;
@@ -37,6 +39,7 @@ public class Meet1BotTeleOp extends OpMode {
 
         robot = new PursuitBot(telemetry, hardwareMap);
         input = new GamepadSystem(this);
+        linearSlide = new LinearSlide(telemetry, hardwareMap);
     }
 
     // called repeatedly during program
@@ -82,21 +85,22 @@ public class Meet1BotTeleOp extends OpMode {
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            slide.closeClaw();
+            linearSlide.closeClaw();
             telemetry.addData("servo", "close");
             telemetry.update();
         }
         //full open=0
         if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            slide.openClaw();
+            linearSlide.openClaw();
             telemetry.addData("servo", "open");
             telemetry.update();
         }
 
-        if(input.gamepad2.getButton(GamepadKeys.Button.A)) slide.goTo(slide.ground, telemetry);
-        if(input.gamepad2.getButton(GamepadKeys.Button.X)) slide.goTo(slide.low, telemetry);
-        if(input.gamepad2.getButton(GamepadKeys.Button.Y)) slide.goTo(slide.med, telemetry);
-        if(input.gamepad2.getButton(GamepadKeys.Button.B)) slide.goTo(slide.high, telemetry);
-        if(input.gamepad2.getRightY() != 0) slide.moveByJoystick(input.gamepad2.getRightY());
+        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP)) heightIndex++;
+        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) heightIndex--;
+        heightIndex = Math.min(linearSlide.slidePositions.length - 1, Math.max(0, heightIndex));
+
+        linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+        if(input.gamepad2.getRightY() != 0) linearSlide.moveByJoystick(input.gamepad2.getRightY());
     }
 }

@@ -37,7 +37,7 @@ public class LinearSlide
         double targetMagnitude = isAtTarget(reachHeight) ? minMagnitude : maxMagnitude;
 
         slideVector *= targetMagnitude/currentMagnitude;
-        while (!isAtTarget(reachHeight)) slide.set(slideVector);
+        if (!isAtTarget(reachHeight)) slide.set(slideVector);
 
         telemetry.addData("Current Slide Pos", slide.encoder.getPosition());
         telemetry.addData("Desired Slide Pos", reachHeight);
