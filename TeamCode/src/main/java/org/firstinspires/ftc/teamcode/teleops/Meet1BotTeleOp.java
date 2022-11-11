@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,20 +21,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Meet1BotTeleOp extends OpMode {
 
     PursuitBot robot;
+    LinearSlide slide;
 
     public double armSpeed = 0.75;
-    public int startHeight, reachHeight;
-    public int low, med, high;
 
     public double turnSpeed = 0.55;
     public double linearSpeed = 0.55;
-
-    public boolean moveToNext;
-    public boolean manualControl;
-
-    // motor declaration
-    public Motor slide;
-    public Servo claw;
 
     // input system reference
     GamepadSystem input;
@@ -43,20 +36,7 @@ public class Meet1BotTeleOp extends OpMode {
     public void init() {
 
         robot = new PursuitBot(telemetry, hardwareMap);
-
-        // initialize hardware devicesklm
-        //claw = hardwareMap.servo.get("claw"); hi
-        claw = hardwareMap.servo.get("claw");
-        claw.getController().pwmEnable();
-
-        slide = new Motor(hardwareMap, "slide");
-        slide.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        reachHeight = 0;
-
         input = new GamepadSystem(this);
-
-        moveToNext = false;
-        manualControl = false;
     }
 
     // called repeatedly during program
@@ -64,10 +44,6 @@ public class Meet1BotTeleOp extends OpMode {
     public void loop() {
 
         telemetry.addData("Drive Speed", linearSpeed);
-        telemetry.addData("Slide Pos", slide.encoder.getPosition());
-        telemetry.addData("Desired Pos", reachHeight);
-        telemetry.addData("Absolute Value", Math.abs(slide.encoder.getPosition() - reachHeight));
-        telemetry.addData("Slide Joystick Input", input.gamepad2.getRightY());
 
         // NORMAL
         robot.drive.driveRobotCentric(
@@ -86,24 +62,6 @@ public class Meet1BotTeleOp extends OpMode {
          */
 
         telemetry.addData("heading", robot.odometry.getPose().getHeading());
-
-        //if(input.gamepad2.getRightY() <= -0.01) slide.set(input.gamepad2.getRightY() * armSpeed - 0.1);
-        if(moveToNext && !manualControl)
-        {
-            if(Math.abs(slide.encoder.getPosition() - reachHeight) < 20)
-            {
-                moveToNext = false;
-                return;
-            }
-            slide.set(Math.signum(reachHeight - slide.encoder.getPosition()));
-        }
-        else if(manualControl)
-        {
-            reachHeight = slide.encoder.getPosition();
-            slide.set(input.gamepad2.getRightY() * armSpeed);
-        }
-        else slide.set(-0.1);
-        //full close=1 hi hi  hi
 
         if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {
@@ -124,41 +82,21 @@ public class Meet1BotTeleOp extends OpMode {
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-            claw.setPosition(0);
+            slide.closeClaw();
             telemetry.addData("servo", "close");
             telemetry.update();
         }
         //full open=0
         if (input.gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-            claw.setPosition(0.5);
+            slide.openClaw();
             telemetry.addData("servo", "open");
             telemetry.update();
         }
 
-        if(input.gamepad2.getButton(GamepadKeys.Button.X))
-        {
-            moveToNext = true;
-            reachHeight = -850;
-        }
-
-        if(input.gamepad2.getButton(GamepadKeys.Button.Y))
-        {
-            moveToNext = true;
-            reachHeight = -1600;
-        }
-
-        if(input.gamepad2.getButton(GamepadKeys.Button.B))
-        {
-            moveToNext = true;
-            reachHeight = -3050;
-        }
-
-        if(input.gamepad2.getButton(GamepadKeys.Button.A))
-        {
-            moveToNext = true;
-            reachHeight = 0;
-        }
-
-        manualControl = (input.gamepad2.getRightY() != 0);
+        if(input.gamepad2.getButton(GamepadKeys.Button.A)) slide.goTo(slide.ground, telemetry);
+        if(input.gamepad2.getButton(GamepadKeys.Button.X)) slide.goTo(slide.low, telemetry);
+        if(input.gamepad2.getButton(GamepadKeys.Button.Y)) slide.goTo(slide.med, telemetry);
+        if(input.gamepad2.getButton(GamepadKeys.Button.B)) slide.goTo(slide.high, telemetry);
+        if(input.gamepad2.getRightY() != 0) slide.moveByJoystick(input.gamepad2.getRightY());
     }
 }
