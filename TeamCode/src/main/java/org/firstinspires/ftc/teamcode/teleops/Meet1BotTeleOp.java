@@ -23,12 +23,11 @@ public class Meet1BotTeleOp extends OpMode {
     PursuitBot robot;
     LinearSlide linearSlide;
 
-    public double armSpeed = 0.75;
-
     public double turnSpeed = 0.55;
     public double linearSpeed = 0.55;
 
     public int heightIndex = 0;
+    public boolean joystickControl = false;
 
     // input system reference
     GamepadSystem input;
@@ -96,11 +95,16 @@ public class Meet1BotTeleOp extends OpMode {
             telemetry.update();
         }
 
-        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP)) heightIndex++;
-        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) heightIndex--;
-        heightIndex = Math.min(linearSlide.slidePositions.length - 1, Math.max(0, heightIndex));
+        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP)) {heightIndex++; joystickControl = false;}
+        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) {heightIndex--; joystickControl = false;}
+        heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
+        telemetry.addData("heightIndex", heightIndex);
 
-        if(input.gamepad2.getRightY() != 0) linearSlide.moveByJoystick(input.gamepad2.getRightY());
-        else linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+        if(input.gamepad2.getRightY() != 0)
+        {
+            linearSlide.moveByJoystick(input.gamepad2.getRightY());
+            joystickControl = true;
+        }
+        else if(!joystickControl) linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
     }
 }

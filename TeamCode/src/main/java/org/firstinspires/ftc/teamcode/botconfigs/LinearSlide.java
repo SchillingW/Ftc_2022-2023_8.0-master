@@ -11,8 +11,9 @@ public class LinearSlide
     private Motor slide;
     private Servo claw;
 
-    private double minMagnitude = 0.01;
+    private double minMagnitude = 0.2;
     private double maxMagnitude = 0.5;
+    private double slideZeroMag = -0.1;
 
     private int errorMargin = 20;
     private double armSpeed = 0.75;
@@ -45,8 +46,7 @@ public class LinearSlide
         telemetry.addData("Target Slide Magnitude", targetMagnitude);
     }
 
-    public void moveByJoystick(double mag) {slide.set(mag * armSpeed);}
-
+    public void moveByJoystick(double mag) {slide.set((mag == 0) ? slideZeroMag : mag * armSpeed);}
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
 
     public void openClaw() {claw.setPosition(0.5);}

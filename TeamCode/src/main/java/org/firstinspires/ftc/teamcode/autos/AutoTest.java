@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
@@ -20,8 +21,7 @@ public class AutoTest extends LinearOpMode {
     public PursuitBot robot;
     public VisionDevice vision;
     public ElapsedTime timer = new ElapsedTime();
-    public Motor slide;
-    public Servo claw;
+    public LinearSlide linearSlide;
 
     public boolean moveToNext;
     public int low = -850; public int med = -1600; public int high = -3050;
@@ -35,9 +35,6 @@ public class AutoTest extends LinearOpMode {
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 1;
 
-        slide = new Motor(hardwareMap, "slide");
-        claw = hardwareMap.servo.get("claw");
-
         moveToNext = false;
 
         vision = new VisionDevice(telemetry, hardwareMap);
@@ -49,23 +46,23 @@ public class AutoTest extends LinearOpMode {
 
         // START MOVEMENT
 
-        if (opModeIsActive()) slide.set(0);
-        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) linearSlide.goTo(linearSlide.ground, telemetry);
+        if (opModeIsActive()) linearSlide.closeClaw();
         if (opModeIsActive()) sleep(2000);
-        moveSlideToPos(low);
+        linearSlide.goTo(linearSlide.low, telemetry);
 
         // CONE GRABBED
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) moveSlideToPos(high);
+        if (opModeIsActive()) linearSlide.goTo(linearSlide.high, telemetry);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
 
         if (opModeIsActive()) sleep(1000);
         //if (opModeIsActive()) sleep(1000);
-        if (opModeIsActive()) claw.setPosition(0.5);
+        if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
 
 
@@ -74,25 +71,25 @@ public class AutoTest extends LinearOpMode {
         // CONE DROPPED
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        moveSlideToPos(low);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        linearSlide.goTo(linearSlide.low, telemetry);;
+
+        /*robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCone(1) - 1, robot.yDim.toCone(1), new Rotation2d()), telemetry, this);
 
         // AT CONE GRAB LOCATION
 
-        Down();
-        slide.set(0);
+        linearSlide.goTo(linearSlide.ground, telemetry);
         if (opModeIsActive()) sleep(1000);
-        if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) linearSlide.closeClaw();
         if (opModeIsActive()) sleep(2000);
 
-        moveSlideToPos(low);
+        linearSlide.goTo(linearSlide.low, telemetry);;
 
         // CONE GRABBED hi
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        if (opModeIsActive()) moveSlideToPos(high);
+        if (opModeIsActive()) linearSlide.goTo(linearSlide.high, telemetry);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP LOCATION
@@ -100,40 +97,12 @@ public class AutoTest extends LinearOpMode {
         if (opModeIsActive()) sleep(2000);
         //if (opModeIsActive()) sleep(500);
         //if (opModeIsActive()) slide.set(1);
-        if (opModeIsActive()) claw.setPosition(0.5);
-        if (opModeIsActive()) sleep(2000);
+        if (opModeIsActive()) linearSlide.openClaw();
+        if (opModeIsActive()) sleep(2000);*/
 
-        // CONE  hi
-
+        // PARK
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
-        moveSlideToPos(low);
-    }
-
-    public void Up()
-    {
-        timer.reset();
-
-        while(opModeIsActive() && timer.seconds() <=0.5)
-        {
-            slide.set(-1);
-        }
-    }
-
-    public void Down()
-    {
-        timer.reset();
-
-        while(opModeIsActive() && timer.seconds() <= 0.5)
-        {
-            slide.set(1);
-        }
-    }
-
-    public void moveSlideToPos(int reachHeight)
-    {
-        while(Math.abs(slide.encoder.getPosition() - reachHeight) > 20)
-            slide.set(Math.signum(reachHeight - slide.encoder.getPosition()));
-        slide.set(-0.1);
+        linearSlide.goTo(linearSlide.low, telemetry);;
     }
 }
 
