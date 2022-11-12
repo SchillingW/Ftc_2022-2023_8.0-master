@@ -11,7 +11,7 @@ public class LinearSlide
     private Motor slide;
     private Servo claw;
 
-    private double minMagnitude = 0.1;
+    private double minMagnitude = 0.01;
     private double maxMagnitude = 0.5;
 
     private int errorMargin = 20;
