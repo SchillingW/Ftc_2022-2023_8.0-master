@@ -16,10 +16,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.Tfod;
 
 public class TFOD_Vision extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "model2.tflite";
+    private static final String TFOD_MODEL_ASSET = "ObjectDetection.tflite";
 
     private static final String[] LABELS = {
-            "1 Cone",
+            "Outlet",
+            "Gear",
+            "Balloon",
     };
 
     private static final String VUFORIA_KEY =
