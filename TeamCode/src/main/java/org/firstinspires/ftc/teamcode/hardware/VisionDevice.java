@@ -25,11 +25,11 @@ public class VisionDevice {
 
     public ElapsedTime timer = new ElapsedTime();
 
-    private static final String TFOD_MODEL_ASSET = "ObjectDetection.tflite";
+    private static final String TFOD_MODEL_ASSET = "ModelOutletGearBalloon.tflite";
 
     private static final String[] LABELS = {
             "Outlet",
-            "Gear",
+            "Gears",
             "Balloon",
     };
 
@@ -60,7 +60,7 @@ public class VisionDevice {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 640f/480f);
+            tfod.setZoom(1.0, 8.0/6.0);
         }
     }
 
@@ -74,28 +74,32 @@ public class VisionDevice {
             // step through the list of recognitions and display image position/size information for each one
             // Note: "Image number" refers to the randomized image orientation/number
             for (Recognition recognition : updatedRecognitions) {
-                double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                double height = Math.abs(recognition.getTop() - recognition.getBottom());
+                double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+                double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+                double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+                double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
 
-                telemetry.addData("", " ");
-                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-                telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                telemetry.addData(""," ");
+                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+                telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+                telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                 if (recognition.getLabel() == "Outlet") {
-                    result = 0;
+                    telemetry.addData("Real Image balloon", 2);
+                    result = 2;
                 }
                 if (recognition.getLabel() == "Gear") {
+                    telemetry.addData("Real Image Gear", 1);
                     result = 1;
                 }
                 if (recognition.getLabel() == "Balloon") {
-                    result = 2;
+                    telemetry.addData("Real Image outlet", 0);
+                    result = 0;
                 }
             }
-
+            telemetry.update();
 
         }
+
         return result;
     }
 

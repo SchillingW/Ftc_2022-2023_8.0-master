@@ -16,11 +16,11 @@ import org.firstinspires.ftc.robotcore.external.tfod.Tfod;
 
 public class TFOD_Vision extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "ObjectDetection.tflite";
+    private static final String TFOD_MODEL_ASSET = "ModelOutletGearBalloon.tflite";
 
     private static final String[] LABELS = {
             "Outlet",
-            "Gear",
+            "Gears",
             "Balloon",
     };
 
@@ -58,7 +58,7 @@ public class TFOD_Vision extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.0, 8.0/6.0);
         }
 
         /** Wait for the game to begin */
@@ -88,13 +88,16 @@ public class TFOD_Vision extends LinearOpMode {
                             telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                             telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                             if (recognition.getLabel() == "Outlet") {
-                                result = 0;
+                                telemetry.addData("Real Image balloon", 2);
+                                result = 2;
                             }
                             if (recognition.getLabel() == "Gear") {
+                                telemetry.addData("Real Image Gear", 1);
                                 result = 1;
                             }
                             if (recognition.getLabel() == "Balloon") {
-                                result = 2;
+                                telemetry.addData("Real Image outlet", 0);
+                                result = 0;
                             }
                         }
                         telemetry.update();
