@@ -29,6 +29,9 @@ public class Meet1BotTeleOp extends OpMode {
     public int heightIndex = 0;
     public boolean joystickControl = false;
 
+    public boolean lastUp;
+    public boolean lastDown;
+
     // input system reference
     GamepadSystem input;
 
@@ -95,10 +98,14 @@ public class Meet1BotTeleOp extends OpMode {
             telemetry.update();
         }
 
-        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP)) {heightIndex++; joystickControl = false;}
-        if (input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) {heightIndex--; joystickControl = false;}
+        boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP);
+        boolean thisDown = input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN);
+        if (thisUp && !lastUp) {heightIndex++; joystickControl = false;}
+        if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
         heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
         telemetry.addData("heightIndex", heightIndex);
+        lastUp = thisUp;
+        lastDown = thisDown;
 
         if(input.gamepad2.getRightY() != 0)
         {
