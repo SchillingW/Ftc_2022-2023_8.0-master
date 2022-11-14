@@ -62,7 +62,7 @@ public class PursuitBot {
         // store debugging device
         this.tele = tele;
 
-        // initialize dimensions
+        // initialize dimensions hi
         xDim.botanchor2botcenterHARDWARE = 6;
         yDim.botanchor2botcenterHARDWARE = 6.5;
         xDim.botanchor2clawcenterHARDWARE = 18;
