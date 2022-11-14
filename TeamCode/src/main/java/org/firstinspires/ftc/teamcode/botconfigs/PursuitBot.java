@@ -22,7 +22,7 @@ public class PursuitBot {
     public FieldDimensions xDim = new FieldDimensions();
     public FieldDimensions yDim = new FieldDimensions();
 
-    // debugging device
+    // debugging devices
     public Telemetry tele;
 
     // mecanum wheel drive train
