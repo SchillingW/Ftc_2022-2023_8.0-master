@@ -42,7 +42,8 @@ public class AutoTest extends LinearOpMode {
         vision.init();
         int result = 0;
         while (!isStarted()) result = vision.perform(1f / 3f);
-
+        telemetry.addData("result", result);
+        telemetry.update();
         waitForStart();
 
         // START MOVEMENT
