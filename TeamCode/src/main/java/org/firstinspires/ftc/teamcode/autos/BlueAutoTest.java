@@ -2,114 +2,72 @@ package org.firstinspires.ftc.teamcode.autos;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
+import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="BluePursuitBotAuto", group="PursuitBot")
+@Autonomous(name="BlueAutoTest", group="PursuitBot")
 public class BlueAutoTest extends LinearOpMode {
 
     public PursuitBot robot;
     public VisionDevice vision;
-    public ElapsedTime timer = new ElapsedTime();
-    public Motor slide;
-    public Servo claw;
+    public LinearSlide linearSlide;
 
-    public int startXOff = -6;
+    public boolean moveToNext;
 
     @Override
     public void runOpMode() {
 
         robot = new PursuitBot(telemetry, hardwareMap);
-        slide = new Motor(hardwareMap, "slide");
-        claw = hardwareMap.servo.get("claw");
+        robot.xDim.cellcorner2botanchorPLACEMENT = 1;
+        robot.yDim.cellcorner2botanchorPLACEMENT = 2;
+        robot.xDim.cellPLACEMENT = 0;
+        robot.yDim.cellPLACEMENT = 4;
+
+        linearSlide = new LinearSlide(telemetry, hardwareMap);
+        moveToNext = false;
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
         int result = 0;
         while (!isStarted()) result = vision.perform(1f / 3f);
-
+        telemetry.addData("result", result);
+        telemetry.update();
         waitForStart();
+
         // START MOVEMENT
 
-        if (opModeIsActive()) slide.set(0);
-        //if (opModeIsActive()) claw.setPosition(0);
+        if (opModeIsActive()) linearSlide.closeClaw();
         if (opModeIsActive()) sleep(2000);
+        linearSlide.goToFull(linearSlide.low, telemetry, this);
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(1, -26.5 - startXOff, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(29.25, -26.5 - startXOff, new Rotation2d()), telemetry, this);
-        //if (opModeIsActive()) Up();
-        //robot.reachPoint(new Pose2d(29.5, -39.25 - startXOff, new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
+        linearSlide.goToFull(linearSlide.high, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
-
-        //if (opModeIsActive()) sleep(2000);
-        //if (opModeIsActive()) slide.set(1);
+        linearSlide.goToFull(linearSlide.med, telemetry, this);
         //if (opModeIsActive()) sleep(1000);
-        //if (opModeIsActive()) claw.setPosition(0.5);
-        //if (opModeIsActive()) sleep(2000);
-        //robot.reachPoint(new Pose2d(26.8, -39.5 - startXOff, new Rotation2d()), telemetry, this);
-        // CONE DROPPED
-
-        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(27.5, -28 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(1.25, -28 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(1.25, -5 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(17.5, -5 - startXOff, new Rotation2d()), telemetry, this);
-
-        // AT CONE GRAB LOCATION
-
-        //if (opModeIsActive()) sleep(1000);
-        //if (opModeIsActive()) claw.setPosition(0);
-        //if (opModeIsActive()) sleep(2000);
-
-        // CONE GRABBED
-
-        //if (opModeIsActive()) Up();
-        //robot.reachPoint(new Pose2d(27.5, -5 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(29.25, -41.6 - startXOff, new Rotation2d()), telemetry, this);
-
-        // AT DROP LOCATION
-
-        //if (opModeIsActive()) sleep(2000);
+        if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
-        //if (opModeIsActive()) sleep(500);
-        //if (opModeIsActive()) claw.setPosition(0.5);
-        //if (opModeIsActive()) sleep(2000);
+
+
+        if (opModeIsActive()) sleep(2000);
 
         // CONE DROPPED
 
-        //robot.reachPoint(new Pose2d(27.5, -41.6 - startXOff, new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(26, -4 - 24 + result * 24 - startXOff, new Rotation2d()),
-                telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        linearSlide.goToFull(linearSlide.low, telemetry, this);
 
-    }
-    public void Up()
-    {
-        timer.reset();
-
-        while(opModeIsActive() && timer.seconds() <= 1)
-        {
-            slide.set(-1);
-        }
-    }
-
-    public void Down()
-    {
-        timer.reset();
-
-        while(opModeIsActive() && timer.seconds() <= 1)
-        {
-            slide.set(1);
-        }
+        // PARK
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this);
+        linearSlide.goToFull(linearSlide.ground, telemetry, this);
     }
 }
 

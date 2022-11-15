@@ -69,7 +69,6 @@ public class VisionDevice {
         int result = 0;
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
-            telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
             // step through the list of recognitions and display image position/size information for each one
             // Note: "Image number" refers to the randomized image orientation/number
@@ -84,16 +83,16 @@ public class VisionDevice {
                 telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                 telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
                 if (recognition.getLabel() == "Outlet") {
-                    telemetry.addData("Real Image balloon", 2);
-                    result = 2;
+                    telemetry.addData("Real Image balloon", 0);
+                    result = 0;
                 }
                 if (recognition.getLabel() == "Gear") {
                     telemetry.addData("Real Image Gear", 1);
                     result = 1;
                 }
                 if (recognition.getLabel() == "Balloon") {
-                    telemetry.addData("Real Image outlet", 0);
-                    result = 0;
+                    telemetry.addData("Real Image outlet", 2);
+                    result = 2;
                 }
             }
             telemetry.update();

@@ -65,8 +65,8 @@ public class PursuitBot {
         // initialize dimensions hi
         xDim.botanchor2botcenterHARDWARE = 6;
         yDim.botanchor2botcenterHARDWARE = 6.5;
-        xDim.botanchor2clawcenterHARDWARE = 18;
-        yDim.botanchor2clawcenterHARDWARE = 7;
+        xDim.botanchor2clawcenterHARDWARE = 16;
+        yDim.botanchor2clawcenterHARDWARE = 6.5;
 
         // initialize drive train
         motorFL = new Motor(map, "motorFL");
