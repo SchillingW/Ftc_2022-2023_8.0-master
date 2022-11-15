@@ -83,6 +83,7 @@ public class VisionDevice {
                 telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
                 telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
                 telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+                telemetry.update();
                 if (recognition.getLabel() == "Outlet") {
                     telemetry.addData("Real Image balloon", 2);
                     result = 2;
