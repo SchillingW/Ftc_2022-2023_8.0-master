@@ -32,9 +32,9 @@ public class VisionDevice {
             "Gears",
             "Balloon",
     };
-
+//
     private static final String VUFORIA_KEY =
-            "Ae+gmGj/////AAABmWz20p9iPUvOnbOi93QfB7sXbfkCt0bYRo0ZsF9MfCnyyqSzGT50iAvJq63Zsze7uk3efapcDwvsUKu7VS7cI0PKl2NJjJc3WzUzZw66E7qNLah2J06uP5XNWi262fa0EcXDFRazWernOoMDrdd2Rh6W1l5Wo9m6TWPDXeToJWbxoEAlURg7wosy4dIU5tGFcQNZ8B9ZODO+FxzYKUz7HOQmZ2FVHF7kGtWJsk+7ikLsh80gtIQFs6M9qY8gvTyhUPZJKzzvTGSvbbotaVzpzWd4Brvl1w00NXnGy/rVVr/cvN+6bBIN2/S/Qrxx4OhFF01r5eTNDshoiQV9xTJQ2Zvcl7eVB1C8lqe1RdtM8I1L";
+            "Acdz4y//////AAABmW70zDxKuEnWrJY6iYczknpDiqeSYqA9IRXuJzhbM0+fRsY0g5rvwouqXOHVlvH/Nf4497j/5YltWntYrjROZWpFeh6E3RbeYfTKzmBCugWJgep4koejh5vMsEAouaqEqQA53H89VYjlf5uEA8Z9p0Ti3FC4yP+fGy68ktKx22IVuprZr9nwfDv+ky2RBfL+FP42Ew+yqTVguX+NQ//41Fv9XXZxUaL0ZL4FnZxzb6A9KlXPvIlN41QpAYAT/n3XhuD8lwdVS2bcjPgaFD1qbcsVKg8V57QGwfUdd9CfEHqwJatdqEOamTqQfAf4wdnrs7TWDwBkpmErMbir+yPMImtlumeXdQezlnkUG9V4MBXy";
 
 
     private VuforiaLocalizer vuforia;
@@ -43,8 +43,6 @@ public class VisionDevice {
 
     public Telemetry telemetry;
     public HardwareMap hardwareMap;
-
-    public int result;
 
     public VisionDevice(Telemetry telemetry, HardwareMap map) {
 
@@ -67,40 +65,46 @@ public class VisionDevice {
     public int perform(float xPosition) {
 
         int result = 0;
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        if (updatedRecognitions != null) {
 
-            // step through the list of recognitions and display image position/size information for each one
-            // Note: "Image number" refers to the randomized image orientation/number
-            for (Recognition recognition : updatedRecognitions) {
-                double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
-                double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Objects Detected", updatedRecognitions.size());
 
-                telemetry.addData(""," ");
-                telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
-                telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
-                telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                if (recognition.getLabel() == "Outlet") {
-                    telemetry.addData("Real Image balloon", 0);
-                    result = 0;
+                // step through the list of recognitions and display image position/size information for each one
+                // Note: "Image number" refers to the randomized image orientation/number
+                for (Recognition recognition : updatedRecognitions) {
+                    double col = (recognition.getLeft() + recognition.getRight()) / 2;
+                    double row = (recognition.getTop() + recognition.getBottom()) / 2;
+                    double width = Math.abs(recognition.getRight() - recognition.getLeft());
+                    double height = Math.abs(recognition.getTop() - recognition.getBottom());
+
+                    telemetry.addData("", " ");
+                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                    telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
+                    telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
+                    if (recognition.getLabel() == "Outlet") {
+                        telemetry.addData("Real Image balloon", 2);
+                        result = 2;
+                    }
+                    if (recognition.getLabel() == "Gear") {
+                        telemetry.addData("Real Image Gear", 1);
+                        result = 1;
+                    }
+                    if (recognition.getLabel() == "Balloon") {
+                        telemetry.addData("Real Image outlet", 0);
+                        result = 0;
+                    }
                 }
-                if (recognition.getLabel() == "Gear") {
-                    telemetry.addData("Real Image Gear", 1);
-                    result = 1;
-                }
-                if (recognition.getLabel() == "Balloon") {
-                    telemetry.addData("Real Image outlet", 2);
-                    result = 2;
-                }
+                telemetry.update();
+
             }
-            telemetry.update();
-
         }
-
         return result;
     }
+
 
 
 
@@ -118,9 +122,6 @@ public class VisionDevice {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
     }
 
     /**
@@ -130,9 +131,14 @@ public class VisionDevice {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minResultConfidence = 0.75f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
+        tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
+        // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
+        // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
     }
 }
