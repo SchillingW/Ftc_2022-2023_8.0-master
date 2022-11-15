@@ -25,7 +25,7 @@ public class VisionDevice {
 
     public ElapsedTime timer = new ElapsedTime();
 
-    private static final String TFOD_MODEL_ASSET = "ModelOutletGearBalloon.tflite";
+    private static final String TFOD_MODEL_ASSET = "ImprovedModel11172.tflite";
 
     private static final String[] LABELS = {
             "Outlet",
