@@ -21,8 +21,8 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
 
         robot = new PursuitBot(telemetry, hardwareMap);
-        robot.xDim.cellcorner2botanchorPLACEMENT = 1;
-        robot.yDim.cellcorner2botanchorPLACEMENT = 2;
+        robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
+        robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 1;
 

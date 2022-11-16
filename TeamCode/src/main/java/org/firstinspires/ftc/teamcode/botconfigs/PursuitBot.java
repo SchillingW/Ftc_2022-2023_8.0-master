@@ -39,7 +39,7 @@ public class PursuitBot {
     public DoubleSupplier encoderH;
 
     // hardware specifications
-    public double wheelDiameter = 2.5;
+    public double wheelDiameter = 2.3622;
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
@@ -47,7 +47,7 @@ public class PursuitBot {
     public double encoderWheelOffset = 1.5;
 
     // robot movement datas
-    public double adjustSpeed = 0.1;
+    public double adjustSpeed = 0.15;
     public double minSpeed = 0.3;
     public double minGradient = 3;
     public double maxSpeed = 0.5;
@@ -63,9 +63,9 @@ public class PursuitBot {
         this.tele = tele;
 
         // initialize dimensions hi
-        xDim.botanchor2botcenterHARDWARE = 6;
+        xDim.botanchor2botcenterHARDWARE = 6.5;
         yDim.botanchor2botcenterHARDWARE = 6.5;
-        xDim.botanchor2clawcenterHARDWARE = 16;
+        xDim.botanchor2clawcenterHARDWARE = 18.5;
         yDim.botanchor2clawcenterHARDWARE = 6.5;
 
         // initialize drive train
