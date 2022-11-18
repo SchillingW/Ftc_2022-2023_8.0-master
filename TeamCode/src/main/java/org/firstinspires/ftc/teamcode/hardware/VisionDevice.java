@@ -85,15 +85,15 @@ public class VisionDevice {
                     telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                     telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                     telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
-                    if (recognition.getLabel() == "Outlet") {
+                    if (recognition.getLabel().equals("Outlet")) {
                         telemetry.addData("Real Image balloon", 2);
                         result = 2;
                     }
-                    if (recognition.getLabel() == "Gear") {
+                    if (recognition.getLabel().equals("Gear")) {
                         telemetry.addData("Real Image Gear", 1);
                         result = 1;
                     }
-                    if (recognition.getLabel() == "Balloon") {
+                    if (recognition.getLabel().equals("Balloon")) {
                         telemetry.addData("Real Image outlet", 0);
                         result = 0;
                     }

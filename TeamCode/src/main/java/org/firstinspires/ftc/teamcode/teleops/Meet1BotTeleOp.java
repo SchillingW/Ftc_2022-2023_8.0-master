@@ -107,11 +107,14 @@ public class Meet1BotTeleOp extends OpMode {
         lastUp = thisUp;
         lastDown = thisDown;
 
-        if(input.gamepad2.getRightY() != 0)
+        if (input.gamepad2.getRightY() != 0 || joystickControl)
         {
             linearSlide.moveByJoystick(input.gamepad2.getRightY());
             joystickControl = true;
         }
-        else if(!joystickControl) linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+        else
+        {
+            linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+        }
     }
 }
