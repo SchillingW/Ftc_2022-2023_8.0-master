@@ -21,7 +21,7 @@ public class LinearSlide
     private double armSpeed = 0.75;
 
     public int ground = 0; public int low = -1250;
-    public int med = -2150; public int high = -3050;
+    public int med = -2150; public int high = -3030;
     public int[] slidePositions = {ground, low, med, high};
 
     public double extraTime = 0.5;

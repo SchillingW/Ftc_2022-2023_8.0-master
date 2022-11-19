@@ -58,7 +58,7 @@ public class VisionDevice {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 8.0/6.0);
+            tfod.setZoom(1.5, 8.0/6.0);
         }
     }
 
@@ -82,14 +82,14 @@ public class VisionDevice {
                     double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
                     telemetry.addData("", " ");
-                    telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+                    //telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                     telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                     telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                     if (recognition.getLabel().equals("Outlet")) {
                         telemetry.addData("Real Image balloon", 2);
                         result = 2;
                     }
-                    if (recognition.getLabel().equals("Gear")) {
+                    if (recognition.getLabel().equals("Gears")) {
                         telemetry.addData("Real Image Gear", 1);
                         result = 1;
                     }

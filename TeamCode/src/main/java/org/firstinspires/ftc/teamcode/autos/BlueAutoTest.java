@@ -31,11 +31,12 @@ public class BlueAutoTest extends LinearOpMode {
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
-        int result = 0;
-        while (!isStarted()) result = vision.perform(1f / 3f);
+        waitForStart();
+        int result = vision.perform(1f / 3f);
+        sleep(2000);
         telemetry.addData("result", result);
         telemetry.update();
-        waitForStart();
+        sleep(2000);
 
         // START MOVEMENT
 
