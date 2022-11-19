@@ -27,9 +27,6 @@ public class AutoTest extends LinearOpMode {
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 1;
 
-        linearSlide = new LinearSlide(telemetry, hardwareMap);
-        moveToNext = false;
-
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
 
