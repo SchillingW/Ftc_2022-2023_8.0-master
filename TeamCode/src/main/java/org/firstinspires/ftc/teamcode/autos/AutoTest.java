@@ -16,7 +16,7 @@ public class AutoTest extends LinearOpMode {
     public LinearSlide linearSlide;
 
     public boolean moveToNext;
-
+    //auto
     @Override
     public void runOpMode() {
 
