@@ -14,6 +14,7 @@ public class BlueAutoTest extends LinearOpMode {
     public PursuitBot robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
+    public int dropHeight = -2975;
 
     public boolean moveToNext;
 
@@ -52,7 +53,7 @@ public class BlueAutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
-        linearSlide.goToFull(linearSlide.med, telemetry, this);
+        linearSlide.goToFull(dropHeight, telemetry, this);
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
