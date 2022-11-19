@@ -52,7 +52,7 @@ public class AutoTest extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
         // AT DROP CONE LOCATION
-        linearSlide.goToFull(linearSlide.med, telemetry, this);
+        //linearSlide.goToFull(linearSlide.med, telemetry, this);
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
