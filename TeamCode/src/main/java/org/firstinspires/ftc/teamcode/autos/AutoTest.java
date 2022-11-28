@@ -30,6 +30,8 @@ public class AutoTest extends LinearOpMode {
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
 
+        linearSlide = new LinearSlide(telemetry, hardwareMap);
+
         waitForStart();
         int result = vision.perform(1f / 3f);
         sleep(2000);
@@ -44,8 +46,10 @@ public class AutoTest extends LinearOpMode {
 
         // CONE GRABBED
 
+        telemetry.addData("X Position", robot.odometry.getPose().getX());
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        telemetry.addData("X Position", robot.odometry.getPose().getX());
         linearSlide.goToFull(linearSlide.high, telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
 
