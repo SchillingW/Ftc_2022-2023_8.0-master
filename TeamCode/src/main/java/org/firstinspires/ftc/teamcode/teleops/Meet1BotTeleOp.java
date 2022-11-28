@@ -7,14 +7,22 @@ import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import android.view.View;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.Locale;
 
 // Rohan's teleop to test claw for cones
 @TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
@@ -22,6 +30,8 @@ public class Meet1BotTeleOp extends OpMode {
 
     PursuitBot robot;
     LinearSlide linearSlide;
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
     public double turnSpeed = 0.55;
     public double linearSpeed = 0.55;
@@ -32,8 +42,15 @@ public class Meet1BotTeleOp extends OpMode {
     public boolean lastUp;
     public boolean lastDown;
 
+
+
     // input system reference
     GamepadSystem input;
+    final double SCALE_FACTOR = 255;
+    float hsvValues[] = {0F, 0F, 0F};
+
+    // values is a reference to the hsvValues array.
+    final float values[] = hsvValues;
 
     // called on program initialization
     @Override
@@ -42,6 +59,8 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
     }
 
     // called repeatedly during program
@@ -67,6 +86,14 @@ public class Meet1BotTeleOp extends OpMode {
          */
 
         telemetry.addData("heading", robot.odometry.getPose().getHeading());
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
 
         if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {
