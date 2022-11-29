@@ -174,5 +174,22 @@ public class PursuitBot {
         telemetry.addData("encoder horizontal", encoderH.getAsDouble());
         telemetry.update();
     }
+
+    public void ToStack()
+    {
+        double botStartToCenterDiff = 3.87;
+        double yDistanceToStack = yDim.toCell(1) - yDim.toCell(0) - botStartToCenterDiff;
+        while(!atRotation(-90)) drive.driveRobotCentric(0, 0, -1);
+
+    }
+
+    public boolean atRotation(int degrees)
+    {
+        boolean returnBoolean = (degrees >= 0)
+                ? (odometry.getPose().getRotation().getDegrees() < 90)
+                : (odometry.getPose().getRotation().getDegrees() > -90);
+
+        return returnBoolean;
+    }
 }
 //changes
