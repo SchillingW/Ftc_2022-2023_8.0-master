@@ -28,9 +28,9 @@ public class VisionDevice {
     private static final String TFOD_MODEL_ASSET = "NewModel.tflite";
 
     private static final String[] LABELS = {
-            "Outlet",
-            "Gears",
             "Balloon",
+            "Gears",
+            "Outlet",
     };
 //
     private static final String VUFORIA_KEY =
