@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.botconfigs;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
@@ -175,17 +177,45 @@ public class PursuitBot {
         telemetry.update();
     }
 
-    public void ToStack()
+    public void RotateToStack(Telemetry telem)
     {
         double botStartToCenterDiff = 3.87;
         double yDistanceToStack = yDim.toCell(1) - yDim.toCell(0) - botStartToCenterDiff;
-        while(!atRotation(-90)) drive.driveRobotCentric(0, 0, -1);
 
+        double stackY = -1 * yDistanceToStack;
+
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+
+        while(currentDegrees > -75)
+        {
+            drive.driveFieldCentric(0, 0, -0.3, odometry.getPose().getHeading());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
+            odometry.update();
+        }
+
+        double currentY = odometry.getPose().getY();
+        double targetY = currentY - yDistanceToStack;
+
+        while(currentY > targetY)
+        {
+            telem.addData("Current Y", currentY);
+            telem.addData("Target Y", targetY);
+
+            /*double y = targetY - currentY;
+            double currentMagnitude = Math.abs(y);
+            y *= 0.1/currentMagnitude;*/
+
+            drive.driveWithMotorPowers(0.1, 0.1, 0.1, 0.1);
+            currentY = odometry.getPose().getY();
+            odometry.update();
+        }
+
+        drive.stop();
     }
 
-    public boolean atRotation(int degrees)
+    public boolean atRotation(int targetDegrees)
     {
-        boolean returnBoolean = (degrees >= 0)
+        boolean returnBoolean = (targetDegrees >= 0)
                 ? (odometry.getPose().getRotation().getDegrees() < 90)
                 : (odometry.getPose().getRotation().getDegrees() > -90);
 

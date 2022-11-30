@@ -14,7 +14,7 @@ public class AutoTest extends LinearOpMode {
     public PursuitBot robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
-    public int dropHeight = -2975;
+    public int dropHeight = -2930;
 
     public boolean moveToNext;
     //auto
@@ -45,30 +45,29 @@ public class AutoTest extends LinearOpMode {
         linearSlide.goToFull(linearSlide.low, telemetry, this);
 
         // CONE GRABBED
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        sleep(5000);
-        robot.ToStack();
-
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(linearSlide.high, telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
-
         // AT DROP CONE LOCATION
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(dropHeight, telemetry, this);
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
 
 
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         if (opModeIsActive()) sleep(2000);
+
+        robot.RotateToStack(telemetry);
+        sleep(10000);
 
         // CONE DROPPED
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+
         linearSlide.goToFull(linearSlide.low, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
 
         // PARK
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
