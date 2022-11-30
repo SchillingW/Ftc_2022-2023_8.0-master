@@ -30,8 +30,7 @@ public class Meet1BotTeleOp extends OpMode {
 
     PursuitBot robot;
     LinearSlide linearSlide;
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+
 
     public double turnSpeed = 0.55;
     public double linearSpeed = 0.55;
@@ -59,7 +58,7 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
 
     }
 
@@ -85,7 +84,7 @@ public class Meet1BotTeleOp extends OpMode {
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
          */
 
-        telemetry.addData("heading", robot.odometry.getPose().getHeading());
+        /*telemetry.addData("heading", robot.odometry.getPose().getHeading());
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
@@ -93,7 +92,7 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Alpha", sensorColor.alpha());
         telemetry.addData("Red  ", sensorColor.red());
         telemetry.addData("Green", sensorColor.green());
-        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Blue ", sensorColor.blue());*/
 
         if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {

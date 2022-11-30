@@ -14,7 +14,7 @@ public class AutoTest extends LinearOpMode {
     public PursuitBot robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
-    public int dropHeight = -2930;
+    public int dropHeight = -2900;
 
     public boolean moveToNext;
     //auto
@@ -51,16 +51,20 @@ public class AutoTest extends LinearOpMode {
         // AT DROP CONE LOCATION
         robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(dropHeight, telemetry, this);
+        sleep(200);
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) linearSlide.openClaw();
         //if (opModeIsActive()) slide.set(1);
+        sleep(100);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
 
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 2.25, new Rotation2d()), telemetry, this);
         if (opModeIsActive()) sleep(2000);
 
         robot.RotateToStack(telemetry);
-        sleep(10000);
+        sleep(2000);
 
         // CONE DROPPED
 

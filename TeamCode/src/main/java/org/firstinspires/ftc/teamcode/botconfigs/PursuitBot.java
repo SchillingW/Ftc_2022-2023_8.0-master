@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -26,6 +27,8 @@ public class PursuitBot {
 
     // debugging devices
     public Telemetry tele;
+
+    public ColorSensor sensor;
 
     // mecanum wheel drive train
     public MecanumDrive drive;
@@ -75,6 +78,8 @@ public class PursuitBot {
         motorFR = new Motor(map, "motorFR");
         motorBL = new Motor(map, "motorBL");
         motorBR = new Motor(map, "motorBR");
+
+        sensor = map.colorSensor.get("sensor");
 
         drive = new MecDriveFlip(
                 motorFL, motorFR, motorBL, motorBR,
@@ -174,6 +179,7 @@ public class PursuitBot {
         telemetry.addData("encoder vertical left", encoderL.getAsDouble());
         telemetry.addData("encoder vertical right", encoderR.getAsDouble());
         telemetry.addData("encoder horizontal", encoderH.getAsDouble());
+        telemetry.addData("blue", sensor.blue());
         telemetry.update();
     }
 
@@ -186,17 +192,19 @@ public class PursuitBot {
 
         double currentDegrees = odometry.getPose().getRotation().getDegrees();
 
-        while(currentDegrees > -75)
+        while(currentDegrees > -85)
         {
             drive.driveFieldCentric(0, 0, -0.3, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
         }
 
-        double currentY = odometry.getPose().getY();
-        double targetY = currentY - yDistanceToStack;
+        //while(sensor.blue() < 110) drive.driveWithMotorPowers(0.1, 0.1, 0.1, 0.1);;
 
-        while(currentY > targetY)
+        double currentY = odometry.getPose().getY();
+        double targetY = currentY - 21.5;
+
+        /*while(currentY > targetY)
         {
             telem.addData("Current Y", currentY);
             telem.addData("Target Y", targetY);
@@ -205,10 +213,10 @@ public class PursuitBot {
             double currentMagnitude = Math.abs(y);
             y *= 0.1/currentMagnitude;*/
 
-            drive.driveWithMotorPowers(0.1, 0.1, 0.1, 0.1);
+            /*drive.driveWithMotorPowers(0.2, 0.2, 0.2, 0.2);
             currentY = odometry.getPose().getY();
             odometry.update();
-        }
+        }*/
 
         drive.stop();
     }
