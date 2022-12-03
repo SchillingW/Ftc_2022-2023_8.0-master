@@ -130,6 +130,8 @@ public class Meet1BotTeleOp extends OpMode {
         if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
         heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
         telemetry.addData("heightIndex", heightIndex);
+        telemetry.addData("pos", linearSlide.getCurrentPos());
+
         lastUp = thisUp;
         lastDown = thisDown;
 

@@ -22,6 +22,8 @@ public class LinearSlide
 
     public int ground = 0; public int low = -1250;
     public int med = -2150; public int high = -3050;
+    public int stack1 = -460; public int stack2 = -300;
+    public int stack3 = -190; public int stack4 = -65;
     public int[] slidePositions = {ground, low, med, high};
 
     public double extraTime = 0.5;
@@ -71,7 +73,7 @@ public class LinearSlide
 
     public void moveByJoystick(double mag) {slide.set((mag == 0) ? slideZeroMag : mag * armSpeed);}
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
-
+    public int getCurrentPos(){return slide.encoder.getPosition();}
     public void openClaw() {claw.setPosition(0.5);}
     public void closeClaw() {claw.setPosition(0);}
 }
