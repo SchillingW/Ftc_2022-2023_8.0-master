@@ -34,10 +34,10 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
         int result = vision.perform(1f / 3f);
-        sleep(2000);
+        sleep(500);
         telemetry.addData("result", result);
         telemetry.update();
-        sleep(2000);
+        sleep(200);
         // START MOVEMENT
 
         if (opModeIsActive()) linearSlide.closeClaw();

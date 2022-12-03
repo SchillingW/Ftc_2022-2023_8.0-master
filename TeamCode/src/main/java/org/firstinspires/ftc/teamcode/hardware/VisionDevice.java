@@ -25,12 +25,12 @@ public class VisionDevice {
 
     public ElapsedTime timer = new ElapsedTime();
 
-    private static final String TFOD_MODEL_ASSET = "ImprovedModel11172.tflite";
+    private static final String TFOD_MODEL_ASSET = "NewModel.tflite";
 
     private static final String[] LABELS = {
-            "Outlet",
-            "Gears",
             "Balloon",
+            "Gears",
+            "Outlet",
     };
 //
     private static final String VUFORIA_KEY =
@@ -81,8 +81,6 @@ public class VisionDevice {
                     double width = Math.abs(recognition.getRight() - recognition.getLeft());
                     double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
-                    telemetry.addData("", " ");
-                    //telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
                     telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
                     telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                     if (recognition.getLabel().equals("Outlet")) {
