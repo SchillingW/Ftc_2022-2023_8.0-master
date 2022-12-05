@@ -55,10 +55,10 @@ public class PursuitBot {
 
     // robot movement datas
     public double adjustSpeed = 0.15;
-    public double minSpeed = 0.3;
+    public double minSpeed = 0.25;
     public double minGradient = 3;
     public double maxSpeed = 0.5;
-    public double maxGradient = 9;
+    public double maxGradient = 12;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
@@ -181,13 +181,11 @@ public class PursuitBot {
         double initialY = odometry.getPose().getY();
         double targetY = initialY + y;
         double currentY = initialY;
-        double ySpeed = targetY - initialY;
-        ySpeed *= speed/ySpeed;
 
         while(!doneTranslating(initialY, currentY, targetY) && mode.opModeIsActive())
         {
             tele.addData("translating", 0);
-            drive.driveWithMotorPowers(ySpeed, ySpeed, ySpeed, ySpeed);
+            drive.driveWithMotorPowers(speed, speed, speed, speed);
             currentY = odometry.getPose().getY();
             odometry.update();
         }
@@ -200,124 +198,51 @@ public class PursuitBot {
         return (initial < target) ? current >= target : current <= target;
     }
 
-    /*public void RotateRight(double degrees, double speed, Telemetry tele, LinearOpMode mode)
-    {
-        double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = currentDegrees + degrees - 15;
-        if(targetDegrees < 0) targetDegrees = 180 + Math.abs(targetDegrees);
-
-        while(currentDegrees <= targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, speed, odometry.getPose().getHeading());
-            currentDegrees = odometry.getPose().getRotation().getDegrees();
-            if(currentDegrees < 0) currentDegrees = 180 + Math.abs(currentDegrees);
-            odometry.update();
-            tele.addData("rotating", 0);
-        }
-    }
-
-    public void RotateLeft(double degrees, double speed, Telemetry tele, LinearOpMode mode)
-    {
-        double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = currentDegrees - degrees + 15;
-        if(targetDegrees < 0) targetDegrees = 180 + Math.abs(targetDegrees);
-
-        while(currentDegrees >= targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
-            currentDegrees = odometry.getPose().getRotation().getDegrees();
-            if(currentDegrees < 0) currentDegrees = 180 + Math.abs(currentDegrees);
-            odometry.update();
-            tele.addData("rotating", 0);
-        }
-    }*/
-
-    /*public void CellToStack(Telemetry tele, LinearOpMode mode)
-    {
-        double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = -75;
-
-        while(currentDegrees >= targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, -0.3, odometry.getPose().getHeading());
-            currentDegrees = odometry.getPose().getRotation().getDegrees();
-            odometry.update();
-        }
-
-        drive.stop();
-    }
-
-    public void StackToPole(Telemetry tele, LinearOpMode mode)
-    {
-        double currentDegrees = getCurrentDegrees();
-        double targetDegrees = 120;
-
-        while(currentDegrees <= targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, 0.3, odometry.getPose().getHeading());
-            currentDegrees = getCurrentDegrees();
-            odometry.update();
-        }
-
-        drive.stop();
-    }
-
-    public void PoleToStack(Telemetry tele, LinearOpMode mode)
-    {
-        double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = -75;
-
-        while(currentDegrees >= targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, -0.3, odometry.getPose().getHeading());
-            currentDegrees = odometry.getPose().getRotation().getDegrees();
-            odometry.update();
-        }
-
-    }*/
 
     public void CellToStack(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
-        double currentDegrees = getCorrectedRot(odometry.getPose().getRotation().getDegrees());
-        double targetDegrees = 285;
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = -75;
 
-        while(!atRotation(currentDegrees, targetDegrees) && mode.opModeIsActive())
+        while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {
-            if(sensor.blue() > 220) break;
+            //if(sensor.blue() > 250) break;
             drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
-            currentDegrees = getCorrectedRot(odometry.getPose().getRotation().getDegrees());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
         }
 
         drive.stop();
     }
 
-    public void StackToPole(double speed, Telemetry tele, LinearOpMode mode)
+    public void StackToCell(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
-        double currentDegrees = getCorrectedRot(odometry.getPose().getRotation().getDegrees());
-        double targetDegrees = 135;
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = -15;
 
-        while(!atRotation(currentDegrees, targetDegrees) && mode.opModeIsActive())
+        while(currentDegrees < targetDegrees && mode.opModeIsActive())
         {
-            if(atRotation(currentDegrees, targetDegrees)) break;
             drive.driveFieldCentric(0, 0, speed, odometry.getPose().getHeading());
-            currentDegrees = getCorrectedRot(odometry.getPose().getRotation().getDegrees());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
         }
 
         drive.stop();
     }
 
-
-    public double getCorrectedRot(double degrees)
+    public void InvertRot(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
-        double returnDegrees = (degrees >= 0) ? degrees : 180 + Math.abs(degrees);
-        return returnDegrees;
-    }
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = odometry.getPose().getRotation().getDegrees() - 180;
 
-    public boolean atRotation(double current, double target)
-    {
-        return Math.abs(target - current) <= rotErrorMargin;
+        while(currentDegrees > targetDegrees && mode.opModeIsActive())
+        {
+            drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
+            odometry.update();
+        }
+
+        drive.stop();
     }
 
     // debug info on bot with telemetry
