@@ -233,7 +233,7 @@ public class PursuitBot {
     public void InvertRot(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
         double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = odometry.getPose().getRotation().getDegrees() - 180;
+        double targetDegrees = currentDegrees - 165;
 
         while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {

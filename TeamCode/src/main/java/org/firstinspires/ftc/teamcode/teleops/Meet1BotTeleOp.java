@@ -30,7 +30,7 @@ public class Meet1BotTeleOp extends OpMode {
 
     PursuitBot robot;
     LinearSlide linearSlide;
-    //ColorSensor sensorColor;
+    ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
 
     public double turnSpeed = 0.55;
@@ -41,6 +41,7 @@ public class Meet1BotTeleOp extends OpMode {
 
     public boolean lastUp;
     public boolean lastDown;
+    public ColorSensor sensor;
 
 
 
@@ -59,7 +60,7 @@ public class Meet1BotTeleOp extends OpMode {
         robot = new PursuitBot(telemetry, hardwareMap);
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
-        //sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        sensor = hardwareMap.colorSensor.get("sensor");
 
     }
 
