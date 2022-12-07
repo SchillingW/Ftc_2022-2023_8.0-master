@@ -55,12 +55,12 @@ public class PursuitBot {
 
     // robot movement datas
     public double adjustSpeed = 0.15;
-    public double minSpeed = 0.25;
+    public double minSpeed = 0.3;
     public double minGradient = 3;
-    public double maxSpeed = 0.5;
+    public double maxSpeed = 0.55;
     public double maxGradient = 12;
     public double errorMargin = 0.5;
-    public double extraTime = 0.5;
+    public double extraTime = 0.45;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
 
     public double rotErrorMargin = 3;
@@ -215,28 +215,14 @@ public class PursuitBot {
         drive.stop();
     }
 
-    public void StackToCell(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
+    public void GroundToLow(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
         double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = -15;
-
-        while(currentDegrees < targetDegrees && mode.opModeIsActive())
-        {
-            drive.driveFieldCentric(0, 0, speed, odometry.getPose().getHeading());
-            currentDegrees = odometry.getPose().getRotation().getDegrees();
-            odometry.update();
-        }
-
-        drive.stop();
-    }
-
-    public void InvertRot(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
-    {
-        double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = currentDegrees - 165;
+        double targetDegrees = -165;
 
         while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {
+            //if(sensor.blue() > 250) break;
             drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
