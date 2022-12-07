@@ -31,14 +31,6 @@ public class AutoTest extends LinearOpMode {
         vision.init();
 
         linearSlide = new LinearSlide(telemetry, hardwareMap);
-
-
-
-
-
-
-
-
         sleep(1000);
         int result = 0;
         while (!isStarted()) result = vision.perform(1f / 3f);
