@@ -43,6 +43,8 @@ public class Meet1BotTeleOp extends OpMode {
     public boolean lastDown;
     public ColorSensor sensor;
 
+    public double baseHeading;
+
 
 
     // input system reference
@@ -71,20 +73,23 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Drive Speed", linearSpeed);
 
         // NORMAL
-        robot.drive.driveRobotCentric(
+        /*robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
-                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
+                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);*/
 
-        /*
+
         // GYRO COMP
         robot.odometry.update();
         robot.drive.driveFieldCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed,
-                robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
-         */
+                robot.odometry.getPose().getHeading() / 2 / Math.PI * 360 - baseHeading);
+
+        // reorient forward to current direction
+        if (gamepad1.right_trigger != 0) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
+
 
         telemetry.addData("heading", robot.odometry.getPose().getHeading());
         /*Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),

@@ -64,8 +64,6 @@ public class VisionDevice {
 
     public int perform(float xPosition) {
 
-        int result = 0;
-
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -85,22 +83,24 @@ public class VisionDevice {
                     telemetry.addData("- Size (Width/Height)", "%.0f / %.0f", width, height);
                     if (recognition.getLabel().equals("Outlet")) {
                         telemetry.addData("Real Image Outlet", 0);
-                        result = 0;
+                        return 0;
                     }
                     if (recognition.getLabel().equals("Gears")) {
                         telemetry.addData("Real Image Gear", 1);
-                        result = 1;
+                        return 1;
                     }
                     if (recognition.getLabel().equals("Balloon")) {
                         telemetry.addData("Real Image Balloon", 2);
-                        result = 2;
+                        return 2;
                     }
                 }
                 telemetry.update();
 
             }
+
         }
-        return result;
+
+        return 0;
     }
 
 

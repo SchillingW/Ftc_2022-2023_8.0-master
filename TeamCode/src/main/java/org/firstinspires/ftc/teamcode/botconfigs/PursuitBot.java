@@ -60,7 +60,7 @@ public class PursuitBot {
     public double maxSpeed = 0.55;
     public double maxGradient = 12;
     public double errorMargin = 0.5;
-    public double extraTime = 0.45;
+    public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
 
     public double rotErrorMargin = 3;
@@ -206,7 +206,7 @@ public class PursuitBot {
 
         while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {
-            //if(sensor.blue() > 250) break;
+            if(sensor.blue() > 245 || sensor.red() > 245) break;
             drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
@@ -218,7 +218,7 @@ public class PursuitBot {
     public void GroundToLow(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
         double currentDegrees = odometry.getPose().getRotation().getDegrees();
-        double targetDegrees = -165;
+        double targetDegrees = -157.5;
 
         while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {
