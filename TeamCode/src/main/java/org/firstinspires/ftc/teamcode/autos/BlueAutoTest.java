@@ -30,7 +30,7 @@ public class BlueAutoTest extends LinearOpMode {
 
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         moveToNext = false;
-
+//hello
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
         waitForStart();
