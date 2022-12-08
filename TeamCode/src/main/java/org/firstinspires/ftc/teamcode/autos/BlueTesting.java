@@ -82,7 +82,7 @@ public class BlueTesting extends LinearOpMode {
 
     public void GrabConeFromCell(int i)
     {
-        robot.CellToStack(0.35, telemetry, this, robot.sensor);
+        robot.CellToStackRight(0.35, telemetry, this, robot.sensor);
         robot.TranslateY(-0.55, 0.2, telemetry, this);
         linearSlide.goToFull(linearSlide.stacks[i], telemetry, this);
         sleep(200);

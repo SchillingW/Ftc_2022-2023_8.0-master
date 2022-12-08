@@ -199,7 +199,7 @@ public class PursuitBot {
     }
 
 
-    public void CellToStack(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
+    public void CellToStackLeft(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
     {
         double currentDegrees = odometry.getPose().getRotation().getDegrees();
         double targetDegrees = -75;
@@ -208,6 +208,22 @@ public class PursuitBot {
         {
             if(sensor.blue() > 245 || sensor.red() > 245) break;
             drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
+            odometry.update();
+        }
+
+        drive.stop();
+    }
+
+    public void CellToStackRight(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
+    {
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = 75;
+
+        while(currentDegrees < targetDegrees && mode.opModeIsActive())
+        {
+            if(sensor.blue() > 245 || sensor.red() > 245) break;
+            drive.driveFieldCentric(0, 0, speed, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
         }

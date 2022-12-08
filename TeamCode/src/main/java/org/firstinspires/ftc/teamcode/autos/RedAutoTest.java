@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="BlueAutoTest", group="PursuitBot")
-public class BlueAutoTest extends LinearOpMode {
+@Autonomous(name="RedAutoTest", group="PursuitBot")
+public class RedAutoTest extends LinearOpMode {
 
     public PursuitBot robot;
     public VisionDevice vision;
@@ -18,7 +18,7 @@ public class BlueAutoTest extends LinearOpMode {
     public int medDropHeight = -2075;
 
     public boolean moveToNext;
-//hi
+    //hi
     @Override
     public void runOpMode() {
 
@@ -26,7 +26,7 @@ public class BlueAutoTest extends LinearOpMode {
         robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;
-        robot.yDim.cellPLACEMENT = 4;
+        robot.yDim.cellPLACEMENT = 1;
 
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         moveToNext = false;
@@ -48,8 +48,8 @@ public class BlueAutoTest extends LinearOpMode {
 
         // CONE GRABBED
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(linearSlide.high, telemetry, this);
         if(result != 0)
         {
@@ -60,7 +60,7 @@ public class BlueAutoTest extends LinearOpMode {
 
         else
         {
-            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
+            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
             // AT DROP CONE LOCATION
             linearSlide.goToFull(medDropHeight, telemetry, this);
         }
@@ -72,12 +72,12 @@ public class BlueAutoTest extends LinearOpMode {
 
         // CONE DROPPED
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(3), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(linearSlide.low, telemetry, this);
 
         // PARK
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(linearSlide.ground, telemetry, this);
     }
 }
