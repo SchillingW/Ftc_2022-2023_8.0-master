@@ -101,7 +101,7 @@ public class TwoConesAutoRight extends LinearOpMode {
         else
         {
             linearSlide.goToFull(linearSlide.low, telemetry, this);
-            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
+            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(5), new Rotation2d()), telemetry, this);
             sleep(200);
             //if (opModeIsActive()) sleep(1000);
             if (opModeIsActive()) linearSlide.openClaw();
