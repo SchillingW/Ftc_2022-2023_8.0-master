@@ -32,8 +32,14 @@ public class TwoConesAutoLeft extends LinearOpMode {
 
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         sleep(1000);
+
         int result = 0;
-        while (!isStarted()) result = vision.perform(1f / 3f);
+        while (!isStarted()) {
+            int next = vision.perform(1f / 3f);
+            if (next != -1) result = next;
+            telemetry.addData("current result", result);
+        }
+
         // START MOVEMENT
         waitForStart();
 

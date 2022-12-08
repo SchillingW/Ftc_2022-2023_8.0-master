@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.botconfigs;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import android.graphics.Color;
+
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,6 +30,8 @@ public class PursuitBotTesting {
     // debugging devices
     public Telemetry tele;
 
+    //public ColorSensor sensor;
+
     // mecanum wheel drive train
     public MecanumDrive drive;
     public Motor motorFL;
@@ -43,18 +50,20 @@ public class PursuitBotTesting {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 7;
+    public double encoderTrackWidth = 8.5;
     public double encoderWheelOffset = 1.5;
 
     // robot movement datas
     public double adjustSpeed = 0.15;
     public double minSpeed = 0.3;
     public double minGradient = 3;
-    public double maxSpeed = 0.5;
-    public double maxGradient = 9;
+    public double maxSpeed = 0.55;
+    public double maxGradient = 12;
     public double errorMargin = 0.5;
-    public double extraTime = 0.5;
+    public double extraTime = 0.6;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
+
+    public double rotErrorMargin = 3;
 
     // initialize devices
     public PursuitBotTesting(Telemetry tele, HardwareMap map) {
@@ -73,6 +82,8 @@ public class PursuitBotTesting {
         motorFR = new Motor(map, "motorFR");
         motorBL = new Motor(map, "motorBL");
         motorBR = new Motor(map, "motorBR");
+
+        //sensor = map.colorSensor.get("sensor");
 
         drive = new MecDriveFlip(
                 motorFL, motorFR, motorBL, motorBR,
@@ -165,6 +176,61 @@ public class PursuitBotTesting {
         return Math.abs(x) <= errorMargin && Math.abs(y) <= errorMargin && Math.abs(rot) <= errorMargin;
     }
 
+    public void TranslateY(double y, double speed, Telemetry tele, LinearOpMode mode)
+    {
+        double initialY = odometry.getPose().getY();
+        double targetY = initialY + y;
+        double currentY = initialY;
+
+        while(!doneTranslating(initialY, currentY, targetY) && mode.opModeIsActive())
+        {
+            tele.addData("translating", 0);
+            drive.driveWithMotorPowers(speed, speed, speed, speed);
+            currentY = odometry.getPose().getY();
+            odometry.update();
+        }
+
+        drive.stop();
+    }
+
+    public boolean doneTranslating(double initial, double current, double target)
+    {
+        return (initial < target) ? current >= target : current <= target;
+    }
+
+
+    public void CellToStack(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
+    {
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = -75;
+
+        while(currentDegrees > targetDegrees && mode.opModeIsActive())
+        {
+            //if(sensor.blue() > 250) break;
+            drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
+            odometry.update();
+        }
+
+        drive.stop();
+    }
+
+    public void GroundToLow(double speed, Telemetry tele, LinearOpMode mode, ColorSensor sensor)
+    {
+        double currentDegrees = odometry.getPose().getRotation().getDegrees();
+        double targetDegrees = -165;
+
+        while(currentDegrees > targetDegrees && mode.opModeIsActive())
+        {
+            //if(sensor.blue() > 250) break;
+            drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
+            currentDegrees = odometry.getPose().getRotation().getDegrees();
+            odometry.update();
+        }
+
+        drive.stop();
+    }
+
     // debug info on bot with telemetry
     public void DebugFull(Telemetry telemetry) {
 
@@ -172,6 +238,7 @@ public class PursuitBotTesting {
         telemetry.addData("encoder vertical left", encoderL.getAsDouble());
         telemetry.addData("encoder vertical right", encoderR.getAsDouble());
         telemetry.addData("encoder horizontal", encoderH.getAsDouble());
+        //telemetry.addData("blue", sensor.blue());
         telemetry.update();
     }
 }
