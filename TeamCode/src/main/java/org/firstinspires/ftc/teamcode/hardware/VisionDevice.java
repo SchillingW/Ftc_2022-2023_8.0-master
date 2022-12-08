@@ -83,6 +83,7 @@ public class VisionDevice {
                     if (recognition.getLabel().equals("Outlet")) {
                         telemetry.addData("Real Image Outlet", 0);
                         return 0;
+
                     }
                     if (recognition.getLabel().equals("Gears")) {
                         telemetry.addData("Real Image Gear", 1);
