@@ -33,8 +33,8 @@ public class Meet1BotTeleOp extends OpMode {
     ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
 
-    public double turnSpeed = 0.55;
-    public double linearSpeed = 0.55;
+    public double turnSpeed = 0.75;
+    public double linearSpeed = 0.75;
 
     public int heightIndex = 0;
     public boolean joystickControl = false;
@@ -88,10 +88,11 @@ public class Meet1BotTeleOp extends OpMode {
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360 - baseHeading);
 
         // reorient forward to current direction
-        if (gamepad1.right_trigger != 0) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
+        if (gamepad1.right_bumperf) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
 
 
-        telemetry.addData("heading", robot.odometry.getPose().getHeading());
+        telemetry.addData("heading", robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
+        telemetry.addData("base heading", baseHeading);
         /*Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),

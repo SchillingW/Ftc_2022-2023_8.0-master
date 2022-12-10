@@ -25,7 +25,7 @@ public class TwoConesAutoRight extends LinearOpMode {
         robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;
-        robot.yDim.cellPLACEMENT = 1;
+        robot.yDim.cellPLACEMENT = 4;
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
@@ -33,10 +33,11 @@ public class TwoConesAutoRight extends LinearOpMode {
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         sleep(1000);
         int result = 0;
-        while (!isStarted()) result = vision.perform(1f / 3f);
-        // START MOVEMENT
-        waitForStart();
-
+        while (!isStarted()) {
+            int next = vision.perform(1f / 3f);
+            if (next != -1) result = next;
+            telemetry.addData("current result", result);
+        }
 
 
 
@@ -67,7 +68,7 @@ public class TwoConesAutoRight extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         linearSlide.goToFull(linearSlide.med, telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(4), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
 
         linearSlide.goToFull(linearSlide.med + dropOffset, telemetry, this);
         sleep(200);
@@ -91,7 +92,7 @@ public class TwoConesAutoRight extends LinearOpMode {
         if(result == 1 || result == 2)
         {
             linearSlide.goToFull(linearSlide.med, telemetry, this);
-            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(4), new Rotation2d()), telemetry, this);
+            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
             sleep(200);
             //if (opModeIsActive()) sleep(1000);
             if (opModeIsActive()) linearSlide.openClaw();
@@ -101,7 +102,7 @@ public class TwoConesAutoRight extends LinearOpMode {
         else
         {
             linearSlide.goToFull(linearSlide.low, telemetry, this);
-            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(5), new Rotation2d()), telemetry, this);
+            robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(4), new Rotation2d()), telemetry, this);
             sleep(200);
             //if (opModeIsActive()) sleep(1000);
             if (opModeIsActive()) linearSlide.openClaw();

@@ -22,7 +22,7 @@ public class LinearSlide
 
     public int ground = 0; public int low = -1250;
     public int med = -2150; public int high = -3050;
-    public int[] stacks = {-460, -340, -190, -65};
+    public int[] stacks = {-425, -340, -190, -65};
     public int[] slidePositions = {ground, low, med, high};
 
     public double extraTime = 0.1;

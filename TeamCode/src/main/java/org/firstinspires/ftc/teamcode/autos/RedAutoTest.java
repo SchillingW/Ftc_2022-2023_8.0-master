@@ -33,12 +33,13 @@ public class RedAutoTest extends LinearOpMode {
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
+        int result = 0;
+        while (!isStarted()) {
+            int next = vision.perform(1f / 3f);
+            if (next != -1) result = next;
+            telemetry.addData("current result", result);
+        }
         waitForStart();
-        int result = vision.perform(1f / 3f);
-        sleep(2000);
-        telemetry.addData("result", result);
-        telemetry.update();
-        sleep(2000);
 
         // START MOVEMENT
 

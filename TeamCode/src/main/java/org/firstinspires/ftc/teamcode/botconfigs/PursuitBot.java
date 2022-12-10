@@ -58,7 +58,7 @@ public class PursuitBot {
     public double minSpeed = 0.3;
     public double minGradient = 3;
     public double maxSpeed = 0.6;
-    public double maxGradient = 12;
+    public double maxGradient = 18;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 24.0 / 360.0;
