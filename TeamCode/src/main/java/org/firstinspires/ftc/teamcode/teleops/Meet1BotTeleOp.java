@@ -88,7 +88,7 @@ public class Meet1BotTeleOp extends OpMode {
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360 - baseHeading);
 
         // reorient forward to current direction
-        if (gamepad1.right_bumperf) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
+        if (gamepad1.right_bumper) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
 
 
         telemetry.addData("heading", robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);

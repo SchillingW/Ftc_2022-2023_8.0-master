@@ -83,7 +83,7 @@ public class PursuitBot {
         motorBL = new Motor(map, "motorBL");
         motorBR = new Motor(map, "motorBR");
 
-        sensor = map.colorSensor.get("sensor");
+        //sensor = map.colorSensor.get("sensor");
 
         drive = new MecDriveFlip(
                 motorFL, motorFR, motorBL, motorBR,
