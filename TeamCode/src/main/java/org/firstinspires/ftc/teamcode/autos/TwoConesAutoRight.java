@@ -38,7 +38,7 @@ public class TwoConesAutoRight extends LinearOpMode {
 
         // START MOVEMENT
         waitForStart();
-
+        //hello
         if (opModeIsActive()) linearSlide.closeClaw();
         if (opModeIsActive()) sleep(1300);
         linearSlide.goToFull(linearSlide.low, telemetry, this);
