@@ -23,11 +23,12 @@ public class AutoErrorTest extends LinearOpMode {
         robot.yDim.cellPLACEMENT = 1;
 
 
-        waitForStart();
 
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(0), new Rotation2d()), telemetry, this, null);
+        //waitForStart();
+
+        /*robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(0), new Rotation2d()), telemetry, this, null);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(5), robot.yDim.toCell(0), new Rotation2d()), telemetry, this, null);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(5), robot.yDim.toCell(5), new Rotation2d()), telemetry, this, null);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(4), robot.yDim.toCell(5), new Rotation2d()), telemetry, this, null);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(4), robot.yDim.toCell(3), new Rotation2d()), telemetry, this, null);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(4), robot.yDim.toCell(3), new Rotation2d()), telemetry, this, null);*/
 }}
