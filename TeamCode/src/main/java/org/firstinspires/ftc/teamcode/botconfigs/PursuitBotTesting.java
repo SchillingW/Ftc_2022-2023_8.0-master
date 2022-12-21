@@ -77,10 +77,10 @@ public class PursuitBotTesting {
         this.tele = tele;
 
         // initialize dimensions hi
-        xDim.botanchor2botcenterHARDWARE = 6.5;
-        yDim.botanchor2botcenterHARDWARE = 6.5;
-        xDim.botanchor2clawcenterHARDWARE = 18.5;
-        yDim.botanchor2clawcenterHARDWARE = 6.5;
+        xDim.botanchor2botcenterHARDWARE = 6.75;
+        yDim.botanchor2botcenterHARDWARE = 6.125;
+        xDim.botanchor2clawcenterHARDWARE = 16;
+        yDim.botanchor2clawcenterHARDWARE = 6;
 
         // initialize drive train
         motorFL = new Motor(map, "motorFL");
@@ -244,7 +244,7 @@ public class PursuitBotTesting {
 
         while(currentDegrees > targetDegrees && mode.opModeIsActive())
         {
-            if(sensor.blue() > 245 || sensor.red() > 245) break;
+            //if(sensor.blue() > 245 || sensor.red() > 245) break;
             drive.driveFieldCentric(0, 0, -1 * speed, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
@@ -260,7 +260,7 @@ public class PursuitBotTesting {
 
         while(currentDegrees < targetDegrees && mode.opModeIsActive())
         {
-            if(sensor.blue() > 245 || sensor.red() > 245) break;
+            //if(sensor.blue() > 245 || sensor.red() > 245) break;
             drive.driveFieldCentric(0, 0, speed, odometry.getPose().getHeading());
             currentDegrees = odometry.getPose().getRotation().getDegrees();
             odometry.update();
@@ -292,7 +292,6 @@ public class PursuitBotTesting {
         telemetry.addData("encoder vertical left", encoderL.getAsDouble());
         telemetry.addData("encoder vertical right", encoderR.getAsDouble());
         telemetry.addData("encoder horizontal", encoderH.getAsDouble());
-        telemetry.addData("blue", sensor.blue());
         telemetry.update();
     }
 }
