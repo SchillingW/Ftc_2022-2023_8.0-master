@@ -120,7 +120,30 @@ public class PursuitBot {
 
 
 
+    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode) {
+        //Optional <String> l = Optional.ofNullable(level);
 
+        if (mode.opModeIsActive()) {
+
+            odometry.update();
+
+            while (!isAtTarget(target) && mode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(true, target, tele);
+            }
+
+            ElapsedTime time = new ElapsedTime();
+
+            while (time.seconds() < extraTime && mode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(false, target, tele);
+            }
+
+            drive.stop();
+        }
+    }
 
     public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
         //Optional <String> l = Optional.ofNullable(level);

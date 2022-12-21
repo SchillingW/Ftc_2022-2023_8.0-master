@@ -6,12 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
 @Autonomous(name="TwoConesAutoRight", group="PursuitBot")
 public class TwoConesAutoRight extends LinearOpMode {
 
-    public PursuitBot robot;
+    public PursuitBotTesting robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
     public int dropOffset = 80;
@@ -21,7 +22,7 @@ public class TwoConesAutoRight extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot = new PursuitBot(telemetry, hardwareMap);
+        robot = new PursuitBotTesting(telemetry, hardwareMap);
         robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;
@@ -34,14 +35,9 @@ public class TwoConesAutoRight extends LinearOpMode {
         sleep(1000);
         int result = 0;
         while (!isStarted()) result = vision.perform(1f / 3f);
+
         // START MOVEMENT
         waitForStart();
-
-
-
-
-
-
 
         if (opModeIsActive()) linearSlide.closeClaw();
         if (opModeIsActive()) sleep(1300);
@@ -116,13 +112,13 @@ public class TwoConesAutoRight extends LinearOpMode {
     public void GrabConeFromCell(int i)
     {
         robot.CellToStackRight(0.35, telemetry, this, robot.sensor);
-        robot.TranslateY(0.55, 0.2, telemetry, this);
+        robot.TranslateY(-0.55, 0.2, telemetry, this);
         linearSlide.goToFull(linearSlide.stacks[i], telemetry, this);
         sleep(500);
         linearSlide.closeClaw();
         sleep(500);
         linearSlide.goToFull(linearSlide.low, telemetry, this);
-        robot.TranslateY(-0.55, -0.2, telemetry, this);
+        robot.TranslateY(0.55, -0.2, telemetry, this);
         robot.reachPoint(new Pose2d(robot.odometry.getPose().getX(), robot.odometry.getPose().getY(), new Rotation2d()), telemetry, this);
     }
 

@@ -6,12 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
 @Autonomous(name="VisionAutoLeft", group="PursuitBot")
 public class VisionAutoLeft extends LinearOpMode {
 
-    public PursuitBot robot;
+    public PursuitBotTesting robot;
     public VisionDevice vision;
 
     public boolean moveToNext;
@@ -19,7 +20,7 @@ public class VisionAutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot = new PursuitBot(telemetry, hardwareMap);
+        robot = new PursuitBotTesting(telemetry, hardwareMap);
         robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;

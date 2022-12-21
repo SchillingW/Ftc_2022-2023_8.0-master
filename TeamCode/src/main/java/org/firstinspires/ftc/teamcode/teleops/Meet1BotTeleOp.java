@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,7 +29,7 @@ import java.util.Locale;
 @TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
 public class Meet1BotTeleOp extends OpMode {
 
-    PursuitBot robot;
+    PursuitBotTesting robot;
     LinearSlide linearSlide;
     ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
@@ -59,7 +60,7 @@ public class Meet1BotTeleOp extends OpMode {
     @Override
     public void init() {
 
-        robot = new PursuitBot(telemetry, hardwareMap);
+        robot = new PursuitBotTesting(telemetry, hardwareMap);
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         sensor = hardwareMap.colorSensor.get("sensor");
@@ -76,16 +77,19 @@ public class Meet1BotTeleOp extends OpMode {
         /*robot.drive.driveRobotCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
-                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);*/
-
+                input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
+        */
 
         // GYRO COMP
+
         robot.odometry.update();
         robot.drive.driveFieldCentric(
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed,
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360 - baseHeading);
+
+
 
         // reorient forward to current direction
         if (gamepad1.right_bumper) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
