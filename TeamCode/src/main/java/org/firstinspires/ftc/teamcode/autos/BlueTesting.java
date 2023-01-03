@@ -58,9 +58,9 @@ public class BlueTesting extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
         //robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
 */
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(0), new Rotation2d()), telemetry, this);
-        linearSlide.goToFull(linearSlide.ground, telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this, null);
+        //robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(0), new Rotation2d()), telemetry, this, null);
+        /*linearSlide.goToFull(linearSlide.ground, telemetry, this);
         sleep(200);
         //if (opModeIsActive()) sleep(1000);
         if (opModeIsActive()) linearSlide.openClaw();
@@ -70,13 +70,13 @@ public class BlueTesting extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);*/
         //robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(0), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this, null);
         if (opModeIsActive()) sleep(200);
         Cycle(0);
         Cycle(1);
 
         // PARK
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result), new Rotation2d()), telemetry, this, null);
         linearSlide.goToFull(linearSlide.ground, telemetry, this);
     }
 
@@ -91,7 +91,7 @@ public class BlueTesting extends LinearOpMode {
         linearSlide.goToFull(linearSlide.low, telemetry, this);
         robot.TranslateY(0.55, -0.2, telemetry, this);
         //robot.StackToCell(0.3, telemetry, this, robot.sensor);
-        robot.reachPoint(new Pose2d(robot.odometry.getPose().getX(), robot.odometry.getPose().getY(), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.odometry.getPose().getX(), robot.odometry.getPose().getY(), new Rotation2d()), telemetry, this, null);
     }
 
     public void Cycle(int i)
@@ -99,12 +99,12 @@ public class BlueTesting extends LinearOpMode {
         GrabConeFromCell(i);
         linearSlide.goToFull(linearSlide.low, telemetry, this);
         linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this, null);
         //robot.InvertRot(0.3, telemetry, this, robot.sensor);
         if (opModeIsActive()) linearSlide.openClaw();
         sleep(500);
         //robot.InvertRot(0.3, telemetry, this, robot.sensor);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this);
+        //robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this, null);
 
     }
 }

@@ -36,7 +36,7 @@ public class TwoConesAutoLeft extends LinearOpMode {
         int result = 0;
         while (!isStarted()) {
             int next = vision.perform(1f / 3f);
-            if (next != -1) result = next;
+            if (next != -1) result = vision.perform(1f / 3f);
             telemetry.addData("current result", result);
         }
 
@@ -166,4 +166,3 @@ public class TwoConesAutoLeft extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this);*/
     }
 }
-

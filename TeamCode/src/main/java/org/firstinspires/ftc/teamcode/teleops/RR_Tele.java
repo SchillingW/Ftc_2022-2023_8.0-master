@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+//import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+//import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 
 /**
@@ -42,15 +42,15 @@ public class RR_Tele extends LinearOpMode {
         linearSlide = new LinearSlide(telemetry, hardwareMap);
 
         // Initialize SampleMecanumDrive
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        //SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // We want to turn off velocity control for teleop
         // Velocity control per wheel is not necessary outside of motion profiled auto
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Retrieve our pose from the PoseStorage.currentPose static field
         // See AutoTransferPose.java for further details
-        drive.setPoseEstimate(PoseStorage.currentPose);
+        //drive.setPoseEstimate(PoseStorage.currentPose);
 
         waitForStart();
 
@@ -58,32 +58,32 @@ public class RR_Tele extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             // Read pose
-            Pose2d poseEstimate = drive.getPoseEstimate();
+            //Pose2d poseEstimate = drive.getPoseEstimate();
 
             // Create a vector from the gamepad x/y inputs
             // Then, rotate that vector by the inverse of that heading
-            Vector2d input = new Vector2d(
-                    -gamepadSystemInput.gamepad1.getLeftY(),
-                    -gamepadSystemInput.gamepad1.getLeftX()
-            ).rotated(-poseEstimate.getHeading());
+            //Vector2d input = new Vector2d(
+             //       -gamepadSystemInput.gamepad1.getLeftY(),
+             //       -gamepadSystemInput.gamepad1.getLeftX()
+            //).rotated(-poseEstimate.getHeading());
 
             // Pass in the rotated input + right stick value for rotation
             // Rotation is not part of the rotated input thus must be passed in separately
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            input.getX(),
-                            input.getY(),
-                            -gamepadSystemInput.gamepad1.getRightX()
-                    )
-            );
+            //drive.setWeightedDrivePower(
+                    //new Pose2d(
+                    //        input.getX(),
+                   //         input.getY(),
+                    //        -gamepadSystemInput.gamepad1.getRightX()
+                    //)
+            //);
 
             // Update everything. Odometry. Etc.
-            drive.update();
+            //drive.update();
 
             // Print pose to telemetry
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
+            //telemetry.addData("x", poseEstimate.getX());
+            //telemetry.addData("y", poseEstimate.getY());
+            //telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
 
             //INCORPORATE LINEAR SLIDE AND CLAW FUNCTIONALITY

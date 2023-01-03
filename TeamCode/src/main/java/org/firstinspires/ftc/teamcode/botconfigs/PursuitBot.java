@@ -13,11 +13,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FieldDimensions;
 import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
 
+
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 // mecanum drive bot with odometry for Pure Pursuit
@@ -31,6 +34,7 @@ public class PursuitBot {
     public Telemetry tele;
 
     public ColorSensor sensor;
+    public int dropOffset = 80;
 
     // mecanum wheel drive train
     public MecanumDrive drive;
@@ -38,6 +42,7 @@ public class PursuitBot {
     public Motor motorFR;
     public Motor motorBL;
     public Motor motorBR;
+    public LinearSlide linearSlide;
 
     // odometry device
     public OdometrySubsystem odometry;
@@ -82,6 +87,7 @@ public class PursuitBot {
         motorFR = new Motor(map, "motorFR");
         motorBL = new Motor(map, "motorBL");
         motorBR = new Motor(map, "motorBR");
+        linearSlide = new LinearSlide(tele, map);
 
         //sensor = map.colorSensor.get("sensor");
 
@@ -114,9 +120,8 @@ public class PursuitBot {
 
 
 
-
-
     public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode) {
+        //Optional <String> l = Optional.ofNullable(level);
 
         if (mode.opModeIsActive()) {
 
@@ -124,6 +129,39 @@ public class PursuitBot {
 
             while (!isAtTarget(target) && mode.opModeIsActive()) {
 
+                odometry.update();
+                moveTowards(true, target, tele);
+            }
+
+            ElapsedTime time = new ElapsedTime();
+
+            while (time.seconds() < extraTime && mode.opModeIsActive()) {
+
+                odometry.update();
+                moveTowards(false, target, tele);
+            }
+
+            drive.stop();
+        }
+    }
+
+    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
+        //Optional <String> l = Optional.ofNullable(level);
+
+        if (mode.opModeIsActive()) {
+
+            odometry.update();
+
+            while (!isAtTarget(target) && mode.opModeIsActive()) {
+                if (level == "low") {
+                    linearSlide.goTo(linearSlide.low + dropOffset, telemetry);
+                }
+                if (level == "medium") {
+                    linearSlide.goTo(linearSlide.med, telemetry);
+                }
+                if (level == "high") {
+                    linearSlide.goTo(linearSlide.high, telemetry);
+                }
                 odometry.update();
                 moveTowards(true, target, tele);
             }

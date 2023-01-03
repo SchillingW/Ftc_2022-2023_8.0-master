@@ -48,7 +48,7 @@ public class AutoTesting extends LinearOpMode {
         // CONE GRABBED
 
         telemetry.addData("X Position", robot.odometry.getPose().getX());
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+        /*robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         telemetry.addData("X Position", robot.odometry.getPose().getX());
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(2), new Rotation2d()), telemetry, this);
@@ -74,7 +74,7 @@ public class AutoTesting extends LinearOpMode {
 
         // PARK
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this);
-
+*/
     }
 }
 
