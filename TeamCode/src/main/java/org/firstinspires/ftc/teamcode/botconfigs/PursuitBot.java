@@ -89,7 +89,7 @@ public class PursuitBot {
                 motorFL, motorFR, motorBL, motorBR,
                 1, 1, 1, 1);
 
-        // initialize odometry
+        // initialize odometry hi
         encoderL = getSupplier(motorFL, 1);
         encoderR = getSupplier(motorFR, -1);
         encoderH = getSupplier(motorBL, 1);
