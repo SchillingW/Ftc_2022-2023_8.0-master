@@ -71,17 +71,11 @@ public class TwoConesAutoRight extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
 
-        //linearSlide.goToFull(linearSlide.med + dropOffset, telemetry, this);
         sleep(200);
-        //if (opModeIsActive()) sleep(1000);
+
         if (opModeIsActive()) linearSlide.openClaw();
         linearSlide.goToFull(linearSlide.low, telemetry, this);
-        //if (opModeIsActive()) slide.set(1);
-        /*sleep(100);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);*/
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(0), new Rotation2d()), telemetry, this);
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
+
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 4.5, new Rotation2d()), telemetry, this);
@@ -90,7 +84,28 @@ public class TwoConesAutoRight extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
 
-        if(result == 1 || result == 2)
+        //High Junction
+        linearSlide.goToFull(linearSlide.high, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
+        sleep(200);
+        if(opModeIsActive()) linearSlide.openClaw();
+        linearSlide.goToFull(linearSlide.low, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toPole(5), new Rotation2d()), telemetry, this);
+
+        GrabConeFromCell(1);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
+
+        //High Junction
+        linearSlide.goToFull(linearSlide.high, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
+        sleep(200);
+        if(opModeIsActive()) linearSlide.openClaw();
+        linearSlide.goToFull(linearSlide.low, telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toPole(5), new Rotation2d()), telemetry, this);
+
+
+        /*if(result == 1 || result == 2)
         {
             linearSlide.goToFull(linearSlide.med, telemetry, this);
             robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(4), new Rotation2d()), telemetry, this);
@@ -105,10 +120,9 @@ public class TwoConesAutoRight extends LinearOpMode {
             linearSlide.goToFull(linearSlide.low, telemetry, this);
             robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(5), new Rotation2d()), telemetry, this);
             sleep(200);
-            //if (opModeIsActive()) sleep(1000);
             if (opModeIsActive()) linearSlide.openClaw();
             linearSlide.goToFull(linearSlide.low, telemetry, this);
-        }
+        }*/
 
         // PARK
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this);
@@ -118,13 +132,13 @@ public class TwoConesAutoRight extends LinearOpMode {
     public void GrabConeFromCell(int i)
     {
         robot.CellToStackRight(0.35, telemetry, this, robot.sensor);
-        robot.TranslateY(-0.55, 0.2, telemetry, this);
+        robot.TranslateY(-0.15, 0.2, telemetry, this);
         linearSlide.goToFull(linearSlide.stacks[i], telemetry, this);
         sleep(500);
         linearSlide.closeClaw();
         sleep(500);
         linearSlide.goToFull(linearSlide.low, telemetry, this);
-        robot.TranslateY(0.55, -0.2, telemetry, this);
+        robot.TranslateY(0.15, -0.2, telemetry, this);
         robot.reachPoint(new Pose2d(robot.odometry.getPose().getX(), robot.odometry.getPose().getY(), new Rotation2d()), telemetry, this);
     }
 
