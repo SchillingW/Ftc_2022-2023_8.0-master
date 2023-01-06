@@ -48,6 +48,7 @@ public class LinearSlide
         telemetry.addData("Desired Slide Pos", reachHeight);
         telemetry.addData("Current Slide Magnitude", currentMagnitude);
         telemetry.addData("Target Slide Magnitude", targetMagnitude);
+        telemetry.update();
     }
 
     public void goToFull(int reachHeight, Telemetry tele, LinearOpMode mode) {

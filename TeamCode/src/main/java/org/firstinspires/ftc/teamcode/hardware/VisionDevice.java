@@ -96,9 +96,7 @@ public class VisionDevice {
                 }
             }
         }
-        telemetry.addData("no detection", -1);
-        telemetry.update();
-        return -1;
+        return 0;
     }
 
 
