@@ -7,12 +7,17 @@ import android.graphics.Color;
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.arcrobotics.ftclib.geometry.Vector2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vec2F;
+import com.vuforia.Vec2I;
+
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -183,7 +188,6 @@ public class PursuitBot {
         double x = target.getX() - odometry.getPose().getX();
         double y = target.getY() - odometry.getPose().getY();
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
-
         double currentMagnitude = Math.sqrt(x * x + y * y + rot * rot);
 
         double x1 = minGradient; double x2 = maxGradient; double y1 = minSpeed; double y2 = maxSpeed;
@@ -225,6 +229,23 @@ public class PursuitBot {
             tele.addData("translating", 0);
             drive.driveWithMotorPowers(speed, speed, speed, speed);
             currentY = odometry.getPose().getY();
+            odometry.update();
+        }
+
+        drive.stop();
+    }
+
+    public void TranslateX(double x, double speed, Telemetry tele, LinearOpMode mode)
+    {
+        double initialX = odometry.getPose().getX();
+        double targetX = initialX + x;
+        double currentX = initialX;
+
+        while(!doneTranslating(initialX, currentX, targetX) && mode.opModeIsActive())
+        {
+            tele.addData("translating", 0);
+            drive.driveWithMotorPowers(speed, speed, speed, speed);
+            currentX = odometry.getPose().getX();
             odometry.update();
         }
 
@@ -294,6 +315,116 @@ public class PursuitBot {
         telemetry.addData("encoder horizontal", encoderH.getAsDouble());
         telemetry.addData("blue", sensor.blue());
         telemetry.update();
+    }
+
+
+    //EESH NEW METHODS
+    public void Translate(Translation2d reach, boolean forward)
+    {
+        double tol = 0.2;
+        double changePos = 3;
+        Translation2d pointA, pointB;
+        double xDistance, yDistance;
+
+        //Define the two points
+        if(forward)
+        {
+            pointA = new Translation2d(odometry.getPose().getX(),odometry.getPose().getY());
+            pointB = new Translation2d(reach.getX(), reach.getY());
+        }
+
+        else
+        {
+            pointA = new Translation2d(reach.getX(), reach.getY());
+            pointB = new Translation2d(odometry.getPose().getX(),odometry.getPose().getY());
+        }
+
+
+        //Create variables to store the distance between the two points
+        if(forward)
+        {
+            xDistance = pointB.getX() - pointA.getX();
+            yDistance = pointB.getY() - pointA.getY();
+        }
+
+        else
+        {
+            xDistance = pointB.getY() - pointA.getY();
+            yDistance = pointB.getX() - pointA.getX();
+        }
+
+        //xDistance = Math.min(1, (Math.max(-1, xDistance)));
+        //yDistance = Math.min(1, (Math.max(-1, yDistance)));
+
+        //Create a variable to store the total distance between the two points
+        double totalDistance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+        //Create a variable to store the speed of the robot
+        double speed = 1;
+
+        //Loop until the robot reaches the destination
+        while (totalDistance > tol) {
+            //Move the robot
+            drive.driveRobotCentric(xDistance * speed, yDistance * speed, 0);
+            odometry.update();
+            if(forward) pointA = new Translation2d(odometry.getPose().getX(),odometry.getPose().getY());
+            else pointB = new Translation2d(odometry.getPose().getX(),odometry.getPose().getY());
+
+            //Calculate the new distance between the two points
+            if(forward)
+            {
+                xDistance = pointB.getX() - pointA.getX();
+                yDistance = pointB.getY() - pointA.getY();
+            }
+
+            else
+            {
+                xDistance = pointB.getY() - pointA.getY();
+                yDistance = pointB.getX() - pointA.getX();
+            }
+
+            //xDistance = Math.min(1, (Math.max(-1, xDistance)));
+            //yDistance = Math.min(1, (Math.max(-1, yDistance)));
+
+            totalDistance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+            //Slow the robot as it approaches the destination
+            speed = Math.max(speed - 0.1, 0.15);
+            if(totalDistance <= tol) break;
+        }
+
+        drive.stop();
+    }
+
+    public void Rotate(double reachDegrees)
+    {
+        double tol = 0.5;
+
+        //Define the starting degrees
+        double startDegrees = odometry.getPose().getRotation().getDegrees();
+
+        //Create variables to store the distance between the two points
+        double distance = reachDegrees - startDegrees;
+        //distance = Math.min(1, (Math.max(-1, distance)));
+
+        //Create a variable to store the speed of the robot
+        double speed = 1;
+
+        //Loop until the robot reaches the destination
+        while (distance > tol) {
+            //Move the robot
+            drive.driveRobotCentric(0, 0, distance * speed);
+
+            //Calculate the new distance between the two
+            double currentDegrees = odometry.getPose().getRotation().getDegrees();
+            distance = reachDegrees - currentDegrees;
+            //distance = Math.min(1, (Math.max(-1, distance)));
+
+            //Slow the robot as it approaches the destination
+            speed = Math.max(speed - 0.1, 0.1);
+        }
+
+        drive.stop();
     }
 }
 //changes
