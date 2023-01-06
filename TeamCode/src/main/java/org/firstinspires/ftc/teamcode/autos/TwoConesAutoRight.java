@@ -67,8 +67,10 @@ public class TwoConesAutoRight extends LinearOpMode {
         robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);*/
 
         robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d(90)), telemetry, this);
         //linearSlide.goToFull(linearSlide.med, telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d(90)), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(4), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toPole(1), robot.yDim.toPole(3), new Rotation2d()), telemetry, this);
 
         //linearSlide.goToFull(linearSlide.med + dropOffset, telemetry, this);
