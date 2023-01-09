@@ -1,33 +1,20 @@
 package org.firstinspires.ftc.teamcode.botconfigs;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import android.graphics.Color;
-
 import com.arcrobotics.ftclib.command.OdometrySubsystem;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
-import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Translation2d;
-import com.arcrobotics.ftclib.geometry.Vector2d;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec2I;
-
-import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FieldDimensions;
-import org.firstinspires.ftc.teamcode.hardware.MecDriveFlip;
+import org.firstinspires.ftc.teamcode.hardware.DCMecDriveFlip;
 
 
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 // mecanum drive bot with odometry for Pure Pursuit
@@ -45,10 +32,10 @@ public class TrajectoryBot {
 
     // mecanum wheel drive train
     public MecanumDrive drive;
-    public MotorEx motorFL;
-    public MotorEx motorFR;
-    public MotorEx motorBL;
-    public MotorEx motorBR;
+    public DcMotorEx motorFL;
+    public DcMotorEx motorFR;
+    public DcMotorEx motorBL;
+    public DcMotorEx motorBR;
 
     public LinearSlide linearSlide;
 
@@ -94,19 +81,23 @@ public class TrajectoryBot {
         yDim.botanchor2clawcenterHARDWARE = 6.5;
 
         // initialize drive train
-        motorFL = new MotorEx(map, "motorFL");
-        motorFR = new MotorEx(map, "motorFR");
-        motorBL = new MotorEx(map, "motorBL");
-        motorBR = new MotorEx(map, "motorBR");
+        motorFL = map.get(DcMotorEx.class, "motorFL");
+        motorFR = map.get(DcMotorEx.class, "motorFL");
+        motorBL = map.get(DcMotorEx.class, "motorFL");
+        motorBR = map.get(DcMotorEx.class, "motorFL");
+
+        motorFR.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         linearSlide = new LinearSlide(tele, map);
 
         pidf = new PIDFController(kP, kI, kD, kF);
 
         // set our gains to some value
-        pidf.setP(0.37);
-        pidf.setI(0.05);
-        pidf.setD(1.02);
+        pidf.setP(10.00);
+        pidf.setI(3.00);
+        pidf.setD(0.00);
+        pidf.setF(0.00);
 
         // get our gain constants
         kP = pidf.getP();
@@ -114,7 +105,7 @@ public class TrajectoryBot {
         kD = pidf.getD();
 
         // set all gains
-        pidf.setPIDF(kP, kI, kD, 0.7);
+        pidf.setPIDF(kP, kI, kD, 0.0);
 
         // get all gain coefficients
         double[] coeffs = pidf.getCoefficients();
@@ -122,12 +113,6 @@ public class TrajectoryBot {
         kI = coeffs[1];
         kD = coeffs[2];
         kF = coeffs[3];
-
-        //sensor = map.colorSensor.get("sensor");
-
-        drive = new MecDriveFlip(
-                motorFL, motorFR, motorBL, motorBR,
-                1, 1, 1, 1);
 
         // initialize odometry
         encoderL = getSupplier(motorFL, 1);
@@ -138,10 +123,15 @@ public class TrajectoryBot {
                 encoderTrackWidth, encoderWheelOffset));
 
         // orient to home
-        motorFL.resetEncoder();
-        motorFR.resetEncoder();
-        motorBL.resetEncoder();
-        motorBR.resetEncoder();
+        motorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public int inchToTicks(double inch) {
@@ -150,15 +140,19 @@ public class TrajectoryBot {
     }
 
     public int velocityToTicks(double velocity) {
-        // Assume the robot has a wheel diameter of 4 inches and 1120 ticks per revolution
         double calcDiam = wheelDiameter * 0.0254; // convert inches to meters
-        double ticksPerRev = motorBL.getCPR();
+        double ticksPerRev = 1680;
         int ticks = (int)(velocity * ticksPerRev / (Math.PI * calcDiam));
         return ticks;
     }
 
+    public double inchesToMeters(double inches)
+    {
+        return inches * 0.0254;
+    }
+
     // return double supplier representing motor value in inches
-    public DoubleSupplier getSupplier(Motor encoder, float coefficient) {
+    public DoubleSupplier getSupplier(DcMotor encoder, float coefficient) {
 
         // convert motor ticks to inches
         double ticksPerInch = 8192 / wheelCircumference;

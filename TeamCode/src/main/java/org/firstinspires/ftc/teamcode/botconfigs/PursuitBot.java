@@ -123,6 +123,11 @@ public class PursuitBot {
         return () -> encoder.getCurrentPosition() / ticksPerInch * coefficient;
     }
 
+    public double inchesToMeters(double inches)
+    {
+        return inches * 0.0254;
+    }
+
 
 
     public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode) {

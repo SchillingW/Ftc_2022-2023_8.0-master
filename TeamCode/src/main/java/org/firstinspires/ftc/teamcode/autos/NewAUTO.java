@@ -9,12 +9,16 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveKinematics;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.DifferentialDriveWheelSpeeds;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveKinematics;
+import com.arcrobotics.ftclib.kinematics.wpilibkinematics.MecanumDriveWheelSpeeds;
 import com.arcrobotics.ftclib.trajectory.Trajectory;
 import com.arcrobotics.ftclib.trajectory.TrajectoryConfig;
 import com.arcrobotics.ftclib.trajectory.TrajectoryGenerator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.TrajectoryBot;
@@ -26,8 +30,11 @@ import java.util.HashMap;
 public class NewAUTO extends LinearOpMode {
 
     public RamseteController controller;
-    public DifferentialDriveKinematics kinematics;
+    public MecanumDriveKinematics kinematics;
     public TrajectoryBot robot;
+
+    public DcMotorEx FL, FR, BL, BR;
+
     //public VisionDevice vision;
     //public LinearSlide linearSlide;
     public int dropOffset = 80;
@@ -47,8 +54,13 @@ public class NewAUTO extends LinearOpMode {
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 1;
 
-        controller = new RamseteController(78.7401574, 27.5590551);
-        kinematics = new DifferentialDriveKinematics(0.3683);
+        controller = new RamseteController(2.0, 0.7);
+        kinematics = new MecanumDriveKinematics(
+                new Translation2d(-1 * robot.inchesToMeters(15.5/2), robot.inchesToMeters(8.5)),
+                new Translation2d(robot.inchesToMeters(15.5/2), robot.inchesToMeters(8.5)),
+                new Translation2d(-1 * robot.inchesToMeters(15.5/2), -1 * robot.inchesToMeters(8.5)),
+                new Translation2d(robot.inchesToMeters(15.5/2), -1 * robot.inchesToMeters(8.5))
+        );
 
         //vision = new VisionDevice(telemetry, hardwareMap);
         //vision.init();
@@ -59,9 +71,20 @@ public class NewAUTO extends LinearOpMode {
         waitForStart();
 
         Trajectory t = createTraj(
-                new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0), new Rotation2d(Math.toRadians(90))),
-                new Translation2d[]{new Translation2d(robot.xDim.toCell(2) / 4, robot.yDim.toCell(0)),
-                        new Translation2d(robot.xDim.toCell(2) / 4, robot.yDim.toCell(0))}, false);
+                new Pose2d(robot.inchesToMeters(robot.xDim.toCell(2)), robot.inchesToMeters(robot.yDim.toCell(0)), new Rotation2d(Math.toRadians(90))),
+                new Translation2d[]{new Translation2d(robot.inchesToMeters(robot.xDim.toCell(2) / 4), robot.inchesToMeters(robot.yDim.toCell(0))),
+                        new Translation2d(robot.inchesToMeters(robot.xDim.toCell(2) / 4), robot.inchesToMeters(robot.yDim.toCell(0)))}, false);
+
+        double seconds = t.getTotalTimeSeconds();
+        ElapsedTime timer = new ElapsedTime();
+
+        while(timer.seconds() < seconds)
+        {
+            robot.odometry.update();
+            driveTraj(t, timer.seconds(), 0.05);
+        }
+
+        robot.drive.stop();
     }
 
     public Trajectory createTraj(Pose2d pose, Translation2d[] interiorPoints, boolean reversed) {
@@ -76,42 +99,50 @@ public class NewAUTO extends LinearOpMode {
         return trajectory;
     }
 
-    public void driveTraj(Trajectory trajectory, double seconds) {
-        Trajectory.State goal = trajectory.sample(seconds);
+    public void driveTraj(Trajectory trajectory, double seconds, double inc) {
+        Trajectory.State goal = trajectory.sample(seconds + inc);
         ChassisSpeeds adjustedSpeeds = controller.calculate(robot.odometry.getPose(), goal);
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
+        MecanumDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
 
-        double left = wheelSpeeds.leftMetersPerSecond;
-        double right = wheelSpeeds.rightMetersPerSecond;
+        double frontLeft = wheelSpeeds.frontLeftMetersPerSecond;
+        double frontRight = wheelSpeeds.frontRightMetersPerSecond;
+        double backLeft = wheelSpeeds.rearLeftMetersPerSecond;
+        double backRight = wheelSpeeds.rearRightMetersPerSecond;
 
-        double outputFL = robot.pidf.calculate(robot.motorFL.getCurrentPosition(), robot.velocityToTicks(left));
-        double outputFR = robot.pidf.calculate(robot.motorFR.getCurrentPosition(), robot.velocityToTicks(right));
-        double outputBL = robot.pidf.calculate(robot.motorBL.getCurrentPosition(), robot.velocityToTicks(left));
-        double outputBR = robot.pidf.calculate(robot.motorBR.getCurrentPosition(), robot.velocityToTicks(right));
+        robot.motorFL.setVelocity(frontLeft);
+        robot.motorFR.setVelocity(frontRight);
+        robot.motorBL.setVelocity(backLeft);
+        robot.motorBR.setVelocity(backRight);
 
-        PController controllerFL = new PController(robot.pidf.getP());
+        /*double outputFL = robot.pidf.calculate(robot.motorFL.getCurrentPosition(), robot.velocityToTicks(frontLeft));
+        double outputFR = robot.pidf.calculate(robot.motorFR.getCurrentPosition(), robot.velocityToTicks(frontRight));
+        double outputBL = robot.pidf.calculate(robot.motorBL.getCurrentPosition(), robot.velocityToTicks(backLeft));
+        double outputBR = robot.pidf.calculate(robot.motorBR.getCurrentPosition(), robot.velocityToTicks(backRight));*/
+
+        /*PController controllerFL = new PController(robot.pidf.getP());
         PController controllerFR = new PController(robot.pidf.getP());
         PController controllerBL = new PController(robot.pidf.getP());
         PController controllerBR = new PController(robot.pidf.getP());
 
+        controllerFL.setTolerance(5, 10);
+        controllerFR.setTolerance(5, 10);
+        controllerBL.setTolerance(5, 10);
+        controllerBR.setTolerance(5, 10);
+
         PController[] controllers = new PController[]{controllerFL, controllerFR, controllerBL, controllerBR};
-        Motor[] motors = new Motor[]{robot.motorFL, robot.motorFR, robot.motorBL, robot.motorBR};
+        DcMotor[] motors = new DcMotor[]{robot.motorFL, robot.motorFR, robot.motorBL, robot.motorBR};
 
-        controllerFL.setSetPoint(robot.velocityToTicks(left));
-        controllerFR.setSetPoint(robot.velocityToTicks(right));
-        controllerBL.setSetPoint(robot.velocityToTicks(left));
-        controllerBR.setSetPoint(robot.velocityToTicks(right));
+        controllerFL.setSetPoint(robot.velocityToTicks(frontLeft));
+        controllerFR.setSetPoint(robot.velocityToTicks(frontRight));
+        controllerBL.setSetPoint(robot.velocityToTicks(backLeft));
+        controllerBR.setSetPoint(robot.velocityToTicks(backRight));
 
-
-        while (!controllerFL.atSetPoint() || !controllerFR.atSetPoint() || !controllerBL.atSetPoint() || !controllerBR.atSetPoint()) {
-            for (int i = 0; i < controllers.length; i++) {
-                while (!controllers[i].atSetPoint()) {
-                    double output = controllers[i].calculate(
-                            motors[i].getCurrentPosition()  // the measured value
-                    );
-                 
-                }
-            }
-        }
+        for (int i = 0; i < controllers.length; i++) {
+            double output = controllers[i].calculate(
+                    motors[i].getCurrentPosition()  // the measured value
+            );
+            DcMotorEx exM = (DcMotorEx)motors[i];
+            exM.setVelocity(output);
+        }*/
     }
 }
