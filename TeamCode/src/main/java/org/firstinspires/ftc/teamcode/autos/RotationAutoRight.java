@@ -44,6 +44,7 @@ public class RotationAutoRight extends LinearOpMode {
             int next = vision.perform(1f / 3f);
             if (next != -1) result = next;
             telemetry.addData("current result", result);
+            telemetry.update();
         }
         // START MOVEMENT
         waitForStart();
