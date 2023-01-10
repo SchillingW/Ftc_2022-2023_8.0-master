@@ -14,7 +14,7 @@ public class LinearSlide
     private Servo claw;
 
     private double minMagnitude = 0.2;
-    private double maxMagnitude = 0.7;
+    private double maxMagnitude = 1;
     private double slideZeroMag = -0.1;
 
     private int errorMargin = 20;
@@ -39,9 +39,15 @@ public class LinearSlide
 
     public void goTo(int reachHeight, Telemetry telemetry)
     {
+        if(isAtTarget(reachHeight))
+        {
+            slide.set(slideZeroMag);
+            return;
+        }
+
         double slideVector = reachHeight - slide.encoder.getPosition();
         double currentMagnitude = Math.abs(slideVector);
-        double targetMagnitude = isAtTarget(reachHeight) ? minMagnitude : maxMagnitude;
+        double targetMagnitude = maxMagnitude;
 
         slideVector *= targetMagnitude/currentMagnitude;
         slide.set(slideVector);
@@ -74,6 +80,7 @@ public class LinearSlide
     }
 
     public void moveByJoystick(double mag) {slide.set((mag == 0) ? slideZeroMag : mag * armSpeed);}
+    public void setSlide(double mag){slide.set(mag);}
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
     public int getCurrentPos(){return slide.encoder.getPosition();}
     public void openClaw() {claw.setPosition(0.9);}

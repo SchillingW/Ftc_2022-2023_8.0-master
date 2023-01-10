@@ -55,7 +55,7 @@ public class  PursuitBotTesting {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 7.5 / (360.0 / 340.0);
+    public double encoderTrackWidth = 7.5 / (360.0 / 341.26) /*(360.0 / 340.0)*/;
     public double encoderWheelOffset = -1.5;
 
     // robot movement datas
@@ -120,7 +120,7 @@ public class  PursuitBotTesting {
 
 
 
-    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode) {
+    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, boolean needsPrecise) {
         //Optional <String> l = Optional.ofNullable(level);
 
         if (mode.opModeIsActive()) {
@@ -135,8 +135,35 @@ public class  PursuitBotTesting {
 
             ElapsedTime time = new ElapsedTime();
 
-            while (time.seconds() < extraTime && mode.opModeIsActive()) {
+            while (time.seconds() < extraTime && mode.opModeIsActive() && needsPrecise) {
 
+                odometry.update();
+                moveTowards(false, target, tele);
+            }
+
+            drive.stop();
+        }
+    }
+
+    public void reachPointSlide(Pose2d target, Telemetry tele, LinearOpMode mode, LinearSlide slide, int reachHeight, boolean needsPrecise) {
+        //Optional <String> l = Optional.ofNullable(level);
+
+        if (mode.opModeIsActive()) {
+
+            odometry.update();
+
+            while (!isAtTarget(target) && mode.opModeIsActive()) {
+
+                slide.goTo(reachHeight, tele);
+                odometry.update();
+                moveTowards(true, target, tele);
+            }
+
+            ElapsedTime time = new ElapsedTime();
+
+            while (time.seconds() < extraTime && mode.opModeIsActive() && needsPrecise) {
+
+                slide.goTo(reachHeight, tele);
                 odometry.update();
                 moveTowards(false, target, tele);
             }
