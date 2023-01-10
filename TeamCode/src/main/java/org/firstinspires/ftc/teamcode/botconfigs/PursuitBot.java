@@ -155,7 +155,7 @@ public class PursuitBot {
         }
     }
 
-    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
+    /*public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
         //Optional <String> l = Optional.ofNullable(level);
 
         if (mode.opModeIsActive()) {
@@ -186,7 +186,7 @@ public class PursuitBot {
 
             drive.stop();
         }
-    }
+    }*/
 
     public void moveTowards(boolean largeMove, Pose2d target, Telemetry tele) {
 

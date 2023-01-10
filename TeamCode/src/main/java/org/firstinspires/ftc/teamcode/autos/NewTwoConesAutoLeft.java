@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 @Autonomous(name="NewTwoConesAutoLeft", group="PursuitBot")
 public class NewTwoConesAutoLeft extends LinearOpMode {
 
-    public PursuitBotTesting robot;
+    public PursuitBot robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
     public int dropOffset = 80;
@@ -23,7 +23,7 @@ public class NewTwoConesAutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot = new PursuitBotTesting(telemetry, hardwareMap);
+        robot = new PursuitBot(telemetry, hardwareMap);
         robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
         robot.xDim.cellPLACEMENT = 0;
@@ -36,7 +36,12 @@ public class NewTwoConesAutoLeft extends LinearOpMode {
         sleep(1000);
 
         int result = 0;
-        while (!isStarted()) result = vision.perform(1f / 3f);
+        while (!isStarted()) {
+            int next = vision.perform(1f / 3f);
+            if (next != -1) result = vision.perform(1f / 3f);
+            telemetry.addData("current result", result);
+            telemetry.update();
+        }
 
         // START MOVEMENT
         waitForStart();
@@ -85,14 +90,14 @@ public class NewTwoConesAutoLeft extends LinearOpMode {
         if (opModeIsActive()) sleep(200);
         GrabConeFromCell(0);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(3), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(0) + 4.5, new Rotation2d()), telemetry, this);
 
         if (opModeIsActive()) sleep(200);
         GrabConeFromCell(0);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(1), new Rotation2d()), telemetry, this);
-        robot.reachPoint(new Pose2d(robot.xDim.toPole(3), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
+        robot.reachPoint(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(1), new Rotation2d()), telemetry, this);
         robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(2), new Rotation2d()), telemetry, this);
 
         // PARK

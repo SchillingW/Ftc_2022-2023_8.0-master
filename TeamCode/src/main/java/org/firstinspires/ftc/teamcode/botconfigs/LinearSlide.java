@@ -83,6 +83,6 @@ public class LinearSlide
     public void setSlide(double mag){slide.set(mag);}
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
     public int getCurrentPos(){return slide.encoder.getPosition();}
-    public void openClaw() {claw.setPosition(0.9);}
+    public void openClaw() {claw.setPosition(0.5);}
     public void closeClaw() {claw.setPosition(0);}
 }
