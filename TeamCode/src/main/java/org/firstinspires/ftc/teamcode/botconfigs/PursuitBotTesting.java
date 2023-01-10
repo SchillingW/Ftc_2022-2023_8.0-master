@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 // mecanum drive bot with odometry for Pure Pursuit
-public class PursuitBotTesting {
+public class  PursuitBotTesting {
 
     // dimensions
     public FieldDimensions xDim = new FieldDimensions();
@@ -55,14 +55,14 @@ public class PursuitBotTesting {
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 7.5;
+    public double encoderTrackWidth = 7.5 / (360.0 / 340.0);
     public double encoderWheelOffset = -1.5;
 
     // robot movement datas
     public double adjustSpeed = 0.15;
-    public double minSpeed = 0.3;
-    public double minGradient = 3;
-    public double maxSpeed = 0.6;
+    public double minSpeed = 0.25;
+    public double minGradient = 6;
+    public double maxSpeed = 0.8;
     public double maxGradient = 18;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
@@ -200,7 +200,7 @@ public class PursuitBotTesting {
         y *= targetMagnitude / currentMagnitude;
         rot *= targetMagnitude / currentMagnitude;
 
-        drive.driveFieldCentric(x, y, rot, odometry.getPose().getHeading());
+        drive.driveFieldCentric(x, y, rot, odometry.getPose().getHeading() / 2 / Math.PI * 360);
 
         DebugFull(tele);
     }

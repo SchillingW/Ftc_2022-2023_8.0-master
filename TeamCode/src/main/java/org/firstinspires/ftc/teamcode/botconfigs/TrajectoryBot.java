@@ -94,7 +94,7 @@ public class TrajectoryBot {
         pidf = new PIDFController(kP, kI, kD, kF);
 
         // set our gains to some value
-        pidf.setP(10.00);
+        pidf.setP(10.0);
         pidf.setI(3.00);
         pidf.setD(0.00);
         pidf.setF(0.00);
@@ -117,7 +117,7 @@ public class TrajectoryBot {
         // initialize odometry
         encoderL = getSupplier(motorFL, 1);
         encoderR = getSupplier(motorFR, -1);
-        encoderH = getSupplier(motorBL, 1);
+        encoderH = getSupplier(motorBL, -1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));

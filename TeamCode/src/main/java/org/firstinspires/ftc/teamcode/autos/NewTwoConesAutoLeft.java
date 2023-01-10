@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="TwoConesAutoLeft", group="PursuitBot")
+@Autonomous(name="NewTwoConesAutoLeft", group="PursuitBot")
 public class NewTwoConesAutoLeft extends LinearOpMode {
 
     public PursuitBotTesting robot;

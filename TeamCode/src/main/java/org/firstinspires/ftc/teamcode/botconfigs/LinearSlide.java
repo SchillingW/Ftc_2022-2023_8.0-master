@@ -22,6 +22,8 @@ public class LinearSlide
 
     public int ground = 0; public int low = -1250;
     public int med = -2150; public int high = -3050;
+    public int driveHeight = -250;
+    public int stackDriveHeight = -600;
     public int[] stacks = {-425, -340, -190, -65};
     public int[] slidePositions = {ground, low, med, high};
 

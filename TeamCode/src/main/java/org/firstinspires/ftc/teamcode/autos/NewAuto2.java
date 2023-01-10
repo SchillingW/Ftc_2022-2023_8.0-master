@@ -61,7 +61,7 @@ public class NewAuto2 extends LinearOpMode {
                 new Translation2d[]{new Translation2d(robot.inchesToMeters(robot.xDim.toCell(2) / 4), robot.inchesToMeters(robot.yDim.toCell(0))),
                         new Translation2d(robot.inchesToMeters(robot.xDim.toCell(2) / 4), robot.inchesToMeters(robot.yDim.toCell(0)))}, false);
 
-        double inc = 0.05;
+        double inc = 1.5;
         double seconds = t.getTotalTimeSeconds();
         ElapsedTime timer = new ElapsedTime();
 

@@ -39,8 +39,8 @@ public class NewAUTO extends LinearOpMode {
     //public LinearSlide linearSlide;
     public int dropOffset = 80;
 
-    public double maxVelocity = 0.5;
-    public double maxAcceleration = 0.5;
+    public double maxVelocity = 2.0;
+    public double maxAcceleration = 2.0;
 
     public boolean moveToNext;
 
