@@ -32,7 +32,7 @@ public class Meet1BotTeleOp extends OpMode {
     PursuitBotTesting robot;
     LinearSlide linearSlide;
     ColorSensor sensorColor;
-    //DistanceSensor sensorDistance;
+    DistanceSensor sensorDistance;
 
     public double turnSpeed = 0.75;
     public double linearSpeed = 0.75;
@@ -64,6 +64,7 @@ public class Meet1BotTeleOp extends OpMode {
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         sensor = hardwareMap.colorSensor.get("sensor");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sen");
 
     }
 
@@ -134,6 +135,10 @@ public class Meet1BotTeleOp extends OpMode {
             linearSlide.openClaw();
             telemetry.addData("servo", "open");
             telemetry.update();
+        }
+
+        if (sensorDistance.getDistance(DistanceUnit.CM) <= 2.5) {
+            gamepad2.rumble(500);
         }
 
         boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP);
