@@ -62,8 +62,8 @@ public class  PursuitBotTesting {
     public double adjustSpeed = 0.15;
     public double minSpeed = 0.25;
     public double minGradient = 6;
-    public double maxSpeed = 0.75;
-    public double maxGradient = 18;
+    public double maxSpeed = 1;
+    public double maxGradient = 24;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 48.0 / 360.0;
@@ -77,10 +77,10 @@ public class  PursuitBotTesting {
         this.tele = tele;
 
         // initialize dimensions hi
-        xDim.botanchor2botcenterHARDWARE = 6.75;
-        yDim.botanchor2botcenterHARDWARE = 6.125;
-        xDim.botanchor2clawcenterHARDWARE = 16;
-        yDim.botanchor2clawcenterHARDWARE = 6;
+        xDim.botanchor2botcenterHARDWARE = 6.125;
+        yDim.botanchor2botcenterHARDWARE = 6.75;
+        xDim.botanchor2clawcenterHARDWARE = 6.325;
+        yDim.botanchor2clawcenterHARDWARE = 16;
 
         // initialize drive train
         motorFL = new Motor(map, "motorFL");
