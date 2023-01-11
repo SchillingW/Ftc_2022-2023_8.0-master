@@ -58,7 +58,7 @@ public class VisionDevice {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.5, 8.0/6.0);
+            tfod.setZoom(10, 8.0/6.0);
         }
     }
 
