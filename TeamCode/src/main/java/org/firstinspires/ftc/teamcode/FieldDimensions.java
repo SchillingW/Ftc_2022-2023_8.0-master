@@ -10,17 +10,17 @@ public class FieldDimensions {
 
     public double cellLength = 23.5;
 
-    public double toCell(int i) {
+    public double toCell(double i) {
 
         return (i + 0.5 - cellPLACEMENT) * cellLength - botanchor2botcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 
-    public double toPole(int i) {
+    public double toPole(double i) {
 
         return (i + 1 - cellPLACEMENT) * cellLength - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }
 
-    public double toCone(int i) {
+    public double toCone(double i) {
 
         return (i + 0.5 - cellPLACEMENT) * cellLength - botanchor2clawcenterHARDWARE - cellcorner2botanchorPLACEMENT;
     }

@@ -17,11 +17,11 @@ public class LinearSlide
     private double maxMagnitude = 1;
     private double slideZeroMag = -0.1;
 
-    private int errorMargin = 20;
+    private int errorMargin = 60;
     private double armSpeed = 0.75;
 
     public int ground = 0; public int low = -1250;
-    public int med = -2150; public int high = -3050;
+    public int med = -2150; public int high = -3000;
     public int driveHeight = -250;
     public int stackDriveHeight = -600;
     public int[] stacks = {-425, -340, -190, -65};
@@ -83,6 +83,6 @@ public class LinearSlide
     public void setSlide(double mag){slide.set(mag);}
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
     public int getCurrentPos(){return slide.encoder.getPosition();}
-    public void openClaw() {claw.setPosition(0.5);}
+    public void openClaw() {claw.setPosition(0.45);}
     public void closeClaw() {claw.setPosition(0);}
 }

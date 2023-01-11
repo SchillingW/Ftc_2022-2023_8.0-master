@@ -18,7 +18,7 @@ public class RotationAutoRight extends LinearOpMode {
     public VisionDevice vision;
     public LinearSlide linearSlide;
     ColorSensor sensorColor;
-    public int dropOffset = 120;
+    public int dropOffset = 40;
     public ColorSensor sensor;
 
     public boolean moveToNext;
@@ -49,33 +49,35 @@ public class RotationAutoRight extends LinearOpMode {
         // START MOVEMENT
         waitForStart();
         if (opModeIsActive()) linearSlide.closeClaw();
+        sleep(200);
 
         // CONE GRABBED
         robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, false);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(1.5), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, false);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2) - 2, robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
-        linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
+        sleep(10000);
         if (opModeIsActive()) linearSlide.openClaw();
 
         Cycle(0);
         Cycle(1);
+        Cycle(2);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.ground, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.ground, true);
     }
 
     public void Cycle(int i)
     {
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.stacks[i], true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5), Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.stacks[i], true);
         sleep(500);
+        sleep(10000);
         linearSlide.closeClaw();
         sleep(200);
         //linearSlide.goToFull(linearSlide.stackDriveHeight, telemetry, this);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2) - 2, robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
-        linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
-        sleep(200);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
         if (opModeIsActive()) linearSlide.openClaw();
+        sleep(200);
     }
 }
 

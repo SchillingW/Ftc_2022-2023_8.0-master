@@ -62,11 +62,11 @@ public class  PursuitBotTesting {
     public double adjustSpeed = 0.15;
     public double minSpeed = 0.25;
     public double minGradient = 6;
-    public double maxSpeed = 0.8;
+    public double maxSpeed = 0.75;
     public double maxGradient = 18;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
-    public double degreeToInchEquivFactor = 24.0 / 360.0;
+    public double degreeToInchEquivFactor = 48.0 / 360.0;
 
     public double rotErrorMargin = 3;
 

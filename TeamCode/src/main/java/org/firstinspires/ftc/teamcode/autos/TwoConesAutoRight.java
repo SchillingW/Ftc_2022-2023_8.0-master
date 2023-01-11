@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 @Autonomous(name="TwoConesAutoRight", group="PursuitBot")
 public class TwoConesAutoRight extends LinearOpMode {
 
-    public PursuitBotTesting robot;
+    public PursuitBot robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
     ColorSensor sensorColor;
@@ -27,7 +27,7 @@ public class TwoConesAutoRight extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot = new PursuitBotTesting(telemetry, hardwareMap);
+        robot = new PursuitBot(telemetry, hardwareMap);
         robot.xDim.cellcorner2botanchorPLACEMENT = 0.125;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2;
         sensor = hardwareMap.colorSensor.get("sensor");
