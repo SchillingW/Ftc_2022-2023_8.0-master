@@ -9,13 +9,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
-import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting2;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="BaccLeftt", group="PursuitBot")
+@Autonomous(name="RotationAutoRight", group="PursuitBot")
 public class BackLeftAutoRight extends LinearOpMode {
 
-    public PursuitBotTesting2 robot;
+    public PursuitBotTesting robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
     ColorSensor sensorColor;
@@ -28,12 +27,12 @@ public class BackLeftAutoRight extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot = new PursuitBotTesting2(telemetry, hardwareMap);
-        robot.xDim.cellcorner2botanchorPLACEMENT = 0.375;
-        robot.yDim.cellcorner2botanchorPLACEMENT = 9;
+        robot = new PursuitBotTesting(telemetry, hardwareMap);
+        robot.xDim.cellcorner2botanchorPLACEMENT = 2.375;
+        robot.yDim.cellcorner2botanchorPLACEMENT = 0.375;
         sensor = hardwareMap.colorSensor.get("sensor");
-        robot.xDim.cellPLACEMENT = 4;
-        robot.yDim.cellPLACEMENT = -1;
+        robot.xDim.cellPLACEMENT = 0;
+        robot.yDim.cellPLACEMENT = 4;
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
@@ -53,27 +52,29 @@ public class BackLeftAutoRight extends LinearOpMode {
         sleep(200);
 
         // CONE GRABBED
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(-1), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(3) + 2, robot.yDim.toPole(-4) + 1, new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
         if (opModeIsActive()) linearSlide.openClaw();
 
         Cycle(0);
         Cycle(1);
+        Cycle(2);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(-3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.low, false);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(result + 3), robot.yDim.toCell(-3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.ground, true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.low, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.ground, true);
     }
 
     public void Cycle(int i)
     {
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(-3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.low, false);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(5) + 1.5, robot.yDim.toCell(-3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.stacks[i] - 75, true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.low, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5), new Rotation2d()), telemetry, this, linearSlide, linearSlide.stacks[i], true);
+        sleep(500);
         linearSlide.closeClaw();
         sleep(200);
         //linearSlide.goToFull(linearSlide.stackDriveHeight, telemetry, this);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(3), robot.yDim.toCell(-3), new Rotation2d()), telemetry, this,  linearSlide, linearSlide.high, false);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(3) + 2, robot.yDim.toPole(-4) + 1, new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(3), new Rotation2d()), telemetry, this,  false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
         if (opModeIsActive()) linearSlide.openClaw();
         sleep(200);
     }
