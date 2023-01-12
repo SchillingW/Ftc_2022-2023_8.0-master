@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 // mecanum drive bot with odometry for Pure Pursuit
-public class  PursuitBotTesting {
+public class  PursuitBotTesting2 {
 
     // dimensions
     public FieldDimensions xDim = new FieldDimensions();
@@ -62,8 +62,8 @@ public class  PursuitBotTesting {
     public double adjustSpeed = 0.15;
     public double minSpeed = 0.25;
     public double minGradient = 6;
-    public double maxSpeed = 0.65;
-    public double maxGradient = 30;
+    public double maxSpeed = 0.5;
+    public double maxGradient = 36;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 48.0 / 360.0;
@@ -71,7 +71,7 @@ public class  PursuitBotTesting {
     public double rotErrorMargin = 3;
 
     // initialize devices
-    public PursuitBotTesting(Telemetry tele, HardwareMap map) {
+    public PursuitBotTesting2(Telemetry tele, HardwareMap map) {
 
         // store debugging device
         this.tele = tele;
@@ -164,39 +164,6 @@ public class  PursuitBotTesting {
             while (time.seconds() < extraTime && mode.opModeIsActive() && needsPrecise) {
 
                 slide.goTo(reachHeight, tele);
-                odometry.update();
-                moveTowards(false, target, tele);
-            }
-
-            drive.stop();
-        }
-    }
-
-    public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
-        //Optional <String> l = Optional.ofNullable(level);
-
-        if (mode.opModeIsActive()) {
-
-            odometry.update();
-
-            while (!isAtTarget(target) && mode.opModeIsActive()) {
-                if (level == "low") {
-                    linearSlide.goTo(linearSlide.low + dropOffset, telemetry);
-                }
-                if (level == "medium") {
-                    linearSlide.goTo(linearSlide.med, telemetry);
-                }
-                if (level == "high") {
-                    linearSlide.goTo(linearSlide.high, telemetry);
-                }
-                odometry.update();
-                moveTowards(true, target, tele);
-            }
-
-            ElapsedTime time = new ElapsedTime();
-
-            while (time.seconds() < extraTime && mode.opModeIsActive()) {
-
                 odometry.update();
                 moveTowards(false, target, tele);
             }

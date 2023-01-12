@@ -11,9 +11,10 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="RotationAutoRight", group="PursuitBot")
-public class RotationAutoRight extends LinearOpMode {
+@Autonomous(name="LowAutoRight", group="PursuitBot")
+public class LowAutoRight extends LinearOpMode {
 
+    public double poleCellDiff;
     public PursuitBotTesting robot;
     public VisionDevice vision;
     public LinearSlide linearSlide;
@@ -26,13 +27,15 @@ public class RotationAutoRight extends LinearOpMode {
     //auto
     @Override
     public void runOpMode() {
-
         robot = new PursuitBotTesting(telemetry, hardwareMap);
         robot.xDim.cellcorner2botanchorPLACEMENT = 0.125;
         robot.yDim.cellcorner2botanchorPLACEMENT = 2;
         sensor = hardwareMap.colorSensor.get("sensor");
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 4;
+        robot.maxSpeed = 0.8;
+
+        poleCellDiff = robot.xDim.toPole(1) - robot.xDim.toCell(1) + 1.25;
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
@@ -52,25 +55,28 @@ public class RotationAutoRight extends LinearOpMode {
         sleep(200);
 
         // CONE GRABBED
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
-        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, false);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0.5), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(1.5) , robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low, true);
         if (opModeIsActive()) linearSlide.openClaw();
 
         Cycle(0);
         Cycle(1);
         Cycle(2);
+        Cycle(3);
+        Cycle(4);
 
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result + 3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.ground, true);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result + 3), Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.ground, true);
     }
 
     public void Cycle(int i)
     {
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(3), Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.stackDriveHeight, true);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5), Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.stacks[i], true);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 0.75, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.stacks[i], true);
         linearSlide.closeClaw();
         sleep(200);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toPole(2), robot.yDim.toPole(3), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, true);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low - 50, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(1.5) , robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low, true);
         if (opModeIsActive()) linearSlide.openClaw();
         sleep(200);
     }

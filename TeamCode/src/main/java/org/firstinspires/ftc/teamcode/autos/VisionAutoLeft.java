@@ -16,36 +16,35 @@ public class VisionAutoLeft extends LinearOpMode {
     public VisionDevice vision;
 
     public boolean moveToNext;
-    //auto
+
     @Override
     public void runOpMode() {
 
         robot = new PursuitBotTesting(telemetry, hardwareMap);
-        robot.xDim.cellcorner2botanchorPLACEMENT = 1.5;
-        robot.yDim.cellcorner2botanchorPLACEMENT = 2.5;
+        robot.xDim.cellcorner2botanchorPLACEMENT = 0.125;
+        robot.yDim.cellcorner2botanchorPLACEMENT = 2;
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 1;
 
-        vision = new VisionDevice(telemetry, hardwareMap);
-        vision.init();
 
+        int result = 0;
+        while (!isStarted()) {
+            int next = vision.perform(1f / 3f);
+            if (next != -1) result = next;
+            telemetry.addData("current result", result);
+            telemetry.update();
+        }
+        // START MOVEMENT
         waitForStart();
-        int result = vision.perform(1f / 3f);
-        sleep(2000);
-        telemetry.addData("result", result);
         telemetry.update();
         sleep(2000);
-        // START MOVEMENT
 
-        // CONE GRABBED
 
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this, null);
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(1), new Rotation2d()), telemetry, this, null);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(1), new Rotation2d()), telemetry, this, null);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(1), new Rotation2d()), telemetry, this, null);
+        sleep(2000);
 
-        if (opModeIsActive()) sleep(2000);
-
-        // PARK
-        //robot.reachPoint(new Pose2d(robot.xDim.toCell(1), robot.yDim.toCell(result), new Rotation2d()), telemetry, this, null);
+        robot.reachPoint(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(result), new Rotation2d()), telemetry, this, null);
     }
 }
 
