@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="RotationAutoRight", group="PursuitBot")
+@Autonomous(name="Backleft", group="PursuitBot")
 public class BackLeftAutoRight extends LinearOpMode {
 
     public PursuitBotTesting robot;

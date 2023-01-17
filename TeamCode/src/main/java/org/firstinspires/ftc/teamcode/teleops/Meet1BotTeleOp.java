@@ -33,7 +33,7 @@ public class Meet1BotTeleOp extends OpMode {
     ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
 
-    public double turnSpeed = 0.75;
+    public double turnSpeed = 0.6;
     public double linearSpeed = 0.75;
 
     public int heightIndex = 0;
@@ -106,22 +106,19 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());*/
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.X))
+        if(input.gamepad1.getButton(GamepadKeys.Button.B))
         {
-            linearSpeed = 0.75;
-            turnSpeed = 0.75;
+            linearSpeed = 1;
         }
 
         if(input.gamepad1.getButton(GamepadKeys.Button.Y))
         {
-            linearSpeed = 0.55;
-            turnSpeed = 0.55;
+            linearSpeed = 0.825;
         }
 //
-        if(input.gamepad1.getButton(GamepadKeys.Button.B))
+        if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {
-            linearSpeed = 0.35;
-            turnSpeed = 0.35;
+            linearSpeed = 0.75;
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {

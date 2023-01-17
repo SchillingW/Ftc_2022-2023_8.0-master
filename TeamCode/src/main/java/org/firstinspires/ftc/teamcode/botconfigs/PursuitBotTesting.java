@@ -60,15 +60,15 @@ public class  PursuitBotTesting {
 
     // robot movement datas
     public double adjustSpeed = 0.15;
-    public double minSpeed = 0.25;
-    public double minGradient = 6;
-    public double maxSpeed = 0.65;
-    public double maxGradient = 30;
+    public double minSpeed = 0.2;
+    public double minGradient = 4;
+    public double maxSpeed = 0.69;
+    public double maxGradient = 12;
     public double errorMargin = 0.5;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 48.0 / 360.0;
 
-    public double rotErrorMargin = 3;
+    public double rotErrorMargin = 0.25;
 
     // initialize devices
     public PursuitBotTesting(Telemetry tele, HardwareMap map) {
@@ -148,13 +148,18 @@ public class  PursuitBotTesting {
     public void reachPointSlide(Pose2d target, Telemetry tele, LinearOpMode mode, LinearSlide slide, int reachHeight, boolean needsPrecise) {
         //Optional <String> l = Optional.ofNullable(level);
 
+        double slideSpeed = slide.maxMagnitude;
+        double startPos = slide.getCurrentPos();
+        double inc = 0.001;
+
         if (mode.opModeIsActive()) {
 
             odometry.update();
 
             while (!isAtTarget(target) && mode.opModeIsActive()) {
 
-                slide.goTo(reachHeight, tele);
+                slideSpeed = Math.max(slide.minMagnitude, slideSpeed - inc);
+                slide.goToAuto(reachHeight, slideSpeed, tele);
                 odometry.update();
                 moveTowards(true, target, tele);
             }
@@ -170,6 +175,26 @@ public class  PursuitBotTesting {
 
             drive.stop();
         }
+    }
+
+    public void setConstants(double maxSpeed, double minSpeed, double maxGradient, double minGradient){
+        this.maxSpeed = maxSpeed;
+        this.minSpeed = minSpeed;
+        this.maxGradient = maxGradient;
+        this.minGradient = minGradient;
+    }
+
+    public static double motorSpeed(int startPos, int endPos, double startSpeed, double endSpeed, int currentPos) {
+        double speedRange = startSpeed - endSpeed;
+        double posRange = Math.abs(startPos - endPos);
+        double speedDelta = speedRange/posRange;
+
+        double absStart = Math.abs(startPos);
+        double absCurrent = Math.abs(currentPos);
+        double diff = 0;
+
+        double currentSpeed = startSpeed - diff * speedDelta;
+        return currentSpeed;
     }
 
     public void reachPoint(Pose2d target, Telemetry tele, LinearOpMode mode, String level) {
@@ -238,7 +263,7 @@ public class  PursuitBotTesting {
         double y = target.getY() - odometry.getPose().getY();
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
 
-        return Math.abs(x) <= errorMargin && Math.abs(y) <= errorMargin && Math.abs(rot) <= errorMargin;
+        return Math.abs(x) <= errorMargin && Math.abs(y) <= errorMargin && Math.abs(rot) <= rotErrorMargin;
     }
 
     public void TranslateY(double y, double speed, Telemetry tele, LinearOpMode mode)

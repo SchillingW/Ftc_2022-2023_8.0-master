@@ -13,21 +13,21 @@ public class LinearSlide
     private Motor slide;
     private Servo claw;
 
-    private double minMagnitude = 0.2;
-    private double maxMagnitude = 1;
+    public double minMagnitude = 0.2;
+    public double maxMagnitude = 1;
     private double slideZeroMag = -0.1;
 
     private int errorMargin = 60;
     private double armSpeed = 0.75;
 
-    public int ground = 0; public int low = -1250;
-    public int med = -2150; public int high = -3000;
+    public int ground = 0; public int low = -1275;
+    public int med = -2150; public int high = -2970;
     public int driveHeight = -250;
     public int stackDriveHeight = -600;
-    public int[] stacks = {-425, -340, -190, -65};
+    public int[] stacks = {-405, -320, -135, -65};
     public int[] slidePositions = {ground, low, med, high};
 
-    public double extraTime = 0.1;
+    public double extraTime = 0.125;
 
     public LinearSlide(Telemetry tele, HardwareMap map)
     {
@@ -48,6 +48,28 @@ public class LinearSlide
         double slideVector = reachHeight - slide.encoder.getPosition();
         double currentMagnitude = Math.abs(slideVector);
         double targetMagnitude = maxMagnitude;
+
+        slideVector *= targetMagnitude/currentMagnitude;
+        slide.set(slideVector);
+
+        telemetry.addData("Current Slide Pos", slide.encoder.getPosition());
+        telemetry.addData("Desired Slide Pos", reachHeight);
+        telemetry.addData("Current Slide Magnitude", currentMagnitude);
+        telemetry.addData("Target Slide Magnitude", targetMagnitude);
+        telemetry.update();
+    }
+
+    public void goToAuto(int reachHeight, double speed, Telemetry telemetry)
+    {
+        if(isAtTarget(reachHeight))
+        {
+            slide.set(slideZeroMag);
+            return;
+        }
+
+        double slideVector = reachHeight - slide.encoder.getPosition();
+        double currentMagnitude = Math.abs(slideVector);
+        double targetMagnitude = maxMagnitude * speed;
 
         slideVector *= targetMagnitude/currentMagnitude;
         slide.set(slideVector);
@@ -84,5 +106,6 @@ public class LinearSlide
     public boolean isAtTarget(int reachHeight) {return (Math.abs(slide.encoder.getPosition() - reachHeight) < errorMargin);}
     public int getCurrentPos(){return slide.encoder.getPosition();}
     public void openClaw() {claw.setPosition(0.45);}
+    public void middleClaw() {claw.setPosition(0.225);}
     public void closeClaw() {claw.setPosition(0);}
 }
