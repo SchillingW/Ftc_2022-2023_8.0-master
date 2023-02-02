@@ -51,20 +51,22 @@ public class  PursuitBotTesting {
     public DoubleSupplier encoderH;
 
     // hardware specifications
-    public double wheelDiameter = 2.3622;
+    public double wheelDiameter = 2.37725105;
     public double wheelCircumference = wheelDiameter * Math.PI;
 
     // robot type data
-    public double encoderTrackWidth = 7.5 / (360.0 / 341.26) /*(360.0 / 340.0)*/;
-    public double encoderWheelOffset = -1.5;
+    public double encoderTrackWidth = 7.009306721;
+    public double encoderWheelOffset = -1.496056465;
 
     // robot movement datas
     public double adjustSpeed = 0.15;
     public double minSpeed = 0.2;
     public double minGradient = 4;
     public double maxSpeed = 0.69;
-    public double maxGradient = 12;
+    public double maxGradient = 16;
     public double errorMargin = 0.5;
+    public double midErrorMargin = 1;
+    public double midRotErrorMargin = 0.7;
     public double extraTime = 0.5;
     public double degreeToInchEquivFactor = 48.0 / 360.0;
 
@@ -96,9 +98,9 @@ public class  PursuitBotTesting {
                 1, 1, 1, 1);
 
         // initialize odometry
-        encoderL = getSupplier(motorFL, 1);
-        encoderR = getSupplier(motorFR, -1);
-        encoderH = getSupplier(motorBL, -1);
+        encoderL = getSupplier(motorFL, 1, 1);
+        encoderR = getSupplier(motorFR, -1, 1);
+        encoderH = getSupplier(motorBL, -1, 1);
         odometry = new OdometrySubsystem(new HolonomicOdometry(
                 encoderL, encoderR, encoderH,
                 encoderTrackWidth, encoderWheelOffset));
@@ -111,11 +113,11 @@ public class  PursuitBotTesting {
     }
 
     // return double supplier representing motor value in inches
-    public DoubleSupplier getSupplier(Motor encoder, float coefficient) {
+    public DoubleSupplier getSupplier(Motor encoder, float coefficient, double multiplier) {
 
         // convert motor ticks to inches
         double ticksPerInch = 8192 / wheelCircumference;
-        return () -> encoder.getCurrentPosition() / ticksPerInch * coefficient;
+        return () -> encoder.getCurrentPosition() * multiplier / ticksPerInch * coefficient;
     }
 
 
@@ -145,12 +147,35 @@ public class  PursuitBotTesting {
         }
     }
 
-    public void reachPointSlide(Pose2d target, Telemetry tele, LinearOpMode mode, LinearSlide slide, int reachHeight, boolean needsPrecise) {
-        //Optional <String> l = Optional.ofNullable(level);
+    public void reachPointSlideNextPoint(Pose2d target, Pose2d nextPoint, Telemetry tele, LinearOpMode mode, LinearSlide slide, int reachHeight, boolean needsPrecise) {
+        moveTowards(true, target, tele);
 
         double slideSpeed = slide.maxMagnitude;
         double startPos = slide.getCurrentPos();
-        double inc = 0.001;
+        double inc = 0.01;
+
+        if (mode.opModeIsActive()) {
+
+            odometry.update();
+
+            while (!isAtMidTarget(target) && mode.opModeIsActive()) {
+
+                slideSpeed = Math.max(slide.minMagnitude, slideSpeed - inc);
+                slide.goToAuto(reachHeight, slideSpeed, tele);
+                odometry.update();
+                moveTowards(true, target, tele);
+            }
+
+            moveTowards(true, nextPoint, tele);
+        }
+    }
+
+    public void reachPointSlide(Pose2d target, Telemetry tele, LinearOpMode mode, LinearSlide slide, int reachHeight, boolean needsPrecise) {
+        moveTowards(true, target, tele);
+
+        double slideSpeed = slide.maxMagnitude;
+        double startPos = slide.getCurrentPos();
+        double inc = 0.01;
 
         if (mode.opModeIsActive()) {
 
@@ -164,22 +189,20 @@ public class  PursuitBotTesting {
                 moveTowards(true, target, tele);
             }
 
-            ElapsedTime time = new ElapsedTime();
-
-            while (time.seconds() < extraTime && mode.opModeIsActive() && needsPrecise) {
-
-                slide.goTo(reachHeight, tele);
-                odometry.update();
-                moveTowards(false, target, tele);
-            }
-
-            drive.stop();
+            moveTowards(true, target, tele);
         }
     }
 
     public void setConstants(double maxSpeed, double minSpeed, double maxGradient, double minGradient){
         this.maxSpeed = maxSpeed;
         this.minSpeed = minSpeed;
+        this.maxGradient = maxGradient;
+        this.minGradient = minGradient;
+    }
+
+    public void setConstantsMult(double multiplier, double maxSpeed, double minSpeed, double maxGradient, double minGradient){
+        this.maxSpeed = maxSpeed * multiplier;
+        this.minSpeed = minSpeed * multiplier;
         this.maxGradient = maxGradient;
         this.minGradient = minGradient;
     }
@@ -191,7 +214,7 @@ public class  PursuitBotTesting {
 
         double absStart = Math.abs(startPos);
         double absCurrent = Math.abs(currentPos);
-        double diff = 0;
+        double diff = (currentPos > startPos) ? currentPos - startPos : startPos - currentPos;
 
         double currentSpeed = startSpeed - diff * speedDelta;
         return currentSpeed;
@@ -264,6 +287,15 @@ public class  PursuitBotTesting {
         double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
 
         return Math.abs(x) <= errorMargin && Math.abs(y) <= errorMargin && Math.abs(rot) <= rotErrorMargin;
+    }
+
+    public boolean isAtMidTarget(Pose2d target) {
+
+        double x = target.getX() - odometry.getPose().getX();
+        double y = target.getY() - odometry.getPose().getY();
+        double rot = target.getRotation().minus(odometry.getPose().getRotation()).getDegrees() * degreeToInchEquivFactor;
+
+        return Math.abs(x) <= midErrorMargin && Math.abs(y) <= midErrorMargin && Math.abs(rot) <= midRotErrorMargin;
     }
 
     public void TranslateY(double y, double speed, Telemetry tele, LinearOpMode mode)

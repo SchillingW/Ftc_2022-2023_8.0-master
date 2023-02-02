@@ -8,7 +8,7 @@ public class FieldDimensions {
     public double cellcorner2botanchorPLACEMENT;
     public int cellPLACEMENT;
 
-    public double cellLength = 23.625;
+    public double cellLength = 23.5;
 
     public double toCell(double i) {
 

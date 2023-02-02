@@ -18,6 +18,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.sun.tools.javac.util.Convert;
 
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
+
 import java.util.ArrayList;
 
 
@@ -27,7 +29,7 @@ import java.util.ArrayList;
 public class TrajectoryDemo extends LinearOpMode {
 
     // robot reference
-    public PursuitBot robot;
+    public PursuitBotTesting robot;
 
     // robot poses which form recorded path
     public ArrayList<Pose2d> recording;
@@ -52,7 +54,7 @@ public class TrajectoryDemo extends LinearOpMode {
     public void runOpMode() {
 
         // get reference to robot
-        robot = new PursuitBot(telemetry, hardwareMap);
+        robot = new PursuitBotTesting(telemetry, hardwareMap);
 
         // wait for user to start program
         waitForStart();

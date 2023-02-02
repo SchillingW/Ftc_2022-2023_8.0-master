@@ -21,13 +21,13 @@ public class LinearSlide
     private double armSpeed = 0.75;
 
     public int ground = 0; public int low = -1275;
-    public int med = -2150; public int high = -2970;
+    public int med = -2150; public int high = -2925;
     public int driveHeight = -250;
     public int stackDriveHeight = -600;
-    public int[] stacks = {-405, -320, -135, -65};
+    public int[] stacks = {-405, -320, -160, -65};
     public int[] slidePositions = {ground, low, med, high};
 
-    public double extraTime = 0.125;
+    public double extraTime = 0.25;
 
     public LinearSlide(Telemetry tele, HardwareMap map)
     {

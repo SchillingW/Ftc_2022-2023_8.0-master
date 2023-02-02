@@ -63,6 +63,7 @@ public class Meet1BotTeleOp extends OpMode {
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
         sensor = hardwareMap.colorSensor.get("sensor");
+        linearSlide.goTo(linearSlide.ground, telemetry);
         //sensorDistance = hardwareMap.get(DistanceSensor.class, "sen");
 
     }
@@ -137,23 +138,23 @@ public class Meet1BotTeleOp extends OpMode {
         //    gamepad2.rumble(500);
         //}
 
-        boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP);
-        boolean thisDown = input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN);
+        boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.X);
+        //boolean thisDown = input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN);
         if (thisUp && !lastUp) {heightIndex++; joystickControl = false;}
-        if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
-        heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
+        //if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
+        heightIndex = linearSlide.high;
         telemetry.addData("heightIndex", heightIndex);
         lastUp = thisUp;
-        lastDown = thisDown;
+        //lastDown = thisDown;
 
         if (input.gamepad2.getRightY() != 0 || joystickControl)
         {
-            linearSlide.moveByJoystick(input.gamepad2.getRightY());
+            linearSlide.moveByJoystick(input.gamepad2.getRightY() * 1.5);
             joystickControl = true;
         }
         else
         {
-            linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+            linearSlide.goTo(linearSlide.high + 30, telemetry);
         }
     }
 }

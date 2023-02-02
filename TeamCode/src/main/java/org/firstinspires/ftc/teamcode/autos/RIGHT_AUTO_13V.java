@@ -12,8 +12,9 @@ import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.hardware.VisionDevice;
 
-@Autonomous(name="RotationAutoTest", group="PursuitBot")
-public class RotationAutoTest extends LinearOpMode {
+@Autonomous(name="RIGHT_AUTO_13V", group="PursuitBot")
+public class RIGHT_AUTO_13V extends LinearOpMode {
+
     public double poleCellDiff;
     public PursuitBotTesting robot;
     public VisionDevice vision;
@@ -39,7 +40,7 @@ public class RotationAutoTest extends LinearOpMode {
         robot.yDim.cellPLACEMENT = 4;
 
         poleCellDiff = robot.xDim.toPole(1) - robot.xDim.toCell(1) - 1.75;
-        high = new Pose2d(robot.xDim.toCell(2) + 3.2, robot.yDim.toPole(3), new Rotation2d());
+        high = new Pose2d(robot.xDim.toCell(2) + 2.5, robot.yDim.toPole(3) - 2.5, new Rotation2d());
         stack = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.8, Rotation2d.fromDegrees(90));
         midCell = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4) + 4, Rotation2d.fromDegrees(90));
 
@@ -62,10 +63,10 @@ public class RotationAutoTest extends LinearOpMode {
 
         // CONE GRABBED
         //robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
-        robot.setConstants(0.8, 0.4, 16, 4);
+        robot.setConstants(0.9, 0.4, 16, 4);
         robot.reachPointSlideNextPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), new Pose2d(robot.xDim.toCell(1.8), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, false);
         robot.reachPointSlideNextPoint(new Pose2d(robot.xDim.toCell(1.8), robot.yDim.toCell(4), new Rotation2d()), high, telemetry, this, linearSlide, linearSlide.high, false);
-        robot.setConstants(0.4, 0.2, 16, 4);
+        robot.setConstants(0.4, 0.2, 16, 6);
         robot.reachPointSlide(high, telemetry, this, linearSlide, linearSlide.high, false);
         robot.drive.stop();
         linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
@@ -75,15 +76,16 @@ public class RotationAutoTest extends LinearOpMode {
 
         Cycle(0, false, result);
         Cycle(1, false, result);
-        Cycle(2, true, result);
+        Cycle(2, false, result);
+        Cycle(3, true, result);
     }
 
     public void Cycle(int i, boolean lastCycle, int result)
     {
-        robot.setConstants(1, 0.45, 12, 6);
-        robot.reachPointSlideNextPoint(midCell, new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.3, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.med, false);
-        robot.setConstants(0.45, 0.19, 16, 4);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.3, Rotation2d.fromDegrees(90 - (i * 0.65))), telemetry, this, linearSlide, linearSlide.stacks[i], false);
+        robot.setConstants(1, 0.45, 12, 2);
+        robot.reachPointSlideNextPoint(midCell, stack, telemetry, this, linearSlide, linearSlide.med, false);
+        robot.setConstants(0.45, 0.19, 16, 10);
+        robot.reachPointSlide(stack, telemetry, this, linearSlide, linearSlide.stacks[i], false);
         robot.drive.stop();
         linearSlide.closeClaw();
         sleep(300);
@@ -92,8 +94,8 @@ public class RotationAutoTest extends LinearOpMode {
         else sleep(450);
         robot.setConstants(1, 0.45, 12, 2);
         robot.reachPointSlideNextPoint(midCell, high, telemetry, this, linearSlide, linearSlide.high, false);
-        robot.setConstants(0.45, 0.2, 16, 4);
-        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2) + 3.2 + i * 0.25, robot.yDim.toPole(3), Rotation2d.fromDegrees(i * 1.25)), telemetry, this, linearSlide, linearSlide.high, false);
+        robot.setConstants(0.45, 0.2, 16, 6);
+        robot.reachPointSlide(high, telemetry, this, linearSlide, linearSlide.high, false);
         robot.drive.stop();
         linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
         if (opModeIsActive()) linearSlide.openClaw();
