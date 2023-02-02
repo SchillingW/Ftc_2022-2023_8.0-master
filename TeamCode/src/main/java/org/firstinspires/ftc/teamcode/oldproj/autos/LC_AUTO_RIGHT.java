@@ -42,8 +42,8 @@ public class LC_AUTO_RIGHT extends LinearOpMode {
         robot.yDim.cellPLACEMENT = 4;
 
         poleCellDiff = robot.xDim.toPole(1) - robot.xDim.toCell(1) - 1.5;
-        high = new Pose2d(robot.xDim.toCell(2) + 2.5, robot.yDim.toPole(3) - 0.425, new Rotation2d());
-        stack = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 2.3, Rotation2d.fromDegrees(90));
+        high = new Pose2d(robot.xDim.toCell(2) + 2.5, robot.yDim.toPole(3) - 1.425, new Rotation2d());
+        stack = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.3, Rotation2d.fromDegrees(90));
         midPoint = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d());
         midCell = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), Rotation2d.fromDegrees(85));
         midPoint2 = new Pose2d(robot.xDim.toCell(2), robot.yDim.toPole(3), new Rotation2d());
