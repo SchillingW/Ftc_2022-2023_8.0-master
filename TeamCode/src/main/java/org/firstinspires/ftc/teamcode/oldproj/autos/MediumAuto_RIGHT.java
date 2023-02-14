@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.oldproj.botconfigs.PursuitBot;
 import org.firstinspires.ftc.teamcode.oldproj.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.oldproj.hardware.VisionDevice;
 
-@Autonomous(name="LC_AUTO_RIGHT", group="PursuitBot")
-public class LC_AUTO_RIGHT extends LinearOpMode {
+@Autonomous(name="MediumAuto_RIGHT", group="PursuitBot")
+public class MediumAuto_RIGHT extends LinearOpMode {
 
     public double poleCellDiff;
     public PursuitBotTesting robot;
@@ -43,12 +43,10 @@ public class LC_AUTO_RIGHT extends LinearOpMode {
         robot.yDim.cellPLACEMENT = 4;
 
         poleCellDiff = robot.xDim.toPole(1) - robot.xDim.toCell(1) - 1.5;
-        high = new Pose2d(robot.xDim.toCell(2) + 1.75, robot.yDim.toPole(3) - 1, new Rotation2d());
-        stack = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.35, Rotation2d.fromDegrees(90));
-        midPoint = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d());
+        high = new Pose2d(robot.xDim.toCell(2) - poleCellDiff /*- 1.75*/, robot.yDim.toPole(3) - 1, Rotation2d.fromDegrees(180));
+        stack = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.25, Rotation2d.fromDegrees(90));
+        midPoint = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), Rotation2d.fromDegrees(180));
         midCell = new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), Rotation2d.fromDegrees(90));
-        midPoint2 = new Pose2d(robot.xDim.toCell(2), robot.yDim.toPole(3), new Rotation2d());
-        midCell2 = new Pose2d(robot.xDim.toCell(2), robot.yDim.toPole(3), Rotation2d.fromDegrees(90));
 
         vision = new VisionDevice(telemetry, hardwareMap);
         vision.init();
@@ -69,16 +67,13 @@ public class LC_AUTO_RIGHT extends LinearOpMode {
 
         // CONE GRABBED
         //robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
-        robot.setConstants(0.9, 0.6, 16, 4);
-        robot.reachPointSlideNextPoint(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4) - 2, new Rotation2d()), new Pose2d(robot.xDim.toCell(1.8), robot.yDim.toCell(4) - 2, new Rotation2d()), telemetry, this, linearSlide, linearSlide.high, false);
-        robot.setConstants(0.6, 0.6, 16, 4);
-        robot.reachPointSlideNextPoint(new Pose2d(robot.xDim.toCell(1.8), robot.yDim.toCell(4) - 2, new Rotation2d()), high, telemetry, this, linearSlide, linearSlide.high, false);
-        robot.setConstants(0.6, 0.25, 16, 2);
-        robot.reachPointSlide(high, telemetry, this, linearSlide, linearSlide.high, false);
-        robot.drive.stop();
-        linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
+        robot.setConstants(0.69, 0.25, 24, 6);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
+        robot.reachPointSlide(new Pose2d(robot.xDim.toCell(1.5) , robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low, true);
+        linearSlide.goToFull(linearSlide.low + 75, telemetry, this);
         if (opModeIsActive()) linearSlide.openClaw();
         sleep(200);
+        robot.reachPointSlide(new Pose2d(midPoint.getX() , midPoint.getY(), Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low, true);
 
 
         Cycle(0, false, result);
@@ -88,35 +83,28 @@ public class LC_AUTO_RIGHT extends LinearOpMode {
 
     public void Cycle(int i, boolean lastCycle, int result)
     {
-        double yPoleOffset = i * 0.85;
-        double xPoleOffset = i * 0.25;
-        double rotPoleOffset = (i + 1) * 0.65;
-        Pose2d newHigh = new Pose2d(high.getX() + xPoleOffset, high.getY() + yPoleOffset, Rotation2d.fromDegrees(0 - rotPoleOffset));
-
-        robot.setConstants(0.85, 0.55, 12, 6);
-        //robot.reachPointSlideNextPoint(midCell, new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.3, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.med, false);
-        robot.reachPointSlideNextPoint(midPoint, midCell, telemetry, this, linearSlide, linearSlide.med, false);
         robot.setConstants(0.55, 0.4, 16, 2);
-        //robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(5) - 1.3, Rotation2d.fromDegrees(90 - (i * 0.65))), telemetry, this, linearSlide, linearSlide.stacks[i], false);
         robot.reachPointSlide(midCell, telemetry, this, linearSlide, linearSlide.stacks[i], false);
         robot.setConstants(0.4, 0.19, 16, 4);
         robot.reachPointSlide(stack, telemetry, this, linearSlide, linearSlide.stacks[i], false);
         robot.drive.stop();
         linearSlide.closeClaw();
         sleep(300);
-        linearSlide.goTo(linearSlide.high, telemetry);
+        linearSlide.goTo(linearSlide.low, telemetry);
         sleep(150);
         robot.setConstants(0.69, 0.3, 16, 4);
-        robot.reachPointSlide(midCell, telemetry, this, linearSlide, linearSlide.high, false);
+        robot.reachPointSlide(midCell, telemetry, this, linearSlide, linearSlide.low, false);
         robot.setConstants(0.4, 0.25, 16, 2);
-        robot.reachPointSlide(midPoint, telemetry, this, linearSlide, linearSlide.high, false);
+        robot.reachPointSlide(midPoint, telemetry, this, linearSlide, linearSlide.low, false);
         robot.setConstants(0.69, 0.3, 16, 4);
         //robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2) + 3.2 + i * 0.1, robot.yDim.toPole(3), Rotation2d.fromDegrees(i * 1.25)), telemetry, this, linearSlide, linearSlide.high, false);
-        robot.reachPointSlide(newHigh, telemetry, this, linearSlide, linearSlide.high, false);
+        robot.reachPointSlide(high, telemetry, this, linearSlide, linearSlide.med, false);
         robot.drive.stop();
-        linearSlide.goToFull(linearSlide.high + dropOffset, telemetry, this);
+        linearSlide.goToFull(linearSlide.med + dropOffset, telemetry, this);
         if (opModeIsActive()) linearSlide.openClaw();
         sleep(200);
+        robot.setConstants(0.85, 0.55, 12, 6);
+        robot.reachPointSlideNextPoint(midPoint, midCell, telemetry, this, linearSlide, linearSlide.low, false);
         if(!lastCycle) return;
 
         //PARK

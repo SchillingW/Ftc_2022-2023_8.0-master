@@ -54,6 +54,7 @@ public class Meet4Auto_RIGHT extends LinearOpMode {
         sleep(300);
 
         // CONE GRABBED
+        robot.setConstants(0.69, 0.25, 24, 6);
         robot.reachPointSlide(new Pose2d(robot.xDim.toCell(0), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.driveHeight, false);
         robot.reachPointSlide(new Pose2d(robot.xDim.toCell(2), robot.yDim.toCell(4), new Rotation2d()), telemetry, this, linearSlide, linearSlide.low, false);
         robot.reachPointSlide(new Pose2d(robot.xDim.toCell(1.5) , robot.yDim.toCell(4) + poleCellDiff, Rotation2d.fromDegrees(90)), telemetry, this, linearSlide, linearSlide.low, true);
