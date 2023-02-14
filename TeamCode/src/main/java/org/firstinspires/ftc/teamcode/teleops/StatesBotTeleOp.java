@@ -1,33 +1,19 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import static java.lang.Thread.sleep;
-
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import android.view.View;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
-import org.firstinspires.ftc.teamcode.botconfigs.PursuitBot;
-import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import java.util.Locale;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
+import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
+import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
 
 @TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
-public class Meet1BotTeleOp extends OpMode {
+public class StatesBotTeleOp extends OpMode {
 
     PursuitBotTesting robot;
     LinearSlide linearSlide;

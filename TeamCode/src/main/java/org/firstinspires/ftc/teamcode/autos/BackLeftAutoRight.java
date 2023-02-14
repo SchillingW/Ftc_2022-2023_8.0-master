@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autos;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -20,6 +21,7 @@ public class BackLeftAutoRight extends LinearOpMode {
     ColorSensor sensorColor;
     public int dropOffset = 40;
     public ColorSensor sensor;
+    RevBlinkinLedDriver lights;
 
     public boolean moveToNext;
 
@@ -31,6 +33,7 @@ public class BackLeftAutoRight extends LinearOpMode {
         robot.xDim.cellcorner2botanchorPLACEMENT = 2.375;
         robot.yDim.cellcorner2botanchorPLACEMENT = 0.375;
         sensor = hardwareMap.colorSensor.get("sensor");
+        lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
         robot.xDim.cellPLACEMENT = 0;
         robot.yDim.cellPLACEMENT = 4;
 
@@ -41,8 +44,12 @@ public class BackLeftAutoRight extends LinearOpMode {
         sleep(1000);
         int result = 0;
         while (!isStarted()) {
+
             int next = vision.perform(1f / 3f);
             if (next != -1) result = next;
+            if (next == 0) lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            if (next == 1) lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
+            if (next == 2) lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
             telemetry.addData("current result", result);
             telemetry.update();
         }
