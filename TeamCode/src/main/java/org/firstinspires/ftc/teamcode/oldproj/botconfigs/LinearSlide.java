@@ -59,6 +59,8 @@ public class LinearSlide
         telemetry.update();
     }
 
+    public boolean isOpen(){return claw.getPosition() > 0.1;}
+
     public void goToAuto(int reachHeight, double speed, Telemetry telemetry)
     {
         if(isAtTarget(reachHeight))
