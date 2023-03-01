@@ -1,23 +1,18 @@
 package org.firstinspires.ftc.teamcode.oldproj.teleops;
 
-import static java.lang.Thread.sleep;
-
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.oldproj.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.oldproj.botconfigs.PursuitBotTesting;
-
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.oldproj.hardware.GamepadSystem;
 
-@TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
-public class Meet1BotTeleOp extends OpMode {
+@TeleOp(name="SensorBotTeleOp", group="ClawLiftBot")
+public class SensorBotTeleOp extends OpMode {
 
     PursuitBotTesting robot;
     LinearSlide linearSlide;
@@ -108,10 +103,6 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());*/
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT))
-        {
-            cyclingMode = !cyclingMode;
-        }
 
         if(input.gamepad1.getButton(GamepadKeys.Button.B))
         {
@@ -178,15 +169,6 @@ public class Meet1BotTeleOp extends OpMode {
             else joystickControl = false;
         }
 
-        if(checkForGrab())
-        {
-            telemetry.addData("Grabbed", 1);
-        }
-
-        else if(checkForRelease())
-        {
-            telemetry.addData("Released", 1);
-        }
 
         if(autoRaiseClaw && cyclingMode && timer.seconds() >= 0.5)
         {
@@ -195,42 +177,5 @@ public class Meet1BotTeleOp extends OpMode {
         }
     }
 
-    public boolean checkForGrab()
-    {
-        boolean blue = sensor.blue() >= 50 && sensor.red() <= 50;
-        boolean red = sensor.red() >= 70 && sensor.blue() <= 60;
 
-        if(blue || red) {
-            if(sensor.getDistance(DistanceUnit.INCH) <= 3.5)
-            {
-                linearSlide.closeClaw();
-                autoRaiseClaw = true;
-                clawClosed = true;
-                timer.reset();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean checkForRelease()
-    {
-        if(linearSlide.getCurrentPos() > -900) return false;
-
-        boolean blue = sensor.blue() >= 60 && sensor.red() <= 40;
-        boolean red = sensor.red() >= 80 && sensor.blue() <= 60;
-        boolean yellow = sensor.red() >= 70 && sensor.green() >= 70;
-
-        if(blue || red || yellow && sensor.getDistance(DistanceUnit.INCH) <= 7 && sensor.getDistance(DistanceUnit.INCH) >= 4.25)
-        {
-            heightIndex--;
-            linearSlide.openClaw();
-            clawClosed = false;
-            return true;
-        }
-
-
-        return false;
-    }
 }

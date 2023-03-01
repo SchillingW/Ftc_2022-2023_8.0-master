@@ -1,28 +1,26 @@
-package org.firstinspires.ftc.teamcode.teleops;
+package org.firstinspires.ftc.teamcode.oldproj.teleops;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.botconfigs.LinearSlide;
-import org.firstinspires.ftc.teamcode.botconfigs.PursuitBotTesting;
-import org.firstinspires.ftc.teamcode.hardware.GamepadSystem;
+import org.firstinspires.ftc.teamcode.oldproj.botconfigs.LinearSlide;
+import org.firstinspires.ftc.teamcode.oldproj.botconfigs.PursuitBotTesting;
+import org.firstinspires.ftc.teamcode.oldproj.hardware.GamepadSystem;
 
-@TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
-public class StatesBotTeleOp extends OpMode {
+@TeleOp(name="SensorBotTeleOp", group="ClawLiftBot")
+public class RumbleBotTeleOp extends OpMode {
 
     PursuitBotTesting robot;
     LinearSlide linearSlide;
-    ColorSensor sensorColor;
+    ColorRangeSensor sensor;
     DistanceSensor sensorDistance;
-    RevBlinkinLedDriver lights;
 
-
-    public double turnSpeed = 0.75;
+    public double turnSpeed = 0.6;
     public double linearSpeed = 0.75;
 
     public int heightIndex = 0;
@@ -30,10 +28,13 @@ public class StatesBotTeleOp extends OpMode {
 
     public boolean lastUp;
     public boolean lastDown;
-    public ColorSensor sensor;
 
     public double baseHeading;
 
+    public boolean cyclingMode;
+    public boolean autoRaiseClaw;
+    public boolean clawClosed;
+    public ElapsedTime timer;
 
 
     // input system reference
@@ -51,8 +52,16 @@ public class StatesBotTeleOp extends OpMode {
         robot = new PursuitBotTesting(telemetry, hardwareMap);
         input = new GamepadSystem(this);
         linearSlide = new LinearSlide(telemetry, hardwareMap);
-        lights = hardwareMap.get(RevBlinkinLedDriver.class, "lights");
-        sensor = hardwareMap.colorSensor.get("sensor");
+        sensor = (ColorRangeSensor) hardwareMap.colorSensor.get("sensor");
+        linearSlide.goTo(linearSlide.stacks[3], telemetry);
+        linearSlide.openClaw();
+        heightIndex = 0;
+        autoRaiseClaw = false;
+        cyclingMode = false;
+        clawClosed = false;
+        timer = new ElapsedTime();
+        timer.reset();
+
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor");
 
     }
@@ -60,7 +69,6 @@ public class StatesBotTeleOp extends OpMode {
     // called repeatedly during program
     @Override
     public void loop() {
-
         telemetry.addData("Drive Speed", linearSpeed);
 
         // NORMAL
@@ -68,7 +76,7 @@ public class StatesBotTeleOp extends OpMode {
                 input.gamepad1.getLeftY() * Math.abs(input.gamepad1.getLeftY()) * linearSpeed,
                 input.gamepad1.getLeftX() * Math.abs(input.gamepad1.getLeftX()) * linearSpeed,
                 input.gamepad1.getRightX() * Math.abs(input.gamepad1.getRightX()) * turnSpeed);
-        lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
+
 
         // GYRO COMP
 
@@ -84,7 +92,7 @@ public class StatesBotTeleOp extends OpMode {
         // reorient forward to current direction
         if (gamepad1.right_bumper) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
 
-
+        telemetry.addData("Cycling Mode", cyclingMode);
         telemetry.addData("heading", robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
         telemetry.addData("base heading", baseHeading);
         /*Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
@@ -96,22 +104,20 @@ public class StatesBotTeleOp extends OpMode {
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());*/
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.X))
+
+        if(input.gamepad1.getButton(GamepadKeys.Button.B))
         {
-            linearSpeed = 0.75;
-            turnSpeed = 0.75;
+            linearSpeed = 1;
         }
 
         if(input.gamepad1.getButton(GamepadKeys.Button.Y))
         {
-            linearSpeed = 0.55;
-            turnSpeed = 0.55;
+            linearSpeed = 0.825;
         }
 //
-        if(input.gamepad1.getButton(GamepadKeys.Button.B))
+        if(input.gamepad1.getButton(GamepadKeys.Button.X))
         {
-            linearSpeed = 0.35;
-            turnSpeed = 0.35;
+            linearSpeed = 0.75;
         }
 //
         if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -130,23 +136,47 @@ public class StatesBotTeleOp extends OpMode {
             gamepad2.rumble(500);
         }
 
+        boolean highUp = input.gamepad2.getButton(GamepadKeys.Button.X);
         boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP);
         boolean thisDown = input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN);
         if (thisUp && !lastUp) {heightIndex++; joystickControl = false;}
         if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
+        if (highUp) { heightIndex = 3;}
         heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
         telemetry.addData("heightIndex", heightIndex);
         lastUp = thisUp;
-        lastDown = thisDown;
+        //lastDown = thisDown;
 
         if (input.gamepad2.getRightY() != 0 || joystickControl)
         {
-            linearSlide.moveByJoystick(input.gamepad2.getRightY());
+            linearSlide.moveByJoystick(input.gamepad2.getRightY() * 1.5);
             joystickControl = true;
         }
         else
         {
-            linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+            if(heightIndex == 3) linearSlide.goTo(linearSlide.high + 30, telemetry);
+            else linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
+        }
+
+
+        if(cyclingMode)
+        {
+            linearSpeed = 0.4;
+            if(!clawClosed) {
+                joystickControl = true;
+                linearSlide.moveByJoystick(1);
+            }
+
+            else joystickControl = false;
+        }
+
+
+        if(autoRaiseClaw && cyclingMode && timer.seconds() >= 0.5)
+        {
+            autoRaiseClaw = false;
+            heightIndex = 3;
         }
     }
+
+
 }

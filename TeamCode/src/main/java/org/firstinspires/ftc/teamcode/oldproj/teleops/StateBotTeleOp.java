@@ -16,8 +16,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.oldproj.hardware.GamepadSystem;
 
-@TeleOp(name="Meet1BotTeleOp", group="ClawLiftBot")
-public class Meet1BotTeleOp extends OpMode {
+@TeleOp(name="StateBotTeleOp", group="ClawLiftBot")
+public class StateBotTeleOp extends OpMode {
 
     PursuitBotTesting robot;
     LinearSlide linearSlide;
@@ -92,9 +92,9 @@ public class Meet1BotTeleOp extends OpMode {
                 robot.odometry.getPose().getHeading() / 2 / Math.PI * 360 - baseHeading);*/
 
 
-
         // reorient forward to current direction
-        if (gamepad1.right_bumper) baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
+        if (gamepad1.right_bumper)
+            baseHeading = robot.odometry.getPose().getHeading() / 2 / Math.PI * 360;
 
         telemetry.addData("Cycling Mode", cyclingMode);
         telemetry.addData("heading", robot.odometry.getPose().getHeading() / 2 / Math.PI * 360);
@@ -108,23 +108,19 @@ public class Meet1BotTeleOp extends OpMode {
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());*/
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT))
-        {
+        if (input.gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
             cyclingMode = !cyclingMode;
         }
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.B))
-        {
+        if (input.gamepad1.getButton(GamepadKeys.Button.B)) {
             linearSpeed = 1;
         }
 
-        if(input.gamepad1.getButton(GamepadKeys.Button.Y))
-        {
+        if (input.gamepad1.getButton(GamepadKeys.Button.Y)) {
             linearSpeed = 0.825;
         }
 //
-        if(input.gamepad1.getButton(GamepadKeys.Button.X))
-        {
+        if (input.gamepad1.getButton(GamepadKeys.Button.X)) {
             linearSpeed = 0.75;
         }
 //
@@ -140,97 +136,33 @@ public class Meet1BotTeleOp extends OpMode {
             telemetry.update();
         }
 
+
+
+        if (input.gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            linearSlide.goTo(linearSlide.med, telemetry);
+        }
+
+
+
         //if (sensorDistance.getDistance(DistanceUnit.CM) <= 2.5) {
         //    gamepad2.rumble(500);
         //}
 
-        boolean highUp = input.gamepad2.getButton(GamepadKeys.Button.X);
         boolean thisUp = input.gamepad2.getButton(GamepadKeys.Button.DPAD_UP);
         boolean thisDown = input.gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN);
-        if (thisUp && !lastUp) {heightIndex++; joystickControl = false;}
-        if (thisDown & !lastDown) {heightIndex--; joystickControl = false;}
-        if (highUp) { heightIndex = 3;}
+
         heightIndex = Math.max(0, Math.min(linearSlide.slidePositions.length - 1, heightIndex));
         telemetry.addData("heightIndex", heightIndex);
         lastUp = thisUp;
         //lastDown = thisDown;
 
-        if (input.gamepad2.getRightY() != 0 || joystickControl)
-        {
+        if (input.gamepad2.getRightY() != 0 || joystickControl) {
             linearSlide.moveByJoystick(input.gamepad2.getRightY() * 1.5);
             joystickControl = true;
+        } else {
+            linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
         }
-        else
-        {
-            if(heightIndex == 3) linearSlide.goTo(linearSlide.high + 30, telemetry);
-            else linearSlide.goTo(linearSlide.slidePositions[heightIndex], telemetry);
-        }
-
-
-        if(cyclingMode)
-        {
-            linearSpeed = 0.4;
-            if(!clawClosed) {
-                joystickControl = true;
-                linearSlide.moveByJoystick(1);
-            }
-
-            else joystickControl = false;
-        }
-
-        if(checkForGrab())
-        {
-            telemetry.addData("Grabbed", 1);
-        }
-
-        else if(checkForRelease())
-        {
-            telemetry.addData("Released", 1);
-        }
-
-        if(autoRaiseClaw && cyclingMode && timer.seconds() >= 0.5)
-        {
-            autoRaiseClaw = false;
-            heightIndex = 3;
-        }
-    }
-
-    public boolean checkForGrab()
-    {
-        boolean blue = sensor.blue() >= 50 && sensor.red() <= 50;
-        boolean red = sensor.red() >= 70 && sensor.blue() <= 60;
-
-        if(blue || red) {
-            if(sensor.getDistance(DistanceUnit.INCH) <= 3.5)
-            {
-                linearSlide.closeClaw();
-                autoRaiseClaw = true;
-                clawClosed = true;
-                timer.reset();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean checkForRelease()
-    {
-        if(linearSlide.getCurrentPos() > -900) return false;
-
-        boolean blue = sensor.blue() >= 60 && sensor.red() <= 40;
-        boolean red = sensor.red() >= 80 && sensor.blue() <= 60;
-        boolean yellow = sensor.red() >= 70 && sensor.green() >= 70;
-
-        if(blue || red || yellow && sensor.getDistance(DistanceUnit.INCH) <= 7 && sensor.getDistance(DistanceUnit.INCH) >= 4.25)
-        {
-            heightIndex--;
-            linearSlide.openClaw();
-            clawClosed = false;
-            return true;
-        }
-
-
-        return false;
     }
 }
+
+
