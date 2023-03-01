@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.oldproj.botconfigs.LinearSlide;
 import org.firstinspires.ftc.teamcode.oldproj.botconfigs.PursuitBotTesting;
 import org.firstinspires.ftc.teamcode.oldproj.hardware.GamepadSystem;
 
-@TeleOp(name="SensorBotTeleOp", group="ClawLiftBot")
+@TeleOp(name="RumbleBotTeleOp", group="ClawLiftBot")
 public class RumbleBotTeleOp extends OpMode {
 
     PursuitBotTesting robot;
@@ -132,7 +132,7 @@ public class RumbleBotTeleOp extends OpMode {
             telemetry.update();
         }
 
-        if (sensorDistance.getDistance(DistanceUnit.CM) <= 2.5) {
+        if (sensorDistance.getDistance(DistanceUnit.CM) <= 8) {
             gamepad2.rumble(500);
         }
 
